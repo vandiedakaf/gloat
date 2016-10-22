@@ -13,4 +13,9 @@ public class GloatController {
     public String index() {
         return "Greetings from Gloat!";
     }
+
+    @RequestMapping("/gloat/")
+    public String gloat() {
+        return "About?";
+    }
 }
