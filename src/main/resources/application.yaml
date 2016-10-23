@@ -9,15 +9,9 @@ logging:
 
 spring:
   datasource:
-    url:
+    url: jdbc:mysql://localhost/gloat
     username: root
     password:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate.ddl-auto: none
-
----
-spring:
-  profiles: dev
-  datasource:
-    url: jdbc:mysql://localhost/gloat
