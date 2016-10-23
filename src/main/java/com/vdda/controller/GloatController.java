@@ -45,8 +45,6 @@ public class GloatController {
     public List<Category> getCategories() {
         log.debug("GloatController.getCategories");
 
-        Category category = new Category(123l);
-
         return (List<Category>) categoryRepository.findAll();
     }
 }
