@@ -12,7 +12,7 @@ cache:
   directories:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
-before-script: 'mysql -uroot -e "CREATE DATABASE gloat"'
+before_script: 'mysql -uroot -e "CREATE DATABASE gloat"'
 script: "./gradlew build"
 branches:
   only:
