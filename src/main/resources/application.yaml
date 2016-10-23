@@ -9,9 +9,6 @@ logging:
 
 spring:
   datasource:
-    url: ${CLEARDB_DATABASE_URL}
-    username: root
-    password:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate.ddl-auto: none
