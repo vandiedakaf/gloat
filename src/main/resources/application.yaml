@@ -21,9 +21,3 @@ spring:
   profiles: dev
   datasource:
     url: jdbc:mysql://localhost/gloat
-
----
-spring:
-  profiles: travis
-  datasource:
-    url: jdbc:mysql://localhost/gloat
