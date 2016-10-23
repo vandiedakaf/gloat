@@ -13,7 +13,7 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
 script:
-  - "mysql -uroot --execute=\CREATE DATABASE `gloat`\""
+  - "mysql -uroot --execute=""CREATE DATABASE `gloat`"""
   - "./gradlew build"
 branches:
   only:
