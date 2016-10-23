@@ -14,7 +14,7 @@ import java.net.URISyntaxException;
 @Configuration
 public class DatabaseConfig {
     @Bean
-    @Profile("heroku")
+    @Profile("default")
     public MysqlDataSource dataSource() throws URISyntaxException {
         URI dbUri = new URI(System.getenv("CLEARDB_DATABASE_URL"));
 
