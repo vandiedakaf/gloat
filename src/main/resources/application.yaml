@@ -6,3 +6,12 @@ logging:
   level:
     org.springframework.web: INFO
     com.vdda: DEBUG
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost/gloat
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
+    testOnBorrow: true
+    validationQuery: SELECT 1

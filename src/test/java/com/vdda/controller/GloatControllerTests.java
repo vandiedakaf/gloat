@@ -1,4 +1,4 @@
-package com.vdda;
+package com.vdda.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +17,7 @@ import static org.hamcrest.Matchers.equalTo;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GloatApplicationTests {
-
-	@Test
-	public void contextLoads() {
-		// TODO
-	}
+public class GloatControllerTests {
 
 	@Autowired
 	private MockMvc mvc;
@@ -39,6 +34,12 @@ public class GloatApplicationTests {
 		mvc.perform(MockMvcRequestBuilders.get("/gloat/").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().string(equalTo("About?")));
+	}
+
+	@Test
+	public void getCategories() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/categories/").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 }
