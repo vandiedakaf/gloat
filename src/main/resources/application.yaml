@@ -9,6 +9,9 @@ logging:
 
 spring:
   datasource:
+    url:
+    username: root
+    password:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate.ddl-auto: none

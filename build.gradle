@@ -49,5 +49,5 @@ jacocoTestReport {
 }
 
 bootRun {
-	environment SPRING_PROFILES_ACTIVE: environment.SPRING_PROFILES_ACTIVE ?: ""
+	systemProperties System.properties
 }
