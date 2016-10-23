@@ -37,6 +37,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-websocket')
 	compile('mysql:mysql-connector-java')
+	compile('org.flywaydb:flyway-core')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
@@ -45,4 +46,8 @@ jacocoTestReport {
 		xml.enabled = true // coveralls plugin depends on xml format report
 		html.enabled = true
 	}
+}
+
+bootRun {
+	environment SPRING_PROFILES_ACTIVE: environment.SPRING_PROFILES_ACTIVE ?: "dev"
 }
