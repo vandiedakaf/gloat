@@ -13,6 +13,7 @@ buildscript {
 plugins {
 	id 'jacoco'
 	id 'com.github.kt3k.coveralls' version '2.6.3'
+	id 'org.flywaydb.flyway' version '4.0.3'
 }
 
 apply plugin: 'java'
@@ -39,6 +40,7 @@ dependencies {
 	compile('mysql:mysql-connector-java')
 	compile('org.flywaydb:flyway-core')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.meanbean:meanbean:2.0.3')
 }
 
 jacocoTestReport {
@@ -49,5 +51,12 @@ jacocoTestReport {
 }
 
 bootRun {
+//	locally run with script parameter: -Dspring.profiles.active=dev
 	systemProperties System.properties
+}
+
+flyway {
+//	clean database with: gradlew flywayClean
+	url = 'jdbc:mysql://localhost/gloat'
+	user = 'root'
 }

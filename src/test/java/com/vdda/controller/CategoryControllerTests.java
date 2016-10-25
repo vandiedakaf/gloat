@@ -12,23 +12,31 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.hamcrest.Matchers.equalTo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = "dev")
-public class GloatControllerTests {
+public class CategoryControllerTests {
 
 	@Autowired
 	private MockMvc mvc;
 
 	@Test
-	public void getIndex() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().string(equalTo("Greetings from Gloat!")));
+	public void getCategories() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/categories").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
+	@Test
+	public void getCategory() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/categories/1").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void createCategory() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.post("/categories").content("{\"description\":\"testing\"}").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
 }

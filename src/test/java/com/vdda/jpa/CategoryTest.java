@@ -1,6 +1,7 @@
 package com.vdda.jpa;
 
 import org.junit.Test;
+import org.meanbean.test.BeanTester;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -11,10 +12,15 @@ import static org.junit.Assert.assertThat;
 public class CategoryTest {
     @Test
     public void construct() throws Exception {
-        Category category = new Category(1234l);
-        Long id = category.getId();
+        Category category = new Category("description");
+        String description = category.getDescription();
 
-        assertThat(1234l, equalTo(id));
+        assertThat("description", equalTo(description));
+    }
+
+    @Test
+    public void meanBean() throws Exception {
+        new BeanTester().testBean(Category.class);
     }
 
 }
