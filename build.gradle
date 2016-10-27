@@ -61,3 +61,5 @@ flyway {
 	url = 'jdbc:mysql://localhost/gloat'
 	user = 'root'
 }
+
+check.dependsOn jacocoTestReport
