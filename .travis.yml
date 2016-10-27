@@ -30,3 +30,12 @@ after_success:
 - "./gradlew jacocoTestReport coveralls"
 notifications:
   email: false
+addons:
+  sonarqube: true
+env:
+  global:
+    - secure: "dL6de0yw+A7q4pDurv2D+O/QtfGe7qc6FB0SzcMZzL2xz1mvAZUiBnt2tMfhm5wXAijus2afshFlpo+/AUwlAPq0TFj9bssSR+Xuz8k7MybedJG7s7VHfbcRcgJMedg+hkDxrsKXFD4tle64nbKQyQD4vNlIbXy/m2qabKawUBMyGQJnjInZJ5SQk3db3qoFmhcmJ02aUwHQ6RLkv8rTt4ZKkfRAeJmp1FZ1UsLlbEg3ADtPMM5xN67lCY
+      fSstvM6ls+FvNGyjYmqr4ZU8y3dU548+TiVEZkky5x35Eq2MxQLM5/zPSgeTgU5GIdHH/880aEG86gbiRJKJFGyadIHJdQzu4PLpePgC3xzG5KxNkE6NHNyLfJOw9oDSeERbyt48vPYq0GcJhFbjcz5AcorX/MSovLbUeJencYwNhZvCOR3n5KHbgzH5T7TXMYKcF6KC/MYnPu49wV05hjTkvjxjLbCWbY0WHMu6FfOLCH+UeaqM6oC0Vytz/ho01BCWT
+      HEw75Xc/a9+ugbOW/1fFYZz9vAN4SmYzO9R5fcg91cwXpStQMN0AfzpFdszbs0kqdMIkI8MzN9KWLHlXv38Bt4EvQ+WIqgHTnQiy5R+tMnYdIPt0OFw82V3Wz0eoofpd/SHzPHjzsjnUp4NL1rXYVs046vRjS3HluJrjycspTNbI="
+script:
+  - sonar-scanner -Dsonar.login=$SONAR_TOKEN

@@ -41,6 +41,7 @@ dependencies {
 	compile('org.flywaydb:flyway-core')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.meanbean:meanbean:2.0.3')
+	testCompile('org.jmockit:jmockit:1.28')
 }
 
 jacocoTestReport {
