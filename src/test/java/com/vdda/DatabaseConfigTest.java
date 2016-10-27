@@ -5,6 +5,8 @@ import mockit.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URISyntaxException;
+
 /**
  * Created by francois on 2016-10-25.
  */
@@ -14,12 +16,12 @@ public class DatabaseConfigTest {
     DatabaseConfig databaseConfig;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         databaseConfig = new DatabaseConfig();
     }
 
     @Test
-    public void dataSource(@Mocked MysqlDataSource basicDataSource) throws Exception {
+    public void dataSource(@Mocked MysqlDataSource basicDataSource) throws URISyntaxException {
         new MockUp<System>()
         {
             @Mock
@@ -28,7 +30,7 @@ public class DatabaseConfigTest {
             }
         };
 
-        MysqlDataSource mysqlDataSource = databaseConfig.dataSource();
+        databaseConfig.dataSource();
 
         new Verifications() {{
             basicDataSource.setUrl("jdbc:mysql://localhost/database");
@@ -38,7 +40,7 @@ public class DatabaseConfigTest {
     }
 
     @Test(expected=NullPointerException.class)
-    public void dataSourceException() throws Exception {
+    public void dataSourceException() throws URISyntaxException {
         new MockUp<System>()
         {
             @Mock
@@ -47,6 +49,6 @@ public class DatabaseConfigTest {
             }
         };
 
-        MysqlDataSource mysqlDataSource = databaseConfig.dataSource();
+        databaseConfig.dataSource();
     }
 }

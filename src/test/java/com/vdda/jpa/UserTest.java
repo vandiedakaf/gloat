@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 public class UserTest {
 
     @Test
-    public void construct() throws Exception {
+    public void construct() {
         User user = new User(1234l);
         Long id = user.getId();
 
@@ -20,7 +20,7 @@ public class UserTest {
     }
 
     @Test
-    public void meanBean() throws Exception {
+    public void meanBean() {
         new BeanTester().testBean(User.class);
     }
 

@@ -1,12 +1,9 @@
 package com.vdda.controller;
 
-import com.vdda.jpa.User;
 import com.vdda.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Random;
 
 /**
  * Created by francois on 2016-10-22.
