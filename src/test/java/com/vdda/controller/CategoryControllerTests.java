@@ -39,4 +39,16 @@ public class CategoryControllerTests {
 		mvc.perform(MockMvcRequestBuilders.post("/categories").content("{\"description\":\"testing\"}").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 	}
+
+	@Test
+	public void updateCategorySuccess() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.post("/categories/1").content("{\"description\":\"overridden\"}").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void updateCategoryFail() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.post("/categories/999").content("{\"description\":\"overridden\"}").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is4xxClientError());
+	}
 }

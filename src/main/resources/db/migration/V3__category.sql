@@ -1,0 +1,1 @@
+ALTER TABLE category ADD enabled TINYINT DEFAULT 1 NULL;

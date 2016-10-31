@@ -18,6 +18,7 @@ public class Category {
     @GeneratedValue
     private Long id;
     private String description;
+    private Boolean enabled;
 
     protected Category() {}
 
