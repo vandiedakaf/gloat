@@ -19,7 +19,6 @@ cache:
 before_script: mysql -uroot -e "CREATE DATABASE gloat"
 script:
   - "./gradlew build"
-  - "sonar-scanner -Dsonar.login=$SONAR_TOKEN"
 deploy:
   provider: heroku
   api_key:
@@ -32,7 +31,8 @@ branches:
   - master
   - develop
 after_success:
-- "./gradlew jacocoTestReport coveralls"
+  - "./gradlew jacocoTestReport coveralls"
+  - "sonar-scanner -Dsonar.login=$SONAR_TOKEN"
 notifications:
   email: false
 env:
