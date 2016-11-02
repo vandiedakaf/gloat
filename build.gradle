@@ -1,65 +1,66 @@
 buildscript {
-	ext {
-		springBootVersion = '1.4.1.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '1.4.1.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 plugins {
-	id 'com.github.kt3k.coveralls' version '2.6.3'
-	id 'java'
-	id 'jacoco'
-	id 'org.flywaydb.flyway' version '4.0.3'
-	id 'org.sonarqube' version "2.2"
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+    id 'java'
+    id 'jacoco'
+    id 'org.flywaydb.flyway' version '4.0.3'
+    id 'org.sonarqube' version "2.2"
 }
 
 apply plugin: 'spring-boot'
 
 jar {
-	baseName = 'gloat'
-	version = '0.0.1-SNAPSHOT'
+    baseName = 'gloat'
+    version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-jpa')
-	compile('org.projectlombok:lombok')
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compile('org.springframework.boot:spring-boot-starter-websocket')
-	compile('mysql:mysql-connector-java')
-	compile('org.flywaydb:flyway-core:4.0.3')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.meanbean:meanbean:2.0.3')
-	testCompile('org.jmockit:jmockit:1.28')
+    compile('ma.glasnost.orika:orika-core:1.4.6')
+    compile('mysql:mysql-connector-java:5.1.40')
+    compile('org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa:1.4.1.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-web:1.4.1.RELEASE')
+    compile('org.springframework.boot:spring-boot-starter-websocket:1.4.1.RELEASE')
+    compile('org.flywaydb:flyway-core:4.0.3')
+    compile('org.projectlombok:lombok:1.16.10')
+    testCompile('org.springframework.boot:spring-boot-starter-test:1.4.1.RELEASE')
+    testCompile('org.meanbean:meanbean:2.0.3')
+    testCompile('org.jmockit:jmockit:1.28')
 }
 
 jacocoTestReport {
-	reports {
-		xml.enabled = true // coveralls plugin depends on xml format report
-		html.enabled = true
-	}
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
 }
 
 bootRun {
 //	locally run with script parameter: -Dspring.profiles.active=dev
-	systemProperties System.properties
+    systemProperties System.properties
 }
 
 flyway {
 //	clean database with: gradlew flywayClean
-	url = 'jdbc:mysql://localhost/gloat'
-	user = 'root'
+    url = 'jdbc:mysql://localhost/gloat'
+    user = 'root'
 }
 
 // check is run by travis

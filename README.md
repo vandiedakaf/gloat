@@ -6,3 +6,6 @@ Time to gloat!
 
 #Setup
 mysql -uroot -e "CREATE DATABASE gloat"
+
+#Run
+gradle bootRun -Dspring.profiles.active=dev
