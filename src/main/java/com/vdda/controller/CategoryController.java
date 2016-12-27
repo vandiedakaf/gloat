@@ -9,17 +9,23 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Created by francois on 2016-10-22.
+ * Created by francois
+ * on 2016-10-22
+ * for vandiedakaf solutions
  */
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @Autowired
-    CategoryRepository categoryRepository;
+    private CategoryRepository categoryRepository;
+
+    private OrikaBeanMapper mapper;
 
     @Autowired
-    private OrikaBeanMapper mapper;
+    public CategoryController(CategoryRepository categoryRepository, OrikaBeanMapper mapper) {
+        this.categoryRepository = categoryRepository;
+        this.mapper = mapper;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Category> getCategories() {
@@ -40,7 +46,7 @@ public class CategoryController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.POST)
-    public Category updateCategory(@PathVariable Long id, @RequestBody Category category) throws IllegalArgumentException {
+    public Category updateCategory(@PathVariable Long id, @RequestBody Category category) {
 
         Category categoryPersisted = categoryRepository.findOne(id);
 

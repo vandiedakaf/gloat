@@ -10,7 +10,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
 /**
- * Created by francois on 2016-10-31.
+ * Created by francois on 2016-10-31 for
+ * vandiedakaf solutions
  */
 public class ControllerAdviceHelperTest {
 

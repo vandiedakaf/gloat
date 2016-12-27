@@ -7,7 +7,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created by francois on 2016-10-23.
+ * Created by francois on 2016-10-23 for
+ * vandiedakaf solutions
  */
 public class UserTest {
 

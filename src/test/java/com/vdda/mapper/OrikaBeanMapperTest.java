@@ -14,7 +14,8 @@ import static org.junit.Assert.assertThat;
 
 
 /**
- * Created by francois on 2016-11-02.
+ * Created by francois on 2016-11-02 for
+ * vandiedakaf solutions
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

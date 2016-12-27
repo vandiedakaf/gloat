@@ -8,7 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * Created by francois on 2016-10-23.
+ * Created by francois on 2016-10-23 for
+ * vandiedakaf solutions
  */
 @Entity
 @Getter

@@ -34,13 +34,15 @@ repositories {
 dependencies {
     compile('ma.glasnost.orika:orika-core:1.4.6')
     compile('mysql:mysql-connector-java:5.1.40')
-    compile('org.springframework.boot:spring-boot-starter-actuator:1.4.1.RELEASE')
-    compile('org.springframework.boot:spring-boot-starter-data-jpa:1.4.1.RELEASE')
-    compile('org.springframework.boot:spring-boot-starter-web:1.4.1.RELEASE')
-    compile('org.springframework.boot:spring-boot-starter-websocket:1.4.1.RELEASE')
+    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
+    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     compile('org.flywaydb:flyway-core:4.0.3')
     compile('org.projectlombok:lombok:1.16.10')
-    testCompile('org.springframework.boot:spring-boot-starter-test:1.4.1.RELEASE')
+    compile('com.github.seratch:jslack:1.0.5')
+
+    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
     testCompile('org.meanbean:meanbean:2.0.3')
     testCompile('org.jmockit:jmockit:1.28')
 }

@@ -8,10 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by francois on 2016-10-31.
+ * Created by francois on 2016-10-31 for
+ * vandiedakaf solutions
  */
 @ControllerAdvice
-public class ControllerAdviceHelper {
+class ControllerAdviceHelper {
     @ExceptionHandler({IllegalArgumentException.class})
     void handleBadRequests(HttpServletResponse response) throws IOException {
         response.sendError(HttpStatus.BAD_REQUEST.value());

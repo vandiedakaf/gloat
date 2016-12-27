@@ -9,7 +9,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * Created by francois on 2016-10-23.
+ * Created by francois on 2016-10-23 for
+ * vandiedakaf solutions
  */
 @Configuration
 public class DatabaseConfig {

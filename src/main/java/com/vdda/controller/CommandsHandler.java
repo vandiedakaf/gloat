@@ -1,0 +1,71 @@
+package com.vdda.controller;
+
+import com.vdda.command.*;
+import com.vdda.slack.Response;
+import com.vdda.tool.Parameters;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * Created by francois
+ * on 2016-12-25
+ * for vandiedakaf solutions
+ */
+public class CommandsHandler {
+
+    static final Map<String, Command> commands;
+
+    static int maxLen = 0;
+
+    static {
+        commands = new TreeMap<>();
+        for (Command command : new Command[]{
+                new Defeat(),
+                new Gloat(),
+                new Listing(),
+                new Tender(),
+                new Victory()
+        }) {
+            Command prev = commands.put(command.getCommand(), command);
+            if (prev != null) {
+                throw new AssertionError(
+                        "Two commands with identical commands: " + command + ", " + prev);
+            }
+            maxLen = Math.max(command.getCommand().length(), maxLen);
+        }
+    }
+
+    static Response run(String parametersString) {
+
+        Map<String, String> parametersMap = Parameters.parse(parametersString);
+
+        String text = parametersMap.get("text");
+        System.out.println("text: " + text);
+
+        if (text != null && !text.isEmpty()) {
+
+            String[] args = text.split(" ");
+
+            if (args.length != 0) {
+                Command tool = commands.get(args[0]);
+                if (tool != null) {
+                    return tool.run(Arrays.asList(args).subList(1, args.length));
+                }
+            }
+        }
+
+        StringBuilder stringBuilder = new StringBuilder("The available gloat commands are:");
+
+        for (Command command : commands.values()) {
+
+            stringBuilder.append(String.format("`%" + maxLen + "s - %s Usage: %s`\n", command.getCommand(), command.getShortDescription(), command.getUsage()));
+        }
+
+        Response response = new Response();
+        response.setText(stringBuilder.toString());
+        return response;
+    }
+
+}

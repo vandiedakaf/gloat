@@ -9,3 +9,6 @@ mysql -uroot -e "CREATE DATABASE gloat"
 
 #Run
 gradle bootRun -Dspring.profiles.active=dev
+
+# ngrok
+ngrok http 8080

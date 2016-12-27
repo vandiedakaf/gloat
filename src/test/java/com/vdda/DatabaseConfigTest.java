@@ -8,7 +8,8 @@ import org.junit.Test;
 import java.net.URISyntaxException;
 
 /**
- * Created by francois on 2016-10-25.
+ * Created by francois on 2016-10-25 for
+ * vandiedakaf solutions
  */
 public class DatabaseConfigTest {
 
