@@ -25,10 +25,10 @@ public class CommandsHandler {
     private Tender tender;
     private Victory victory;
     private Map<String, Command> commands;
-    private static int maxLen = 0;
+    private int maxLen = 0;
 
     @Autowired
-    void CommandsHandler(Defeat defeat, Gloat gloat, Top top, Tender tender, Victory victory){
+    CommandsHandler(Defeat defeat, Gloat gloat, Top top, Tender tender, Victory victory){
         this.defeat = defeat;
         this.gloat = gloat;
         this.top = top;
@@ -43,7 +43,6 @@ public class CommandsHandler {
                 this.tender,
                 this.victory
         }) {
-            System.out.println("Adding: " + command.getCommand());
             Command prev = commands.put(command.getCommand(), command);
             if (prev != null) {
                 throw new AssertionError(
@@ -58,7 +57,6 @@ public class CommandsHandler {
         Map<String, String> parametersMap = Parameters.parse(parametersString);
 
         String text = parametersMap.get(SlackParameters.TEXT.toString());
-        System.out.println(text);
 
         if (text != null && !text.isEmpty()) {
             String[] args = text.split(" ");

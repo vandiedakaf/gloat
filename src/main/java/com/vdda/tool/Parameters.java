@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
  */
 public class Parameters {
 
+    private Parameters() {
+    }
 
     /**
      * Seems that slack sends only one value per parameter (i.e no value lists are require)
@@ -22,7 +24,7 @@ public class Parameters {
 
         Map<String, String> list = new HashMap<>();
 
-        if ((parameters == null)) {
+        if (parameters == null) {
             return list;
         }
 

@@ -23,13 +23,17 @@ import java.util.Optional;
 @Service
 public class Victory implements Command {
 
+    private final CategoryRepository categoryRepository;
+
     @Autowired
-    private CategoryRepository categoryRepository;
+    public Victory(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     @Override
     public Response run(Map<String, String> parameters, List<String> args) {
 
-        if (args.size() == 0) {
+        if (args.isEmpty()) {
             Response response = new Response();
             response.setText(getShortDescription() + "\nUsage: `" + getUsage() + "`");
             return response;
@@ -46,8 +50,6 @@ public class Victory implements Command {
         }
 
         final String channelId = parameters.get(SlackParameters.CHANNEL_ID.toString());
-        System.out.println(teamId);
-        System.out.println(channelId);
 
         Category category = categoryRepository.findByTeamIdAndChannelId(teamId, channelId);
 

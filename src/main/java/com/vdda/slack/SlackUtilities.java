@@ -18,17 +18,16 @@ import java.util.Optional;
  */
 @Slf4j
 public class SlackUtilities {
-    final Slack slack = Slack.getInstance();
-    final String teamId;
-    final String token;
+    private final Slack slack = Slack.getInstance();
+    private final String token;
 
     public SlackUtilities(String teamId) {
-        this.teamId = teamId;
+        assert (teamId != null);
         // TODO get token from teamId
         this.token = System.getenv("SLACK_TOKEN");
     }
 
-    public UsersListResponse usersList() {
+    private UsersListResponse usersList() {
 
         UsersListResponse usersListResponse = new UsersListResponse();
 
@@ -53,9 +52,7 @@ public class SlackUtilities {
 
         List<User> users = usersListResponse.getMembers();
 
-        Optional<User> user = users.stream().filter(u -> u.getName().equals(userNameSanitised)).findFirst();
-
-        return user;
+        return users.stream().filter(u -> u.getName().equals(userNameSanitised)).findFirst();
     }
 
 }
