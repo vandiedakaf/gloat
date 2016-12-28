@@ -19,6 +19,7 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    // jpa constructor
     protected User() {}
 
     public User(Long id) {

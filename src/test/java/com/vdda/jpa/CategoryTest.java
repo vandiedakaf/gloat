@@ -13,10 +13,12 @@ import static org.junit.Assert.assertThat;
 public class CategoryTest {
     @Test
     public void construct() throws Exception {
-        Category category = new Category("description");
-        String description = category.getDescription();
+        Category category = new Category("team_id", "channel_id");
+        String teamId = category.getTeamId();
+        String channelId = category.getChannelId();
 
-        assertThat("description", equalTo(description));
+        assertThat(teamId, equalTo("team_id"));
+        assertThat(channelId, equalTo("channel_id"));
     }
 
     @Test

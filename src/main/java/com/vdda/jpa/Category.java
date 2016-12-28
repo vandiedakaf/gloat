@@ -18,12 +18,14 @@ public class Category {
     @Id
     @GeneratedValue
     private Long id;
-    private String description;
-    private Boolean enabled;
+    private String teamId;
+    private String channelId;
 
+    // jpa constructor
     protected Category() {}
 
-    public Category(String description) {
-        this.description = description;
+    public Category(String teamId, String channelId) {
+        this.teamId= teamId;
+        this.channelId = channelId;
     }
 }

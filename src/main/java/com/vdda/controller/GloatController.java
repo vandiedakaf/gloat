@@ -1,6 +1,8 @@
 package com.vdda.controller;
 
 import com.vdda.slack.Response;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,17 +15,20 @@ import org.springframework.web.bind.annotation.RestController;
  * for vandiedakaf solutions
  */
 @RestController
+@Slf4j
 public class GloatController {
+
+    @Autowired
+    private CommandsHandler commandsHandler;
 
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Response gloat(@RequestBody String parameters) {
 
-        System.out.println("GloatController.gloat");
-        System.out.println("parameters = " + parameters);
+        log.debug("parameters = " + parameters);
 
         Response response = new Response();
         response.setText("tada");
 
-        return CommandsHandler.run(parameters);
+        return commandsHandler.run(parameters);
     }
 }

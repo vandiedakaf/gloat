@@ -17,6 +17,8 @@ import java.util.List;
 @RequestMapping("/categories")
 public class CategoryController {
 
+    // TODO: probably have to remove this class
+
     private CategoryRepository categoryRepository;
 
     private OrikaBeanMapper mapper;

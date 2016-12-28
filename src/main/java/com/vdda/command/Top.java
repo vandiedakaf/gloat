@@ -1,17 +1,20 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by francois
  * on 2016-12-25
  * for vandiedakaf solutions
  */
-public class Listing implements Command {
+@Service
+public class Top implements Command {
     @Override
-    public Response run(List<String> args) {
+    public Response run(Map<String, String> parameters, List<String> args) {
         Response response = new Response();
         response.setText("1) Someone 2) Someone Else");
         return response;
@@ -19,12 +22,12 @@ public class Listing implements Command {
 
     @Override
     public String getCommand() {
-        return "list";
+        return "top";
     }
 
     @Override
     public String getUsage() {
-        return "list";
+        return "top";
     }
 
     @Override

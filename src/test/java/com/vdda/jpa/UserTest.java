@@ -17,7 +17,7 @@ public class UserTest {
         User user = new User(1234l);
         Long id = user.getId();
 
-        assertThat(1234l, equalTo(id));
+        assertThat(id, equalTo(1234l));
     }
 
     @Test
