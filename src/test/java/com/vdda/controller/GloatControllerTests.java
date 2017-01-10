@@ -26,8 +26,12 @@ public class GloatControllerTests {
 	private MockMvc mvc;
 
 	@Test
-	public void getIndex() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.post("/").content("test").contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE).accept(MediaType.APPLICATION_JSON))
+	public void postEmptyCommand() throws Exception {
+		mvc.perform(MockMvcRequestBuilders
+				.post("/")
+				.content("test")
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().string(containsString("The available gloat commands are")));
 

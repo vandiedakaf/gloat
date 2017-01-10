@@ -14,4 +14,13 @@ spring:
     password:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
-    hibernate.ddl-auto: none
+    hibernate.ddl-auto: none # https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-creating-and-dropping-jpa-databases
+
+management:
+  port: 9000
+  security:
+   enabled: true
+
+security:
+  basic:
+    authorize-mode: none

@@ -3,7 +3,6 @@ package com.vdda.command;
 import com.vdda.slack.Response;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,7 +11,7 @@ import java.util.Map;
  * for vandiedakaf solutions
  */
 @Service
-public class Top implements Command {
+public class Draw implements Command {
     @Override
     public Response run(Map<String, String> parameters) {
         Response response = new Response();
@@ -22,16 +21,16 @@ public class Top implements Command {
 
     @Override
     public String getCommand() {
-        return "top";
+        return "draw";
     }
 
     @Override
     public String getUsage() {
-        return "top";
+        return "draw @user";
     }
 
     @Override
     public String getShortDescription() {
-        return "Lists the top ranking players (also known as the winners). Coming soon.";
+        return "No winners here. Coming soon.";
     }
 }

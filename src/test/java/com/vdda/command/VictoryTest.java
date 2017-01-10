@@ -36,8 +36,7 @@ public class VictoryTest {
         parameters.put("channel_id", "channelId");
         parameters.put("team_id", "teamId");
         parameters.put("text", "victory");
-        List<String> args = new ArrayList<>();
-        Response response = victory.run(parameters, args);
+        Response response = victory.run(parameters);
 
         assertThat(response.getText(), containsString("Usage: `victory @user`"));
     }
@@ -48,12 +47,10 @@ public class VictoryTest {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("channel_id", "channelId");
         parameters.put("team_id", "teamId");
-        parameters.put("text", "victory");
-        List<String> args = new ArrayList<>();
-        args.add("@slackbot");
-        Response response = victory.run(parameters, args);
+        parameters.put("text", "victory @slackbot");
 
-        assertThat(response.getText(), containsString("slackbot"));
+        Response response = victory.run(parameters);
+        assertThat(response.getText(), containsString("We're processing your request..."));
     }
 
     @Test
@@ -62,11 +59,11 @@ public class VictoryTest {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("channel_id", "channelId");
         parameters.put("team_id", "teamId");
-        parameters.put("text", "victory");
-        List<String> args = new ArrayList<>();
-        args.add("this_user_should_not_exist");
-        Response response = victory.run(parameters, args);
+        parameters.put("text", "victory this_user_should_not_exist");
+        Response response = victory.run(parameters);
 
-        assertThat(response.getText(), containsString("Sorry, seems like this_user_should_not_exist is some imaginary person."));
+        assertThat(response.getText(), containsString("We're processing your request..."));
+        // TODO verification
+
     }
 }

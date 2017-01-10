@@ -12,26 +12,26 @@ import java.util.Map;
  * for vandiedakaf solutions
  */
 @Service
-public class Defeat implements Command {
+public class Loss implements Command {
     @Override
-    public Response run(Map<String, String> parameters, List<String> args) {
+    public Response run(Map<String, String> parameters) {
         Response response = new Response();
-        response.setText("Oh did you?");
+        response.setText("COMING SOON.");
         return response;
     }
 
     @Override
     public String getCommand() {
-        return "defeat";
+        return "loss";
     }
 
     @Override
     public String getUsage() {
-        return "defeat @user";
+        return "loss @user";
     }
 
     @Override
     public String getShortDescription() {
-        return "At least acknowledging your defeat is something you can be first at.";
+        return "Hey now, at least you can be first at acknowledging defeat. Coming soon.";
     }
 }

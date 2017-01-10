@@ -14,11 +14,9 @@ public class CategoryTest {
     @Test
     public void construct() throws Exception {
         Category category = new Category("team_id", "channel_id");
-        String teamId = category.getTeamId();
-        String channelId = category.getChannelId();
 
-        assertThat(teamId, equalTo("team_id"));
-        assertThat(channelId, equalTo("channel_id"));
+        assertThat(category.getTeamId(), equalTo("team_id"));
+        assertThat(category.getChannelId(), equalTo("channel_id"));
     }
 
     @Test

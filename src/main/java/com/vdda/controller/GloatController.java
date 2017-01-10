@@ -19,16 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class GloatController {
 
     @Autowired
-    private CommandsHandler commandsHandler;
+    private CommandsService commandsService;
 
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Response gloat(@RequestBody String parameters) {
 
-        log.debug("parameters = " + parameters);
-
-        Response response = new Response();
-        response.setText("tada");
-
-        return commandsHandler.run(parameters);
+        // TODO confirm token validity
+        return commandsService.run(parameters);
     }
 }

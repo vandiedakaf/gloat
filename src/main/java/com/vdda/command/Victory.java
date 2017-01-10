@@ -1,18 +1,15 @@
 package com.vdda.command;
 
-import com.github.seratch.jslack.api.model.User;
-import com.vdda.jpa.Category;
-import com.vdda.repository.CategoryRepository;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
-import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.Future;
 
 /**
  * Created by francois
@@ -23,15 +20,18 @@ import java.util.Optional;
 @Service
 public class Victory implements Command {
 
-    private final CategoryRepository categoryRepository;
+    private final VictoryService victoryService;
 
     @Autowired
-    public Victory(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public Victory(VictoryService victoryService) {
+        this.victoryService = victoryService;
     }
 
     @Override
-    public Response run(Map<String, String> parameters, List<String> args) {
+    public Response run(Map<String, String> parameters) {
+
+        String[] argsArray = parameters.get(SlackParameters.TEXT.toString()).split(" ");
+        List<String> args = Arrays.asList(argsArray).subList(1, argsArray.length);
 
         if (args.isEmpty()) {
             Response response = new Response();
@@ -39,28 +39,10 @@ public class Victory implements Command {
             return response;
         }
 
-        final String teamId = parameters.get(SlackParameters.TEAM_ID.toString());
-        SlackUtilities slackUtilities = new SlackUtilities(teamId);
-        Optional<User> user = slackUtilities.getUser(args.get(0));
-
-        if (!user.isPresent()) {
-            Response response = new Response();
-            response.setText("Sorry, seems like " + args.get(0) + " is some imaginary person.");
-            return response;
-        }
-
-        final String channelId = parameters.get(SlackParameters.CHANNEL_ID.toString());
-
-        Category category = categoryRepository.findByTeamIdAndChannelId(teamId, channelId);
-
-        if (category == null) {
-            category = new Category(teamId, channelId);
-            categoryRepository.save(category);
-        }
+        Future<?> futureProcessRequest = victoryService.processRequest(parameters, args);
 
         Response response = new Response();
-        response.setText("You beat " + user.get().getName() + ", now did you?");
-        // TODO add confirmation buttons
+        response.setText("We're processing your request...");
         return response;
     }
 

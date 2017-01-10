@@ -14,9 +14,9 @@ import java.util.Map;
 @Service
 public class Tender implements Command {
     @Override
-    public Response run(Map<String, String> parameters, List<String> args) {
+    public Response run(Map<String, String> parameters) {
         Response response = new Response();
-        response.setText("You wot w8?");
+        response.setText("COMING SOON.");
         return response;
     }
 
@@ -32,6 +32,6 @@ public class Tender implements Command {
 
     @Override
     public String getShortDescription() {
-        return "Request a challenger.";
+        return "Request a challenger. Coming soon.";
     }
 }

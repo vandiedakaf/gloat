@@ -4,9 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 
 /**
  * Created by francois on 2016-10-23 for
@@ -15,22 +14,19 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
-public class User {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class UserCategory {
+    @EmbeddedId
+    private UserCategoryPK userCategoryPK;
     @Column(nullable = false)
-    private String teamId;
-    @Column(nullable = false)
-    private String userId;
+    private Long elo;
 
-    protected User() {
+    protected UserCategory() {
         // no-args constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 
-    public User(String teamId, String userId) {
-        this.teamId = teamId;
-        this.userId = userId;
+    public UserCategory(UserCategoryPK userCategoryPK, Long elo) {
+        this.userCategoryPK = userCategoryPK;
+        this.elo = elo;
     }
 }

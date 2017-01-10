@@ -14,10 +14,10 @@ public class UserTest {
 
     @Test
     public void construct() {
-        User user = new User(1234l);
-        Long id = user.getId();
+        User user = new User("teamId", "userId");
 
-        assertThat(id, equalTo(1234l));
+        assertThat(user.getTeamId(), equalTo("teamId"));
+        assertThat(user.getUserId(), equalTo("userId"));
     }
 
     @Test

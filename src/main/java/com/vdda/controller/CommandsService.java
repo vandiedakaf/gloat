@@ -1,15 +1,16 @@
 package com.vdda.controller;
 
-import com.vdda.command.*;
+import com.vdda.command.Command;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.tool.Parameters;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Created by francois
@@ -17,40 +18,11 @@ import java.util.TreeMap;
  * for vandiedakaf solutions
  */
 @Service
-public class CommandsHandler {
+public class CommandsService implements ApplicationContextAware, InitializingBean {
 
-    private Defeat defeat;
-    private Gloat gloat;
-    private Top top;
-    private Tender tender;
-    private Victory victory;
     private Map<String, Command> commands;
     private int maxLen = 0;
-
-    @Autowired
-    CommandsHandler(Defeat defeat, Gloat gloat, Top top, Tender tender, Victory victory){
-        this.defeat = defeat;
-        this.gloat = gloat;
-        this.top = top;
-        this.tender = tender;
-        this.victory = victory;
-
-        commands = new TreeMap<>();
-        for (Command command : new Command[]{
-                this.defeat,
-                this.gloat,
-                this.top,
-                this.tender,
-                this.victory
-        }) {
-            Command prev = commands.put(command.getCommand(), command);
-            if (prev != null) {
-                throw new AssertionError(
-                        "Two commands with identical commands: " + command + ", " + prev);
-            }
-            maxLen = Math.max(command.getCommand().length(), maxLen);
-        }
-    }
+    private ApplicationContext applicationContext;
 
     Response run(String parametersString) {
 
@@ -63,7 +35,7 @@ public class CommandsHandler {
             if (args.length != 0) {
                 Command tool = commands.get(args[0]);
                 if (tool != null) {
-                    return tool.run(parametersMap, Arrays.asList(args).subList(1, args.length));
+                    return tool.run(parametersMap);
                 }
             }
         }
@@ -79,4 +51,14 @@ public class CommandsHandler {
         return response;
     }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        commands = applicationContext.getBeansOfType(Command.class);
+        commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
+    }
 }

@@ -1,12 +1,6 @@
 buildscript {
-    ext {
-        springBootVersion = '1.4.1.RELEASE'
-    }
     repositories {
         mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
@@ -15,15 +9,15 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'org.flywaydb.flyway' version '4.0.3'
-    id 'org.sonarqube' version "2.2"
+    id 'org.sonarqube' version '2.2'
+    id 'org.springframework.boot' version '1.4.3.RELEASE'
 }
-
-apply plugin: 'spring-boot'
 
 jar {
     baseName = 'gloat'
     version = '0.0.1-SNAPSHOT'
 }
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
@@ -32,17 +26,22 @@ repositories {
 }
 
 dependencies {
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-web")
+
+    // dependencies managed by spring boot parent
+    compile('mysql:mysql-connector-java')
+    compile('com.google.code.gson:gson')
+    compile('org.flywaydb:flyway-core')
+    compile('org.projectlombok:lombok')
+
+    // dependencies NOT managed by spring boot
     compile('ma.glasnost.orika:orika-core:1.4.6')
-    compile('mysql:mysql-connector-java:5.1.40')
-    compile("org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-data-rest:${springBootVersion}")
-    compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
-    compile('org.flywaydb:flyway-core:4.0.3')
-    compile('org.projectlombok:lombok:1.16.10')
     compile('com.github.seratch:jslack:1.0.5')
 
-    testCompile("org.springframework.boot:spring-boot-starter-test:${springBootVersion}")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile('org.meanbean:meanbean:2.0.3')
     testCompile('org.jmockit:jmockit:1.28')
 }
@@ -55,15 +54,18 @@ jacocoTestReport {
 }
 
 bootRun {
-//	locally run with script parameter: -Dspring.profiles.active=dev
+    // locally run with script parameter: -Dspring.profiles.active=dev
+    // http://stackoverflow.com/a/31328621/792287
     systemProperties System.properties
 }
 
-flyway {
-//	clean database with: gradlew flywayClean
-    url = 'jdbc:mysql://localhost/gloat'
-    user = 'root'
-}
+// possible that this section is no longer needed, leaving this here until after V5 has successfully been loaded onto heroku
+//flyway {
+////	clean database with: gradlew flywayClean
+//    url = 'jdbc:mysql://localhost/gloat'
+//    user = 'root'
+//}
 
-// check is run by travis
+// https://vorba.ch/2015/java-gradle-travis-jacoco-codecov.html
+// "Also the check task, which is run by Travis, needs to depend on jacocoTestReport"
 check.dependsOn jacocoTestReport
