@@ -18,7 +18,7 @@ cache:
   - "$HOME/.sonar"
 #before_script: mysql -uroot -e "DROP DATABASE gloat"
 script:
-  - "./gradlew build"
+  - "./gradlew build --info"
 deploy:
   provider: heroku
   api_key:
