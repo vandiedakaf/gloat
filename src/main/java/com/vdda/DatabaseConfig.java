@@ -21,7 +21,7 @@ public class DatabaseConfig {
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath();
+        String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath() + "?createDatabaseIfNotExist=true";
 
         MysqlDataSource basicDataSource = new MysqlDataSource();
         basicDataSource.setUrl(dbUrl);

@@ -9,7 +9,7 @@ logging:
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost/gloat
+    url: jdbc:mysql://localhost/gloat?createDatabaseIfNotExist=true
     username: root
     password:
     driver-class-name: com.mysql.jdbc.Driver
