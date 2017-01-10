@@ -16,7 +16,7 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.sonar"
-before_script: mysql -uroot -e "DROP DATABASE gloat"
+#before_script: mysql -uroot -e "DROP DATABASE gloat"
 script:
   - "./gradlew build"
 deploy:
