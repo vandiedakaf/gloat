@@ -60,11 +60,11 @@ bootRun {
 }
 
 // possible that this section is no longer needed, leaving this here until after V5 has successfully been loaded onto heroku
-//flyway {
-////	clean database with: gradlew flywayClean
-//    url = 'jdbc:mysql://localhost/gloat'
-//    user = 'root'
-//}
+flyway {
+//	clean database with: gradlew flywayClean
+    url = 'jdbc:mysql://localhost/gloat'
+    user = 'root'
+}
 
 // https://vorba.ch/2015/java-gradle-travis-jacoco-codecov.html
 // "Also the check task, which is run by Travis, needs to depend on jacocoTestReport"
