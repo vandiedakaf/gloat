@@ -59,12 +59,6 @@ bootRun {
     systemProperties System.properties
 }
 
-//flyway {
-////	clean database with: gradlew flywayClean
-//    url = 'jdbc:mysql://localhost/gloat'
-//    user = 'root'
-//}
-
 // https://vorba.ch/2015/java-gradle-travis-jacoco-codecov.html
 // "Also the check task, which is run by Travis, needs to depend on jacocoTestReport"
 check.dependsOn jacocoTestReport

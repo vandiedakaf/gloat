@@ -10,6 +10,12 @@ mysql -uroot -e "CREATE DATABASE gloat"
 #Run
 gradle bootRun -Dspring.profiles.active=dev
 
+# Travis
+Required Environment Variables:
+* SPRING_PROFILES_ACTIVE: travis
+* SONAR_TOKEN: *****
+* SLACK_TOKEN: *****
+
 # ngrok
 ngrok http 8080
 
