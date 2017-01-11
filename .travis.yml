@@ -1,5 +1,4 @@
 language: java
-#services: mysql
 dist: trusty
 sudo: required
 addons:
@@ -23,9 +22,8 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.sonar"
-#before_script: mysql -uroot -e "DROP DATABASE gloat"
 script:
-  - "./gradlew build --info"
+  - "./gradlew build"
 deploy:
   provider: heroku
   api_key:

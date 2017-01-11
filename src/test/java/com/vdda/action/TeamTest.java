@@ -1,6 +1,5 @@
 package com.vdda.action;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
@@ -9,7 +8,6 @@ import org.meanbean.test.BeanTester;
  * on 2017-01-03
  * for vandiedakaf solutions
  */
-@Ignore
 public class TeamTest {
     @Test
     public void meanBean() throws Exception {

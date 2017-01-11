@@ -1,6 +1,5 @@
 package com.vdda.slack;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
@@ -9,7 +8,6 @@ import org.meanbean.test.BeanTester;
  * on 2016-12-29
  * for vandiedakaf solutions
  */
-@Ignore
 public class ActionTest {
 
     @Test
