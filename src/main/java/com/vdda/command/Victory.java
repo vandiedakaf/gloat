@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 /**
  * Created by francois
@@ -39,7 +38,8 @@ public class Victory implements Command {
             return response;
         }
 
-        Future<?> futureProcessRequest = victoryService.processRequest(parameters, args);
+        // The below is a Future
+        victoryService.processRequest(parameters, args);
 
         Response response = new Response();
         response.setText("We're processing your request...");

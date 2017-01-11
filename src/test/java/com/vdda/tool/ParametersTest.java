@@ -1,8 +1,18 @@
 package com.vdda.tool;
 
+import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.Mocked;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URLDecoder;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -13,6 +23,8 @@ import static org.junit.Assert.*;
  * for vandiedakaf solutions
  */
 public class ParametersTest {
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private String parameters;
 
@@ -63,5 +75,28 @@ public class ParametersTest {
         Map<String, String> parameterMap = Parameters.parse("nada1&nada2");
 
         assertTrue(parameterMap.size() == 0);
+    }
+
+    @Test
+    public void contstructorException() throws Exception {
+
+        thrown.expect(InvocationTargetException.class);
+
+        Constructor<Parameters> c = Parameters.class.getDeclaredConstructor();
+        c.setAccessible(true);
+        Parameters u = c.newInstance();
+    }
+
+    @Test
+    public void unsupportedEncodingException(@Mocked URLDecoder urlDecoder) throws Exception {
+
+        thrown.expect(RuntimeException.class);
+
+        new Expectations() {{
+            urlDecoder.decode(anyString, anyString);
+            result = new UnsupportedEncodingException("Testing an exception condition.");
+        }};
+
+        Map<String, String> parameterMap = Parameters.parse(parameters);
     }
 }

@@ -37,7 +37,7 @@ public class VictoryService {
     }
 
     @Async
-    public Future<?> processRequest(Map<String, String> parameters, List<String> args) {
+    Future<?> processRequest(Map<String, String> parameters, List<String> args) {
 
         final String teamId = parameters.get(SlackParameters.TEAM_ID.toString());
 
@@ -47,20 +47,20 @@ public class VictoryService {
             log.debug("User not found");
             Response response = new Response();
             response.setText("Sorry, seems like " + args.get(0) + " is some imaginary person.");
-            SendResponse(parameters.get("response_url"), response);
+            sendResponse(parameters.get("response_url"), response);
             return new AsyncResult<>(null);
         }
 
         // TODO don't allow @slackbot or self as a user
 
-        Response response = confirmationButton(user);
+        Response response = confirmationButton(user.get());
 
-        SendResponse(parameters.get("response_url"), response);
+        sendResponse(parameters.get("response_url"), response);
 
         return new AsyncResult<>(null);
     }
 
-    private Response confirmationButton(Optional<User> user) {
+    private Response confirmationButton(User user) {
         Response response = new Response();
         List<Attachment> attachments = new ArrayList<>();
         Attachment attachment = new Attachment();
@@ -79,9 +79,9 @@ public class VictoryService {
         actions.add(actionNo);
         attachment.setFallback("Victory Confirmation");
         attachment.setTitle("Victory Confirmation");
-        attachment.setText("Did you defeat <@" + user.get().getId() + ">?");
+        attachment.setText("Did you defeat <@" + user.getId() + ">?");
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(VICTORY_CONFIRM.toString(), user.get().getId()));
+        attachment.setCallback_id(callbackBuilder(VICTORY_CONFIRM.toString(), user.getId()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);
@@ -93,7 +93,7 @@ public class VictoryService {
     }
 
 
-    private void SendResponse(String responseUrl, Response response) {
+    private void sendResponse(String responseUrl, Response response) {
         restTemplate.postForLocation(responseUrl, response);
     }
 }

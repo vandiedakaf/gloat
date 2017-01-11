@@ -42,7 +42,7 @@ public class VictoryConfirm implements Callback {
         String actionName = callbackRequest.getActions().get(0).getName();
         String loserId = callbackRequest.getCallbackId().split("\\|")[1];
 
-        if (actionName.equals("no")) {
+        if ("no".equals(actionName)) {
             Response response = new Response();
             List<Attachment> attachments = new ArrayList<>();
             Attachment attachment = new Attachment();

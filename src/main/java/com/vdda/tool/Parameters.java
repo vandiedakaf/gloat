@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class Parameters {
 
     private Parameters() {
+        throw new UnsupportedOperationException();
     }
 
     /**
