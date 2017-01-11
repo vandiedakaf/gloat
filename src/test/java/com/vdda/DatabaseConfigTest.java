@@ -34,7 +34,7 @@ public class DatabaseConfigTest {
         databaseConfig.dataSource();
 
         new Verifications() {{
-            basicDataSource.setUrl("jdbc:mysql://localhost/database");
+            basicDataSource.setUrl("jdbc:mysql://localhost/database?createDatabaseIfNotExist=true");
             basicDataSource.setUser("user");
             basicDataSource.setPassword("password");
         }};

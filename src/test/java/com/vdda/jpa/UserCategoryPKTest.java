@@ -1,5 +1,6 @@
 package com.vdda.jpa;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
@@ -11,8 +12,8 @@ import static org.junit.Assert.assertThat;
  * on 2017-01-10
  * for vandiedakaf solutions
  */
+@Ignore
 public class UserCategoryPKTest {
-
     @Test
     public void construct() throws Exception {
         UserCategoryPK userCategoryPK = new UserCategoryPK(1L, 2L);
