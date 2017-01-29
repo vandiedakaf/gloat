@@ -129,7 +129,7 @@ public class TopServiceTest {
     public void noUsers() throws Exception {
         new Expectations() {{
             userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong);
-            result = null;
+            result = new ArrayList<>();
         }};
 
         topService.processRequest(parameters);
