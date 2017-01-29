@@ -36,6 +36,6 @@ public class UserCategory {
         this.elo = elo;
         this.contestTotal = 0;
         this.contestWins = 0;
-        this.k = 0;
+        this.k = 32;
     }
 }

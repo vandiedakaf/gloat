@@ -115,7 +115,6 @@ public class EloServiceTest {
         User user = new User("teamId", "userId");
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
         UserCategory userCategory = new UserCategory(userCategoryPK, 1500);
-        userCategory.setK(32);
 
         return userCategory;
     }

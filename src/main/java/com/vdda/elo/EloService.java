@@ -77,6 +77,7 @@ public class EloService {
 
         winnerCategory.setElo((int) Math.round(ratings.getPlayerRating()));
         winnerCategory.setContestTotal(winnerCategory.getContestTotal() + 1); // race condition
+        winnerCategory.setContestWins(winnerCategory.getContestWins() + 1);
         userCategoryRepository.save(winnerCategory);
 
         loserCategory.setElo((int) Math.round(ratings.getOpponentRating()));

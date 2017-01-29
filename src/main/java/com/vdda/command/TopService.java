@@ -68,7 +68,7 @@ public class TopService {
 
         List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId());
 
-        if (userCategories == null) {
+        if (userCategories.isEmpty()) {
             Response response = new Response();
             response.setText("No contests have been registered in this category.");
             return response;
@@ -88,7 +88,7 @@ public class TopService {
         Attachment attachment = new Attachment();
 
         attachment.setFallback("Top Contestants");
-        attachment.setTitle("Top Contestants (Rank, Name & Wins-Losses)");
+        attachment.setTitle("Top Contestants - (Rank) Name [Wins-Losses]");
         attachment.setText(stringBuilder.toString());
         attachment.setColor("#86C53C");
         attachments.add(attachment);
