@@ -1,6 +1,7 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -12,10 +13,20 @@ import java.util.Map;
  */
 @Service
 public class Top implements Command {
+    private final TopService topService;
+
+    @Autowired
+    public Top(TopService topService) {
+        this.topService = topService;
+    }
+
     @Override
     public Response run(Map<String, String> parameters) {
+
+        topService.processRequest(parameters);
+
         Response response = new Response();
-        response.setText("COMING SOON.");
+        response.setText("We're processing your request...");
         return response;
     }
 
@@ -31,6 +42,6 @@ public class Top implements Command {
 
     @Override
     public String getShortDescription() {
-        return "Lists the top ranking players (also known as the winners). Coming soon.";
+        return "Lists the top ranking players (also known as the winners).";
     }
 }

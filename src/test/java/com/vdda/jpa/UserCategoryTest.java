@@ -14,12 +14,15 @@ import static org.junit.Assert.assertThat;
 public class UserCategoryTest {
     @Test
     public void construct() throws Exception {
-        UserCategoryPK userCategoryPK = new UserCategoryPK(1L, 2L);
-        UserCategory userCategory = new UserCategory(userCategoryPK, 1500L);
+        User user = new User();
+        user.setId(1L);
+
+        UserCategoryPK userCategoryPK = new UserCategoryPK(user, 2L);
+        UserCategory userCategory = new UserCategory(userCategoryPK, 1500);
 
         assertThat(userCategory.getUserCategoryPK(), equalTo(userCategoryPK));
 
-        assertThat(userCategory.getElo(), equalTo(1500L));
+        assertThat(userCategory.getElo(), equalTo(1500));
     }
 
     @Test

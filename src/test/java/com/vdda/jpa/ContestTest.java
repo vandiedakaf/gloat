@@ -14,11 +14,15 @@ import static org.junit.Assert.assertThat;
 public class ContestTest {
     @Test
     public void construct() throws Exception {
-        Contest contest = new Contest(1L, 2L, 3L);
+        Category category = new Category("teamId", "channelId");
+        User winner = new User("teamId", "winnerId");
+        User loser = new User("teamId", "loserId");
 
-        assertThat(contest.getCategoryId(), equalTo(1L));
-        assertThat(contest.getWinnerId(), equalTo(2L));
-        assertThat(contest.getLoserId(), equalTo(3L));
+        Contest contest = new Contest(category, winner, loser);
+
+        assertThat(contest.getCategory().getChannelId(), equalTo("channelId"));
+        assertThat(contest.getWinner().getUserId(), equalTo("winnerId"));
+        assertThat(contest.getLoser().getUserId(), equalTo("loserId"));
     }
 
     @Test

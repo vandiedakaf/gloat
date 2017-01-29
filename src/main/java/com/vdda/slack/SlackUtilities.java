@@ -2,7 +2,9 @@ package com.vdda.slack;
 
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.methods.SlackApiException;
+import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
 import com.github.seratch.jslack.api.methods.request.users.UsersListRequest;
+import com.github.seratch.jslack.api.methods.response.chat.ChatPostMessageResponse;
 import com.github.seratch.jslack.api.methods.response.users.UsersListResponse;
 import com.github.seratch.jslack.api.model.User;
 import com.vdda.jpa.Oauth;
@@ -35,8 +37,6 @@ public class SlackUtilities {
 
     private UsersListResponse usersList() {
 
-        // TODO check if initialised
-
         UsersListResponse usersListResponse = new UsersListResponse();
 
         try {
@@ -57,14 +57,11 @@ public class SlackUtilities {
     }
 
     public Optional<User> getUser(String teamId, String userName) {
-        log.debug("SlackUtilities.getUser");
 
-        Oauth oauth = oauthRepository.findOne(teamId);
-        if (oauth == null) {
-            log.warn("Oauth token not found");
+        token = getAccessToken(teamId);
+        if (token == null) {
             return Optional.empty();
         }
-        this.token = oauth.getAccessToken();
 
         // remove '@'
         String userNameSanitised = userName.replaceAll("@", "");
@@ -78,6 +75,43 @@ public class SlackUtilities {
         }
 
         return users.stream().filter(u -> u.getName().equals(userNameSanitised)).findFirst();
+    }
+
+    private String getAccessToken(String teamId){
+        Oauth oauth = oauthRepository.findOne(teamId);
+        if (oauth == null) {
+            log.warn("Oauth token not found");
+            return null;
+        }
+        return oauth.getAccessToken();
+    }
+
+    public boolean sendChatMessage(String teamId, String channelId, String message) {
+
+        token = getAccessToken(teamId);
+        if (token == null) {
+            return false;
+        }
+
+        ChatPostMessageResponse chatPostMessageResponse;
+        try {
+            chatPostMessageResponse = slack.methods().chatPostMessage(
+                    ChatPostMessageRequest.builder()
+                            .token(token)
+                            .channel(channelId)
+                            .text(message)
+                            .build());
+        } catch (IOException | SlackApiException e) {
+            log.debug("ChatPostMessageRequest", e);
+            return false;
+        }
+
+        if (!chatPostMessageResponse.isOk()) {
+            log.error("Could not send ChatPostMessageRequest: {}", chatPostMessageResponse.toString());
+            return false;
+        }
+
+        return true;
     }
 
 }

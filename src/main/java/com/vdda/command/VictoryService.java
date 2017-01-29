@@ -47,7 +47,7 @@ public class VictoryService {
             log.debug("User not found");
             Response response = new Response();
             response.setText("Sorry, seems like " + args.get(0) + " is some imaginary person.");
-            sendResponse(parameters.get("response_url"), response);
+            sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return new AsyncResult<>(null);
         }
 
@@ -55,7 +55,7 @@ public class VictoryService {
 
         Response response = confirmationButton(user.get());
 
-        sendResponse(parameters.get("response_url"), response);
+        sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
 
         return new AsyncResult<>(null);
     }
@@ -79,7 +79,7 @@ public class VictoryService {
         actions.add(actionNo);
         attachment.setFallback("Victory Confirmation");
         attachment.setTitle("Victory Confirmation");
-        attachment.setText("Did you defeat <@" + user.getId() + ">?");
+        attachment.setText("Confirm that you beat <@" + user.getId() + ">.");
         attachment.setColor("#86C53C");
         attachment.setCallback_id(callbackBuilder(VICTORY_CONFIRM.toString(), user.getId()));
         attachment.setActions(actions);

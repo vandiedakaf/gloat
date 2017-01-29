@@ -1,6 +1,7 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
+import com.vdda.slack.SlackParameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,37 +34,23 @@ public class VictoryTest {
     public void missingArgs() throws Exception {
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("channel_id", "channelId");
-        parameters.put("team_id", "teamId");
-        parameters.put("text", "victory");
+        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
+        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
+        parameters.put(SlackParameters.TEXT.toString(), "victory");
         Response response = victory.run(parameters);
 
         assertThat(response.getText(), containsString("Usage: `victory @user`"));
     }
 
     @Test
-    public void slackbot() throws Exception {
+    public void victoryGolden() throws Exception {
 
         Map<String, String> parameters = new HashMap<>();
-        parameters.put("channel_id", "channelId");
-        parameters.put("team_id", "teamId");
-        parameters.put("text", "victory @slackbot");
+        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
+        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
+        parameters.put(SlackParameters.TEXT.toString(), "victory user");
 
         Response response = victory.run(parameters);
         assertThat(response.getText(), containsString("We're processing your request..."));
-    }
-
-    @Test
-    public void nobot() throws Exception {
-
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("channel_id", "channelId");
-        parameters.put("team_id", "teamId");
-        parameters.put("text", "victory this_user_should_not_exist");
-        Response response = victory.run(parameters);
-
-        assertThat(response.getText(), containsString("We're processing your request..."));
-        // TODO verification
-
     }
 }

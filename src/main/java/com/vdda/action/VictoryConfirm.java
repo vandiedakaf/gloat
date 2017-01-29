@@ -1,13 +1,15 @@
 package com.vdda.action;
 
-import com.vdda.jpa.*;
+import com.vdda.elo.EloService;
+import com.vdda.jpa.Category;
+import com.vdda.jpa.Contest;
 import com.vdda.jpa.User;
 import com.vdda.repository.CategoryRepository;
 import com.vdda.repository.ContestRepository;
-import com.vdda.repository.UserCategoryRepository;
 import com.vdda.repository.UserRepository;
 import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,20 +22,20 @@ import java.util.List;
  * for vandiedakaf solutions
  */
 @Service
+@Slf4j
 public class VictoryConfirm implements Callback {
 
     private final CategoryRepository categoryRepository;
-    private final UserCategoryRepository userCategoryRepository;
     private final UserRepository userRepository;
     private final ContestRepository contestRepository;
-    private static final Long ELO_INIT = 1500L;
+    private final EloService eloService;
 
     @Autowired
-    public VictoryConfirm(CategoryRepository categoryRepository, UserCategoryRepository userCategoryRepository, UserRepository userRepository, ContestRepository contestRepository) {
+    public VictoryConfirm(CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, EloService eloService) {
         this.categoryRepository = categoryRepository;
-        this.userCategoryRepository = userCategoryRepository;
         this.userRepository = userRepository;
         this.contestRepository = contestRepository;
+        this.eloService = eloService;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class VictoryConfirm implements Callback {
             List<Attachment> attachments = new ArrayList<>();
             Attachment attachment = new Attachment();
             attachment.setTitle("Victory Confirmation");
-            attachment.setText("Did you defeat <@" + loserId + ">?\nYou've opted not to confirm this victory.");
+            attachment.setText("Confirm that you beat <@" + loserId + ">.\nYou've opted not to confirm this victory.");
             attachment.setColor("#86C53C");
             attachments.add(attachment);
             response.setAttachments(attachments);
@@ -63,11 +65,13 @@ public class VictoryConfirm implements Callback {
             categoryRepository.save(category);
         }
 
-        User userWinner = getUser(winnerId, teamId, category.getId());
-        User userLoser = getUser(loserId, teamId, category.getId());
+        User winner = getUser(winnerId, teamId);
+        User loser = getUser(loserId, teamId);
 
-        Contest contest = new Contest(category.getId(), userWinner.getId(), userLoser.getId());
+        Contest contest = new Contest(category, winner, loser);
         contestRepository.save(contest);
+
+        eloService.processContests();
 
         // TODO post dispute message to loser
 
@@ -75,20 +79,18 @@ public class VictoryConfirm implements Callback {
         List<Attachment> attachments = new ArrayList<>();
         Attachment attachment = new Attachment();
         attachment.setTitle("Victory Confirmation");
-        attachment.setText("Did you defeat <@" + loserId + ">?\nCongratulations on your victory!\n<@" + loserId + "> has 8 hours to dispute your claim.");
+        attachment.setText("Confirm that you beat <@" + loserId + ">.\nCongratulations on your victory!\n<@" + loserId + "> has 8 hours to dispute your claim.");
         attachment.setColor("#86C53C");
         attachments.add(attachment);
         response.setAttachments(attachments);
         return response;
     }
 
-    private User getUser(String userId, String teamId, Long categoryId) {
+    private User getUser(String userId, String teamId) {
         User user = userRepository.findByTeamIdAndUserId(teamId, userId);
         if (user == null) {
             user = new User(teamId, userId);
             userRepository.save(user);
-            UserCategory userCategory = new UserCategory(new UserCategoryPK(user.getId(), categoryId), ELO_INIT);
-            userCategoryRepository.save(userCategory);
         }
         return user;
     }

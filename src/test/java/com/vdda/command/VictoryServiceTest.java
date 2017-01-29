@@ -28,6 +28,7 @@ public class VictoryServiceTest {
     private static final String USER_NAME = "@userName";
     private static final String TEAM_ID = "teamId";
     private static final String RESPONSE_URL = "responseUrl";
+    private static final String TEST_USER_ID = "testUserId";
 
     @Tested
     private VictoryService victoryService;
@@ -48,7 +49,7 @@ public class VictoryServiceTest {
 
         parameters = new HashMap<>();
         parameters.put(SlackParameters.TEAM_ID.toString(), TEAM_ID);
-        parameters.put("response_url", RESPONSE_URL);
+        parameters.put(SlackParameters.RESPONSE_URL.toString(), RESPONSE_URL);
 
         args = new ArrayList<>();
         args.add(USER_NAME);
@@ -65,7 +66,9 @@ public class VictoryServiceTest {
         victoryService.processRequest(parameters, args);
 
         new Verifications() {{
-            restTemplate.postForLocation(RESPONSE_URL, any);
+            Response response;
+            restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID));
         }};
     }
 
@@ -85,6 +88,7 @@ public class VictoryServiceTest {
 
     private Optional<User> mockUser() {
         User user = new User();
+        user.setId(TEST_USER_ID);
         return Optional.of(user);
     }
 }

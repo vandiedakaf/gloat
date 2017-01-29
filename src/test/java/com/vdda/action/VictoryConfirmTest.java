@@ -1,5 +1,6 @@
 package com.vdda.action;
 
+import com.vdda.elo.EloService;
 import com.vdda.jpa.Category;
 import com.vdda.jpa.Contest;
 import com.vdda.jpa.UserCategory;
@@ -8,6 +9,7 @@ import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
 import com.vdda.repository.UserRepository;
 import com.vdda.slack.Response;
+import com.vdda.slack.SlackUtilities;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Tested;
@@ -43,11 +45,11 @@ public class VictoryConfirmTest {
     @Mocked
     private ContestRepository contestRepository;
     @Mocked
-    private UserCategoryRepository userCategoryRepository;
+    private EloService eloService;
 
     @Before
     public void setUp() throws Exception {
-        victoryConfirm = new VictoryConfirm(categoryRepository, userCategoryRepository, userRepository, contestRepository);
+        victoryConfirm = new VictoryConfirm(categoryRepository, userRepository, contestRepository, eloService);
     }
 
     @Test
@@ -184,7 +186,6 @@ public class VictoryConfirmTest {
 
         new Verifications() {{
             contestRepository.save((Contest) withNotNull());
-            userCategoryRepository.save((UserCategory) withNotNull());
             userRepository.save((com.vdda.jpa.User) withNotNull());
         }};
     }

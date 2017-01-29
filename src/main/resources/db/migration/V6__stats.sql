@@ -1,0 +1,4 @@
+ALTER TABLE contest ADD processed TINYINT DEFAULT 0 NOT NULL;
+ALTER TABLE user_category ADD contest_total INT DEFAULT 0 NOT NULL;
+ALTER TABLE user_category ADD contest_wins INT DEFAULT 0 NOT NULL;
+ALTER TABLE user_category ADD k INT DEFAULT 32 NOT NULL;

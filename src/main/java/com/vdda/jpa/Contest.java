@@ -2,6 +2,7 @@ package com.vdda.jpa;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,12 +18,17 @@ public class Contest {
     @Id
     @GeneratedValue
     private Long id;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "winner_id")
+    private User winner;
+    @ManyToOne
+    @JoinColumn(name = "loser_id")
+    private User loser;
     @Column(nullable = false)
-    private Long categoryId;
-    @Column(nullable = false)
-    private Long winnerId;
-    @Column(nullable = false)
-    private Long loserId;
+    private Boolean processed;
     @Basic(optional = false)
     @Column(insertable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,10 +39,11 @@ public class Contest {
         // this one is protected since it shouldn't be used directly
     }
 
-    public Contest(Long categoryId, Long winnerId, Long loserId) {
-        this.categoryId = categoryId;
-        this.winnerId = winnerId;
-        this.loserId = loserId;
+    public Contest(Category category, User winner, User loser) {
+        this.category = category;
+        this.winner = winner;
+        this.loser = loser;
+        this.processed = false;
     }
 }
 

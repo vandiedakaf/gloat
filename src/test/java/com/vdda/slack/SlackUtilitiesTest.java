@@ -1,6 +1,9 @@
 package com.vdda.slack;
 
 import com.github.seratch.jslack.Slack;
+import com.github.seratch.jslack.api.methods.request.chat.ChatPostMessageRequest;
+import com.github.seratch.jslack.api.methods.request.users.UsersListRequest;
+import com.github.seratch.jslack.api.methods.response.chat.ChatPostMessageResponse;
 import com.github.seratch.jslack.api.methods.response.users.UsersListResponse;
 import com.github.seratch.jslack.api.model.User;
 import com.vdda.jpa.Oauth;
@@ -27,6 +30,7 @@ import static org.junit.Assert.assertThat;
 public class SlackUtilitiesTest {
 
     private static final String TEAM_ID = "teamId";
+    private static final String CHANNEL_ID = "channelId";
     private static final String USER_ID = "123";
     private static final String USER_NAME_AT = "@userName";
     private static final String USER_NAME = "userName";
@@ -84,7 +88,10 @@ public class SlackUtilitiesTest {
     public void tokenInvalid(@Mocked Slack slack) throws Exception {
 
         new Expectations() {{
-            slack.methods();
+            oauthRepository.findOne(TEAM_ID);
+            result = new Oauth(TEAM_ID, "accessToken");
+
+            slack.methods().usersList((UsersListRequest) any);
             result = new IOException("test exception");
         }};
 
@@ -107,13 +114,80 @@ public class SlackUtilitiesTest {
         assertThat(user.isPresent(), is(false));
     }
 
-    protected void expectationGolden() throws Exception {
+    @Test
+    public void sendChatMessageGolden() throws Exception {
+
+        new Expectations() {{
+            oauthRepository.findOne(TEAM_ID);
+            result = new Oauth(TEAM_ID, "accessToken");
+
+            slack.methods().chatPostMessage(withNotNull());
+            result = mockChatPostMessageResponse();
+        }};
+
+        boolean messageSent = slackUtilities.sendChatMessage(TEAM_ID, CHANNEL_ID, "message");
+        assertThat(messageSent, is(true));
+    }
+
+    @Test
+    public void sendChatMessageNoToken() throws Exception {
+
+        new Expectations() {{
+            oauthRepository.findOne(TEAM_ID);
+            result = null;
+        }};
+
+        boolean messageSent = slackUtilities.sendChatMessage(TEAM_ID, CHANNEL_ID, "message");
+        assertThat(messageSent, is(false));
+    }
+
+    @Test
+    public void sendChatMessageException() throws Exception {
+
+        new Expectations() {{
+            oauthRepository.findOne(TEAM_ID);
+            result = new Oauth(TEAM_ID, "accessToken");
+
+            slack.methods().chatPostMessage((ChatPostMessageRequest) any);
+            result = new IOException("test exception");
+        }};
+
+        boolean messageSent = slackUtilities.sendChatMessage(TEAM_ID, CHANNEL_ID, "message");
+        assertThat(messageSent, is(false));
+    }
+
+    @Test
+    public void sendChatMessageRequestFail() throws Exception {
+
+        new Expectations() {{
+            oauthRepository.findOne(TEAM_ID);
+            result = new Oauth(TEAM_ID, "accessToken");
+
+            slack.methods().chatPostMessage(withNotNull());
+            result = mockChatPostMessageResponseFail();
+        }};
+
+        boolean messageSent = slackUtilities.sendChatMessage(TEAM_ID, CHANNEL_ID, "message");
+        assertThat(messageSent, is(false));
+    }
+
+    private void expectationGolden() throws Exception {
         new Expectations() {{
             oauthRepository.findOne(TEAM_ID);
             result = new Oauth(TEAM_ID, "accessToken");
 
             slack.methods().usersList(withNotNull());
             result = mockUsersListResponse();
+        }};
+    }
+
+    private void expectationException() throws Exception {
+        new Expectations() {{
+            oauthRepository.findOne(TEAM_ID);
+            result = new Oauth(TEAM_ID, "accessToken");
+
+            slack.methods();
+            result = new IOException("test exception");
         }};
     }
 
@@ -133,6 +207,18 @@ public class SlackUtilitiesTest {
         UsersListResponse usersListResponse = new UsersListResponse();
         usersListResponse.setOk(false);
         return usersListResponse;
+    }
+
+    private ChatPostMessageResponse mockChatPostMessageResponse() {
+        ChatPostMessageResponse chatPostMessageResponse = new ChatPostMessageResponse();
+        chatPostMessageResponse.setOk(true);
+        return chatPostMessageResponse;
+    }
+
+    private ChatPostMessageResponse mockChatPostMessageResponseFail() {
+        ChatPostMessageResponse chatPostMessageResponse = new ChatPostMessageResponse();
+        chatPostMessageResponse.setOk(false);
+        return chatPostMessageResponse;
     }
 
 }

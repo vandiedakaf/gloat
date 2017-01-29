@@ -54,11 +54,6 @@ public class CallbacksController {
             throw new IllegalArgumentException("Could not parse Payload");
         }
 
-        if (callbackRequests.length == 0) {
-            log.warn("No Callback Request");
-            throw new IllegalArgumentException("No Callback Request");
-        }
-
         return callbacksService.run(callbackRequests[0]);
     }
 }

@@ -4,9 +4,6 @@
 
 Time to gloat!
 
-#Setup
-mysql -uroot -e "CREATE DATABASE gloat"
-
 #Run
 gradle bootRun -Dspring.profiles.active=dev
 
@@ -22,4 +19,4 @@ ngrok http 8080
 # oauth
 https://slack.com/oauth/authorize?client_id=70045358465.121259295136&scope=identity.basic
 
-https://slack.com/oauth/authorize?client_id=70045358465.121259295136&scope=commands,users:read
+https://slack.com/oauth/authorize?client_id=70045358465.121259295136&scope=commands,users:read,chat:write:bot

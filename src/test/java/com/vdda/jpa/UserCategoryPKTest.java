@@ -14,9 +14,11 @@ import static org.junit.Assert.assertThat;
 public class UserCategoryPKTest {
     @Test
     public void construct() throws Exception {
-        UserCategoryPK userCategoryPK = new UserCategoryPK(1L, 2L);
+        User user = new User();
+        user.setId(1L);
+        UserCategoryPK userCategoryPK = new UserCategoryPK(user, 2L);
 
-        assertThat(userCategoryPK.getUserId(), equalTo(1L));
+        assertThat(userCategoryPK.getUser().getId(), equalTo(1L));
         assertThat(userCategoryPK.getCategoryId(), equalTo(2L));
     }
 
