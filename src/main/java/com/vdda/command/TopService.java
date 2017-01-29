@@ -33,7 +33,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class TopService {
 
-    private final static int TOP_COUNT = 3;
+    private static final int TOP_COUNT = 3;
 
     private final RestTemplate restTemplate;
     private final UserCategoryRepository userCategoryRepository;

@@ -3,8 +3,11 @@ package com.vdda.jpa;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * Created by francois on 2016-10-23 for
@@ -13,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
