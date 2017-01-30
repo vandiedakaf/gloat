@@ -87,8 +87,9 @@ public class TopService {
         List<Attachment> attachments = new ArrayList<>();
         Attachment attachment = new Attachment();
 
+        response.setText("Top Contestants");
         attachment.setFallback("Top Contestants");
-        attachment.setTitle("Top Contestants - (Rank) Name [Wins-Losses]");
+        attachment.setTitle("Rank. (Rating) Name [Wins-Losses]");
         attachment.setText(stringBuilder.toString());
         attachment.setColor("#86C53C");
         attachments.add(attachment);

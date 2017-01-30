@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.vdda.action.CallbackRequest;
 import com.vdda.slack.Response;
 import mockit.Expectations;
+import mockit.Mock;
+import mockit.MockUp;
 import mockit.Mocked;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,6 +75,13 @@ public class CallbacksControllerTest {
     @Test
     public void postGolden() throws Exception {
 
+        new MockUp<System>() {
+            @Mock
+            public String getenv(final String string) {
+                return "SLACK_TOKEN";
+            }
+        };
+
         new Expectations() {{
             callbacksService.run(withNotNull());
             result = new Response();
@@ -80,10 +89,29 @@ public class CallbacksControllerTest {
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/callbacks")
-                .content("payload={\"callback_id\":\"victory_confirm|userId\"}")
+                .content("payload={\"callback_id\":\"victory_confirm|userId\",\"token\":\"SLACK_TOKEN\"}")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void postWrongToken() throws Exception {
+
+        new MockUp<System>() {
+            @Mock
+            public String getenv(final String string) {
+                return "SLACK_TOKEN";
+            }
+        };
+
+        mvc.perform(MockMvcRequestBuilders
+                .post("/callbacks")
+                .content("payload={\"callback_id\":\"victory_confirm|userId\",\"token\":\"WRONG_TOKEN\"}")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is4xxClientError());
 
     }
 }

@@ -73,13 +73,11 @@ public class VictoryConfirm implements Callback {
 
         eloService.processContests();
 
-        // TODO post dispute message to loser
-
         Response response = new Response();
         List<Attachment> attachments = new ArrayList<>();
         Attachment attachment = new Attachment();
         attachment.setTitle("Victory Confirmation");
-        attachment.setText("Confirm that you beat <@" + loserId + ">.\nCongratulations on your victory!\n<@" + loserId + "> has 8 hours to dispute your claim.");
+        attachment.setText("Confirm that you beat <@" + loserId + ">.\nCongratulations on your victory!");
         attachment.setColor("#86C53C");
         attachments.add(attachment);
         response.setAttachments(attachments);

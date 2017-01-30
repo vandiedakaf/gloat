@@ -9,13 +9,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by francois
@@ -52,5 +50,20 @@ public class VictoryTest {
 
         Response response = victory.run(parameters);
         assertThat(response.getText(), containsString("We're processing your request..."));
+    }
+
+    @Test
+    public void getCommand() throws Exception {
+        assertThat(victory.getCommand(), is(notNullValue()));
+    }
+
+    @Test
+    public void getUsage() throws Exception {
+        assertThat(victory.getUsage(), is(notNullValue()));
+    }
+
+    @Test
+    public void getShortDescription() throws Exception {
+        assertThat(victory.getShortDescription(), is(notNullValue()));
     }
 }

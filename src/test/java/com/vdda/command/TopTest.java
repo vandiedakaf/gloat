@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -40,5 +40,20 @@ public class TopTest {
 
         assertThat(response.getText(), containsString("We're processing your request..."));
 
+    }
+
+    @Test
+    public void getCommand() throws Exception {
+        assertThat(top.getCommand(), is(notNullValue()));
+    }
+
+    @Test
+    public void getUsage() throws Exception {
+        assertThat(top.getUsage(), is(notNullValue()));
+    }
+
+    @Test
+    public void getShortDescription() throws Exception {
+        assertThat(top.getShortDescription(), is(notNullValue()));
     }
 }

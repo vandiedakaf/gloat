@@ -2,6 +2,8 @@ package com.vdda.command;
 
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,14 @@ import java.util.Map;
  */
 @Slf4j
 @Service
+@Getter
 public class Victory implements Command {
 
+    private final String command = "victory";
+    private final String usage = "victory @user";
+    private final String shortDescription = "Gloat about your well-deserved victory.";
+
+    @Getter(AccessLevel.NONE)
     private final VictoryService victoryService;
 
     @Autowired
@@ -44,20 +52,5 @@ public class Victory implements Command {
         Response response = new Response();
         response.setText("We're processing your request...");
         return response;
-    }
-
-    @Override
-    public String getCommand() {
-        return "victory";
-    }
-
-    @Override
-    public String getUsage() {
-        return "victory @user";
-    }
-
-    @Override
-    public String getShortDescription() {
-        return "Gloat about your well-deserved victory.";
     }
 }

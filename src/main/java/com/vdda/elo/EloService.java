@@ -37,7 +37,7 @@ public class EloService {
     }
 
     /**
-     * At the moment we're just processing any and all contests. TODO: This can be limited to specific categories.
+     * Processing any and all contests. TODO: This can be limited to specific categories.
      */
     @Async
     public Future<?> processContests() {
@@ -78,10 +78,12 @@ public class EloService {
         winnerCategory.setElo((int) Math.round(ratings.getPlayerRating()));
         winnerCategory.setContestTotal(winnerCategory.getContestTotal() + 1); // race condition
         winnerCategory.setContestWins(winnerCategory.getContestWins() + 1);
+        winnerCategory.setK(EloCalculator.determineK(winnerCategory.getContestTotal()));
         userCategoryRepository.save(winnerCategory);
 
         loserCategory.setElo((int) Math.round(ratings.getOpponentRating()));
         loserCategory.setContestTotal(loserCategory.getContestTotal() + 1); // race condition
+        loserCategory.setK(EloCalculator.determineK(loserCategory.getContestTotal()));
         userCategoryRepository.save(loserCategory);
 
         contest.setProcessed(true);

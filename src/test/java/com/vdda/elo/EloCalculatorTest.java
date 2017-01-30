@@ -65,4 +65,18 @@ public class EloCalculatorTest {
         assertThat(ratings.getPlayerRating(), is(closeTo(1508.3, 0.1)));
         assertThat(ratings.getOpponentRating(), is(closeTo(1691.7, 0.1)));
     }
+
+    @Test
+    public void determineK() throws Exception {
+        int k;
+
+        k = EloCalculator.determineK(0);
+        assertThat(k, is(32));
+
+        k = EloCalculator.determineK(10);
+        assertThat(k, is(24));
+
+        k = EloCalculator.determineK(50);
+        assertThat(k, is(16));
+    }
 }

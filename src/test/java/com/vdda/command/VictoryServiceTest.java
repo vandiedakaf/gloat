@@ -26,6 +26,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class VictoryServiceTest {
 
     private static final String USER_NAME = "@userName";
+    private static final String USER_NAME_SLACKBOT_1 = "@slackbot";
+    private static final String USER_NAME_SLACKBOT_2 = "slackbot";
+    private static final String USER_ID = "userId";
     private static final String TEAM_ID = "teamId";
     private static final String RESPONSE_URL = "responseUrl";
     private static final String TEST_USER_ID = "testUserId";
@@ -50,6 +53,7 @@ public class VictoryServiceTest {
         parameters = new HashMap<>();
         parameters.put(SlackParameters.TEAM_ID.toString(), TEAM_ID);
         parameters.put(SlackParameters.RESPONSE_URL.toString(), RESPONSE_URL);
+        parameters.put(SlackParameters.USER_ID.toString(), USER_ID);
 
         args = new ArrayList<>();
         args.add(USER_NAME);
@@ -85,10 +89,76 @@ public class VictoryServiceTest {
         }};
     }
 
+    @Test
+    public void processSelf() throws Exception {
+
+        new Expectations() {{
+            slackUtilities.getUser(TEAM_ID, USER_NAME);
+            result = mockUserSelf();
+        }};
+
+        args = new ArrayList<>();
+        args.add(USER_NAME);
+        victoryService.processRequest(parameters, args);
+
+        new Verifications() {{
+            Response response;
+            restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+
+            assertThat(response.getText(), containsString("can't compete against yourself of slackbot"));
+        }};
+    }
+
+    @Test
+    public void processSlackbot1() throws Exception {
+
+        new Expectations() {{
+            slackUtilities.getUser(TEAM_ID, USER_NAME_SLACKBOT_1);
+            result = mockUser();
+        }};
+
+        args = new ArrayList<>();
+        args.add(USER_NAME_SLACKBOT_1);
+        victoryService.processRequest(parameters, args);
+
+        new Verifications() {{
+            Response response;
+            restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+
+            assertThat(response.getText(), containsString("can't compete against yourself of slackbot"));
+        }};
+    }
+
+    @Test
+    public void processSlackbot2() throws Exception {
+
+        new Expectations() {{
+            slackUtilities.getUser(TEAM_ID, USER_NAME_SLACKBOT_2);
+            result = mockUser();
+        }};
+
+        args = new ArrayList<>();
+        args.add(USER_NAME_SLACKBOT_2);
+        victoryService.processRequest(parameters, args);
+
+        new Verifications() {{
+            Response response;
+            restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+
+            assertThat(response.getText(), containsString("can't compete against yourself of slackbot"));
+        }};
+    }
+
 
     private Optional<User> mockUser() {
         User user = new User();
         user.setId(TEST_USER_ID);
+        return Optional.of(user);
+    }
+
+    private Optional<User> mockUserSelf() {
+        User user = new User();
+        user.setId(USER_ID);
         return Optional.of(user);
     }
 }

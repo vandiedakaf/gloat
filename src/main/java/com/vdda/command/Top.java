@@ -1,6 +1,8 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
+import lombok.AccessLevel;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,14 @@ import java.util.Map;
  * for vandiedakaf solutions
  */
 @Service
+@Getter
 public class Top implements Command {
+
+    private final String command = "top";
+    private final String usage = "top";
+    private final String shortDescription = "Lists the top ranking players (also known as the winners).";
+
+    @Getter(AccessLevel.NONE)
     private final TopService topService;
 
     @Autowired
@@ -28,20 +37,5 @@ public class Top implements Command {
         Response response = new Response();
         response.setText("We're processing your request...");
         return response;
-    }
-
-    @Override
-    public String getCommand() {
-        return "top";
-    }
-
-    @Override
-    public String getUsage() {
-        return "top";
-    }
-
-    @Override
-    public String getShortDescription() {
-        return "Lists the top ranking players (also known as the winners).";
     }
 }

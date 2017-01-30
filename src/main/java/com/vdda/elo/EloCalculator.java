@@ -25,11 +25,11 @@ public class EloCalculator {
     // Code taken from http://chess.stackexchange.com/a/1379
     // Also see "Theory" section https://en.wikipedia.org/wiki/Elo_rating_system
     private double getExpectedScorePlayer() {
-        return 1.0 / (1 + Math.pow(10, Math.min(opponentRating - playerRating,400) / FOUR_HUNDRED));
+        return 1.0 / (1 + Math.pow(10, Math.min(opponentRating - playerRating, 400) / FOUR_HUNDRED));
     }
 
     private double getExpectedScoreOpponent() {
-        return 1.0 / (1 + Math.pow(10, Math.min(playerRating - opponentRating,400) / FOUR_HUNDRED));
+        return 1.0 / (1 + Math.pow(10, Math.min(playerRating - opponentRating, 400) / FOUR_HUNDRED));
     }
 
     public Ratings adjustedRating(Outcome outcome) {
@@ -38,6 +38,15 @@ public class EloCalculator {
 
         ratings.setOpponentRating(opponentRating + k * ((1 - outcome.getValue()) - getExpectedScoreOpponent()));
         return ratings;
+    }
+
+    public static Integer determineK(int contestTotal) {
+        if (contestTotal >= 50) {
+            return 16;
+        } else if (contestTotal >= 10) {
+            return 24;
+        } else
+            return 32;
     }
 
     public enum Outcome {

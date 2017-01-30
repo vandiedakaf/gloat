@@ -1,6 +1,7 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -11,26 +12,17 @@ import java.util.Map;
  * for vandiedakaf solutions
  */
 @Service
+@Getter
 public class Loss implements Command {
+
+    private final String command = "loss";
+    private final String usage = "loss @user";
+    private final String shortDescription = "Hey now, at least you can be first at acknowledging defeat. Coming soon.";
+
     @Override
     public Response run(Map<String, String> parameters) {
         Response response = new Response();
         response.setText("COMING SOON.");
         return response;
-    }
-
-    @Override
-    public String getCommand() {
-        return "loss";
-    }
-
-    @Override
-    public String getUsage() {
-        return "loss @user";
-    }
-
-    @Override
-    public String getShortDescription() {
-        return "Hey now, at least you can be first at acknowledging defeat. Coming soon.";
     }
 }

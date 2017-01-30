@@ -10,7 +10,8 @@ public enum SlackParameters {
     USER_ID("user_id"),
     RESPONSE_URL("response_url"),
     TEAM_ID("team_id"),
-    TEXT("text");
+    TEXT("text"),
+    TOKEN("token"),;
 
     String name;
     SlackParameters(String name) {

@@ -13,6 +13,11 @@ Required Environment Variables:
 * SONAR_TOKEN: *****
 * SLACK_TOKEN: *****
 
+# environment variables
+* SLACK_CLIENT_ID: *****
+* SLACK_CLIENT_SECRET: *****
+* SLACK_TOKEN: *****
+
 # ngrok
 ngrok http 8080
 

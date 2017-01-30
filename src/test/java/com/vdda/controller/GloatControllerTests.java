@@ -1,40 +1,33 @@
 package com.vdda.controller;
 
+import mockit.Injectable;
+import mockit.Tested;
+import mockit.Verifications;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles(profiles = "dev")
 public class GloatControllerTests {
 
-	@Autowired
-	private MockMvc mvc;
+    @Tested
+    private GloatController gloatController;
 
-	@Test
-	public void postEmptyCommand() throws Exception {
-		mvc.perform(MockMvcRequestBuilders
-				.post("/")
-				.content("test")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-				.accept(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk())
-				.andExpect(content().string(containsString("The available gloat commands are")));
+    @Injectable
+    private CommandsService commandsService;
 
-	}
+    @Test
+    public void incorrectToken() throws Exception {
+
+        String parameters = "parameters";
+        gloatController.gloat(parameters);
+
+        new Verifications() {{
+            String parametersSent;
+            commandsService.run(parametersSent = withCapture());
+
+            assertThat(parametersSent, is(parameters));
+        }};
+    }
 
 }

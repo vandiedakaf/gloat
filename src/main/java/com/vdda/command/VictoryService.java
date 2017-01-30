@@ -51,7 +51,14 @@ public class VictoryService {
             return new AsyncResult<>(null);
         }
 
-        // TODO don't allow @slackbot or self as a user
+        if ("slackbot".equals(args.get(0))
+                || "@slackbot".equals(args.get(0))
+                || parameters.get(SlackParameters.USER_ID.toString()).equals(user.get().getId())) {
+            Response response = new Response();
+            response.setText("Sorry, you can't compete against yourself of slackbot.");
+            sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+            return new AsyncResult<>(null);
+        }
 
         Response response = confirmationButton(user.get());
 

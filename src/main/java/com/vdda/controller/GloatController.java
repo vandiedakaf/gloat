@@ -24,7 +24,8 @@ public class GloatController {
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Response gloat(@RequestBody String parameters) {
 
-        // TODO confirm token validity
+        log.debug("gloat: {}", parameters);
+
         return commandsService.run(parameters);
     }
 }

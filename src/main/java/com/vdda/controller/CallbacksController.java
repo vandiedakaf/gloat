@@ -36,15 +36,12 @@ public class CallbacksController {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Response processCallback(@RequestBody MultiValueMap multiValueMap) {
 
-        // TODO confirm token validity
+        log.debug("processCallback: {}", multiValueMap);
 
-
-        if (multiValueMap.get(PAYLOAD) == null){
+        if (multiValueMap.get(PAYLOAD) == null) {
             log.warn("Empty Payload");
             throw new IllegalArgumentException("Empty Payload");
         }
-
-        log.debug(multiValueMap.get(PAYLOAD).toString());
 
         CallbackRequest[] callbackRequests;
         try {
@@ -52,6 +49,11 @@ public class CallbacksController {
         } catch (JsonSyntaxException e) {
             log.warn("Could not parse Payload", e);
             throw new IllegalArgumentException("Could not parse Payload");
+        }
+
+        if (!System.getenv("SLACK_TOKEN").equals(callbackRequests[0].getToken())) {
+            log.warn("Incorrect Token");
+            throw new IllegalArgumentException("Incorrect Token");
         }
 
         return callbacksService.run(callbackRequests[0]);

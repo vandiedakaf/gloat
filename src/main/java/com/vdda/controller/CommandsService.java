@@ -4,6 +4,7 @@ import com.vdda.command.Command;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.tool.Parameters;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +18,7 @@ import java.util.Map;
  * on 2016-12-25
  * for vandiedakaf solutions
  */
+@Slf4j
 @Service
 public class CommandsService implements ApplicationContextAware, InitializingBean {
 
@@ -27,6 +29,11 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
     Response run(String parametersString) {
 
         Map<String, String> parametersMap = Parameters.parse(parametersString);
+
+        if (!System.getenv("SLACK_TOKEN").equals(parametersMap.get(SlackParameters.TOKEN.toString()))) {
+            log.warn("Incorrect Token");
+            throw new IllegalArgumentException("Incorrect Token");
+        }
 
         String text = parametersMap.get(SlackParameters.TEXT.toString());
 
