@@ -76,25 +76,57 @@ public class TopService {
 
         List<Pair<Integer, UserCategory>> rankedUserCategories = getRankedPairs(userCategories);
 
-        List<Pair<Integer, UserCategory>> rankedUserCategoriesTop = rankedUserCategories.subList(0, Math.min(TOP_COUNT, rankedUserCategories.size()));
-
-        addRequestingUser(parameters.get(SlackParameters.USER_ID.toString()), rankedUserCategories, rankedUserCategoriesTop);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        rankedUserCategoriesTop.forEach(u -> addContestant(u, stringBuilder));
+        List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(parameters.get(SlackParameters.USER_ID.toString()), rankedUserCategories);
 
         Response response = new Response();
-        List<Attachment> attachments = new ArrayList<>();
-        Attachment attachment = new Attachment();
-
         response.setText("Top Contestants");
-        attachment.setFallback("Top Contestants");
-        attachment.setTitle("Rank. (Rating) Name [Wins-Losses]");
-        attachment.setText(stringBuilder.toString());
-        attachment.setColor("#86C53C");
-        attachments.add(attachment);
+
+        List<Attachment> attachments = new ArrayList<>();
+
+        Attachment attachmentTitle = new Attachment();
+        attachmentTitle.setFallback("Top Contestants");
+        attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses]");
+        attachmentTitle.setColor("#86C53C");
+        attachments.add(attachmentTitle);
+
+        StringBuilder textTopContestants = new StringBuilder();
+        rankedUserCategoriesFiltered.stream().filter(p -> p.getFirst() <= TOP_COUNT).collect(toList()).forEach(u -> addContestant(u, textTopContestants));
+
+        Attachment attachmentTopContestants = new Attachment();
+        attachmentTopContestants.setText(textTopContestants.toString());
+        attachmentTopContestants.setColor("#FFD700");
+        attachments.add(attachmentTopContestants);
+
+        if (rankedUserCategoriesFiltered.size() > TOP_COUNT) {
+            StringBuilder textNeighbouringContestants = new StringBuilder();
+            rankedUserCategoriesFiltered.stream().filter(p -> p.getFirst() > TOP_COUNT).collect(toList()).forEach(u -> addContestant(u, textNeighbouringContestants));
+
+            Attachment attachmentNeighbouringContestants = new Attachment();
+            attachmentNeighbouringContestants.setText(textNeighbouringContestants.toString());
+            attachmentNeighbouringContestants.setColor("#CD7F32");
+            attachments.add(attachmentNeighbouringContestants);
+        }
+
         response.setAttachments(attachments);
         return response;
+    }
+
+    private List<Pair<Integer, UserCategory>> getFilteredList(String userId, List<Pair<Integer, UserCategory>> rankedUserCategories) {
+
+        List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered;
+
+        Pair<Integer, UserCategory> userCategoryPair = rankedUserCategories
+                .stream()
+                .filter(u -> u.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
+                .findFirst()
+                .orElse(null);
+
+        if (userCategoryPair != null) {
+            rankedUserCategoriesFiltered = rankedUserCategories.stream().filter(p -> (p.getFirst() <= TOP_COUNT) || Math.abs(p.getFirst() - userCategoryPair.getFirst()) <= 1).collect(toList());
+        } else {
+            rankedUserCategoriesFiltered = rankedUserCategories.stream().filter(p -> p.getFirst() <= TOP_COUNT).collect(toList());
+        }
+        return rankedUserCategoriesFiltered;
     }
 
     private List<Pair<Integer, UserCategory>> getRankedPairs(List<UserCategory> userCategories) {
@@ -102,24 +134,6 @@ public class TopService {
                 .parallel()
                 .mapToObj(i -> Pair.of(i + 1, userCategories.get(i)))
                 .collect(toList());
-    }
-
-    private void addRequestingUser(String userId, List<Pair<Integer, UserCategory>> userCategories, List<Pair<Integer, UserCategory>> userCategoriesTop) {
-        boolean userInTopList = userCategoriesTop
-                .stream()
-                .anyMatch(u -> u.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId));
-
-        if (!userInTopList) {
-            Pair<Integer, UserCategory> userCategoryPair = userCategories
-                    .stream()
-                    .filter(u -> u.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
-                    .findFirst()
-                    .orElse(null);
-
-            if (userCategoryPair != null) {
-                userCategoriesTop.add(userCategoryPair);
-            }
-        }
     }
 
     private void addContestant(Pair<Integer, UserCategory> userCategoryPair, StringBuilder stringBuilder) {

@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThan;
 
 /**
  * Created by francois
@@ -39,6 +41,9 @@ public class TopServiceTest {
     private static final String TEST_USER_ID_2 = "testUserId2";
     private static final String TEST_USER_ID_3 = "testUserId3";
     private static final String TEST_USER_ID_4 = "testUserId4";
+    private static final String TEST_USER_ID_5 = "testUserId5";
+    private static final String TEST_USER_ID_6 = "testUserId6";
+    private static final String TEST_USER_ID_7 = "testUserId7";
 
 
     @Tested
@@ -78,11 +83,13 @@ public class TopServiceTest {
         new Verifications() {{
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_1));
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_2));
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_3));
-            assertThat(response.getAttachments().get(0).getText(), containsString(USER_ID));
-            assertThat(response.getAttachments().get(0).getText(), not(containsString(TEST_USER_ID_4)));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_1));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_2));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_3));
+            assertThat(response.getAttachments().get(2).getText(), containsString(TEST_USER_ID_5));
+            assertThat(response.getAttachments().get(2).getText(), containsString(USER_ID));
+            assertThat(response.getAttachments().get(2).getText(), containsString(TEST_USER_ID_6));
+
         }};
     }
 
@@ -98,10 +105,11 @@ public class TopServiceTest {
         new Verifications() {{
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_1));
-            assertThat(response.getAttachments().get(0).getText(), containsString(USER_ID));
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_3));
-            assertThat(response.getAttachments().get(0).getText(), not(containsString(TEST_USER_ID_4)));
+
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_1));
+            assertThat(response.getAttachments().get(1).getText(), containsString(USER_ID));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_3));
+            assertThat(response.getAttachments().size(), is(lessThan(3)));
         }};
     }
 
@@ -117,10 +125,11 @@ public class TopServiceTest {
         new Verifications() {{
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_1));
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_2));
-            assertThat(response.getAttachments().get(0).getText(), containsString(TEST_USER_ID_3));
-            assertThat(response.getAttachments().get(0).getText(), not(containsString(USER_ID)));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_1));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_2));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_3));
+            assertThat(response.getAttachments().get(1).getText(), not(containsString(USER_ID)));
+            assertThat(response.getAttachments().size(), is(lessThan(3)));
         }};
 
     }
@@ -164,25 +173,40 @@ public class TopServiceTest {
 
         User user = new User(TEAM_ID, TEST_USER_ID_1);
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
-        UserCategory userCategory = new UserCategory(userCategoryPK, 5);
+        UserCategory userCategory = new UserCategory(userCategoryPK, 8);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_2);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 4);
+        userCategory = new UserCategory(userCategoryPK, 7);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_3);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 3);
+        userCategory = new UserCategory(userCategoryPK, 6);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_4);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 2);
+        userCategory = new UserCategory(userCategoryPK, 5);
+        userCategories.add(userCategory);
+
+        user = new User(TEAM_ID, TEST_USER_ID_5);
+        userCategoryPK = new UserCategoryPK(user, 1L);
+        userCategory = new UserCategory(userCategoryPK, 4);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, USER_ID);
+        userCategoryPK = new UserCategoryPK(user, 1L);
+        userCategory = new UserCategory(userCategoryPK, 3);
+        userCategories.add(userCategory);
+
+        user = new User(TEAM_ID, TEST_USER_ID_6);
+        userCategoryPK = new UserCategoryPK(user, 1L);
+        userCategory = new UserCategory(userCategoryPK, 2);
+        userCategories.add(userCategory);
+
+        user = new User(TEAM_ID, TEST_USER_ID_7);
         userCategoryPK = new UserCategoryPK(user, 1L);
         userCategory = new UserCategory(userCategoryPK, 1);
         userCategories.add(userCategory);
