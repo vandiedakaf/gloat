@@ -3,17 +3,17 @@ package com.vdda.controller;
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.github.seratch.jslack.api.methods.request.oauth.OAuthAccessRequest;
-import com.github.seratch.jslack.api.methods.request.users.UsersIdentityRequest;
+import com.github.seratch.jslack.api.methods.request.team.TeamInfoRequest;
 import com.github.seratch.jslack.api.methods.response.oauth.OAuthAccessResponse;
-import com.github.seratch.jslack.api.methods.response.users.UsersIdentityResponse;
+import com.github.seratch.jslack.api.methods.response.team.TeamInfoResponse;
 import com.vdda.jpa.Oauth;
 import com.vdda.repository.OauthRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ import java.io.IOException;
  * on 2016-10-22
  * for vandiedakaf solutions
  */
-@RestController
+@Controller
 @RequestMapping("/oauth")
 @Slf4j
 public class OauthController {
@@ -51,24 +51,25 @@ public class OauthController {
             throw new IllegalArgumentException("Oauth process cancelled - no code");
         }
 
-        OAuthAccessResponse oAuthAccessResponse = getOauthAccessResponse(code);
+        OAuthAccessResponse oAuthAccessResponse = getOauthAccess(code);
         if (!oAuthAccessResponse.isOk()) {
             log.warn("Failed to complete oauth process: {}", oAuthAccessResponse.toString());
             throw new IllegalArgumentException("Failed to complete oauth process");
         }
 
-        UsersIdentityResponse usersIdentityResponse = getUsersIdentityResponse(oAuthAccessResponse.getAccessToken());
-        if (!usersIdentityResponse.isOk()) {
-            log.warn("Failed to complete oauth process: {}", usersIdentityResponse.toString());
-            throw new IllegalArgumentException("Failed to complete oauth process");
+
+        TeamInfoResponse teamInfoResponse = getTeamInfo(oAuthAccessResponse.getAccessToken());
+        if (!teamInfoResponse.isOk()) {
+            log.warn("Failed to get team info: {}", teamInfoResponse.toString());
+            throw new IllegalArgumentException("Failed to get team info");
         }
 
-        oauthRepository.save(new Oauth(usersIdentityResponse.getTeam().getId(), oAuthAccessResponse.getAccessToken()));
+        oauthRepository.save(new Oauth(teamInfoResponse.getTeam().getId(), oAuthAccessResponse.getAccessToken()));
 
-        return "Yay!";
+        return "oauth";
     }
 
-    private OAuthAccessResponse getOauthAccessResponse(String code) {
+    private OAuthAccessResponse getOauthAccess(String code) {
         OAuthAccessResponse oAuthAccessResponse = new OAuthAccessResponse();
 
         try {
@@ -86,20 +87,20 @@ public class OauthController {
         return oAuthAccessResponse;
     }
 
-    private UsersIdentityResponse getUsersIdentityResponse(String accessToken) {
-        UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
+    private TeamInfoResponse getTeamInfo(String accessToken) {
+        TeamInfoResponse teamInfoResponse = new TeamInfoResponse();
 
         try {
-            usersIdentityResponse = slack.methods().usersIdentity(
-                    UsersIdentityRequest.builder()
+            teamInfoResponse = slack.methods().teamInfo(
+                    TeamInfoRequest.builder()
                             .token(accessToken)
                             .build());
         } catch (IOException | SlackApiException e) {
-            log.debug("UsersIdentityRequest", e);
+            log.debug("TeamInfoRequest", e);
         }
 
-        log.debug(usersIdentityResponse.toString());
+        log.debug(teamInfoResponse.toString());
 
-        return usersIdentityResponse;
+        return teamInfoResponse;
     }
 }

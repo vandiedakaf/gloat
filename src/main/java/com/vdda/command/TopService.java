@@ -131,7 +131,6 @@ public class TopService {
 
     private List<Pair<Integer, UserCategory>> getRankedPairs(List<UserCategory> userCategories) {
         return IntStream.range(0, userCategories.size())
-                .parallel()
                 .mapToObj(i -> Pair.of(i + 1, userCategories.get(i)))
                 .collect(toList());
     }

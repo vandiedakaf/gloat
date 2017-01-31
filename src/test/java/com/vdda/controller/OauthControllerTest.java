@@ -2,7 +2,8 @@ package com.vdda.controller;
 
 import com.github.seratch.jslack.Slack;
 import com.github.seratch.jslack.api.methods.response.oauth.OAuthAccessResponse;
-import com.github.seratch.jslack.api.methods.response.users.UsersIdentityResponse;
+import com.github.seratch.jslack.api.methods.response.team.TeamInfoResponse;
+import com.github.seratch.jslack.api.model.Team;
 import mockit.Expectations;
 import mockit.Mocked;
 import org.junit.Test;
@@ -63,8 +64,8 @@ public class OauthControllerTest {
             slack.methods().oauthAccess(withNotNull());
             result = mockOauthResponse();
 
-            slack.methods().usersIdentity(withNotNull());
-            result = mockUsersIdentityResponse();
+            slack.methods().teamInfo(withNotNull());
+            result = mockTeamInfoResponse();
         }};
 
         mvc.perform(MockMvcRequestBuilders
@@ -108,8 +109,8 @@ public class OauthControllerTest {
             slack.methods().oauthAccess(withNotNull());
             result = mockOauthResponse();
 
-            slack.methods().usersIdentity(withNotNull());
-            result = mockUsersIdentityResponseFail();
+            slack.methods().teamInfo(withNotNull());
+            result = mockTeamInfoResponseFail();
         }};
 
         mvc.perform(MockMvcRequestBuilders
@@ -125,7 +126,7 @@ public class OauthControllerTest {
             slack.methods().oauthAccess(withNotNull());
             result = mockOauthResponse();
 
-            slack.methods().usersIdentity(withNotNull());
+            slack.methods().teamInfo(withNotNull());
             result = new IOException();
         }};
 
@@ -149,19 +150,19 @@ public class OauthControllerTest {
         return oAuthAccessResponse;
     }
 
-    private UsersIdentityResponse mockUsersIdentityResponse() {
-        UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
-        usersIdentityResponse.setOk(true);
-        UsersIdentityResponse.Team team = new UsersIdentityResponse.Team();
+    private TeamInfoResponse mockTeamInfoResponse() {
+        TeamInfoResponse teamInfoResponse = new TeamInfoResponse();
+        teamInfoResponse.setOk(true);
+        Team team = new Team();
         team.setId(TEAM_ID);
-        usersIdentityResponse.setTeam(team);
-        return usersIdentityResponse;
+        teamInfoResponse.setTeam(team);
+        return teamInfoResponse;
     }
 
-    private UsersIdentityResponse mockUsersIdentityResponseFail() {
-        UsersIdentityResponse usersIdentityResponse = new UsersIdentityResponse();
-        usersIdentityResponse.setOk(false);
-        return usersIdentityResponse;
+    private TeamInfoResponse mockTeamInfoResponseFail() {
+        TeamInfoResponse teamInfoResponse = new TeamInfoResponse();
+        teamInfoResponse.setOk(false);
+        return teamInfoResponse;
     }
 
 }
