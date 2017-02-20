@@ -173,42 +173,50 @@ public class TopServiceTest {
 
         User user = new User(TEAM_ID, TEST_USER_ID_1);
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
-        UserCategory userCategory = new UserCategory(userCategoryPK, 8);
+        UserCategory userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(8);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_2);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 7);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(7);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_3);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 6);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(6);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_4);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 5);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(5);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_5);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 4);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(4);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, USER_ID);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 3);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(3);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_6);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 2);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(2);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_7);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 1);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(1);
         userCategories.add(userCategory);
 
         return userCategories;
@@ -219,22 +227,26 @@ public class TopServiceTest {
 
         User user = new User(TEAM_ID, TEST_USER_ID_1);
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
-        UserCategory userCategory = new UserCategory(userCategoryPK, 5);
+        UserCategory userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(5);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, USER_ID);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 1);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(1);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_3);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 3);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(3);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_4);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 2);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(2);
         userCategories.add(userCategory);
 
         return userCategories;
@@ -245,22 +257,26 @@ public class TopServiceTest {
 
         User user = new User(TEAM_ID, TEST_USER_ID_1);
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
-        UserCategory userCategory = new UserCategory(userCategoryPK, 5);
+        UserCategory userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(5);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_2);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 4);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(4);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_3);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 3);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(3);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_4);
         userCategoryPK = new UserCategoryPK(user, 1L);
-        userCategory = new UserCategory(userCategoryPK, 2);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(2);
         userCategories.add(userCategory);
 
         return userCategories;

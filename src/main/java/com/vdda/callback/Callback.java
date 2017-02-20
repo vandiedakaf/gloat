@@ -1,4 +1,4 @@
-package com.vdda.action;
+package com.vdda.callback;
 
 import com.vdda.slack.Response;
 

@@ -1,4 +1,4 @@
-package com.vdda.action;
+package com.vdda.callback;
 
 /**
  * Created by francois
@@ -6,7 +6,9 @@ package com.vdda.action;
  * for vandiedakaf solutions
  */
 public enum Callbacks {
-    VICTORY_CONFIRM("victory_confirm");
+    CONFIRM_DRAW("confirm_draw"),
+    CONFIRM_LOSS("confirm_loss"),
+    CONFIRM_VICTORY("confirm_victory");
 
     private String name;
 

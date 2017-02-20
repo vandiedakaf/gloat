@@ -15,14 +15,14 @@ public class ContestTest {
     @Test
     public void construct() throws Exception {
         Category category = new Category("teamId", "channelId");
-        User winner = new User("teamId", "winnerId");
-        User loser = new User("teamId", "loserId");
+        User reporter = new User("teamId", "reporterId");
+        User opponent = new User("teamId", "opponentId");
 
-        Contest contest = new Contest(category, winner, loser);
+        Contest contest = new Contest(category, reporter, opponent, ContestOutcome.WIN);
 
         assertThat(contest.getCategory().getChannelId(), equalTo("channelId"));
-        assertThat(contest.getWinner().getUserId(), equalTo("winnerId"));
-        assertThat(contest.getLoser().getUserId(), equalTo("loserId"));
+        assertThat(contest.getReporter().getUserId(), equalTo("reporterId"));
+        assertThat(contest.getOpponent().getUserId(), equalTo("opponentId"));
     }
 
     @Test

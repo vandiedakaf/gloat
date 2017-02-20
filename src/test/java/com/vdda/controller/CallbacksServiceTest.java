@@ -1,8 +1,8 @@
 package com.vdda.controller;
 
-import com.vdda.action.CallbackRequest;
-import com.vdda.action.Callbacks;
-import com.vdda.action.VictoryConfirm;
+import com.vdda.callback.CallbackRequest;
+import com.vdda.callback.Callbacks;
+import com.vdda.callback.ConfirmContestVictory;
 import com.vdda.slack.Response;
 import mockit.Mocked;
 import mockit.Verifications;
@@ -26,10 +26,10 @@ import static org.junit.Assert.assertThat;
 @ActiveProfiles(profiles = "dev")
 public class CallbacksServiceTest {
 
-    private static final String CALLBACK_ID = Callbacks.VICTORY_CONFIRM.toString() + "|userId";
+    private static final String CALLBACK_ID = Callbacks.CONFIRM_VICTORY.toString() + "|userId";
 
     @Mocked
-    private VictoryConfirm victoryConfirm;
+    private ConfirmContestVictory confirmVictory;
 
     @Autowired
     private CallbacksService callbacksService;
@@ -72,7 +72,7 @@ public class CallbacksServiceTest {
 
         new Verifications() {{
             CallbackRequest callbackRequestCapture;
-            victoryConfirm.run(callbackRequestCapture = withCapture());
+            confirmVictory.run(callbackRequestCapture = withCapture());
 
             assertThat(callbackRequestCapture, is(equalTo(callbackRequest)));
         }};

@@ -85,12 +85,15 @@ public class TopService {
 
         Attachment attachmentTitle = new Attachment();
         attachmentTitle.setFallback("Top Contestants");
-        attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses]");
+        attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses-Draws]");
         attachmentTitle.setColor("#86C53C");
         attachments.add(attachmentTitle);
 
         StringBuilder textTopContestants = new StringBuilder();
-        rankedUserCategoriesFiltered.stream().filter(p -> p.getFirst() <= TOP_COUNT).collect(toList()).forEach(u -> addContestant(u, textTopContestants));
+        rankedUserCategoriesFiltered.stream()
+                .filter(p -> p.getFirst() <= TOP_COUNT)
+                .collect(toList())
+                .forEach(u -> addContestant(u, textTopContestants));
 
         Attachment attachmentTopContestants = new Attachment();
         attachmentTopContestants.setText(textTopContestants.toString());
@@ -99,7 +102,10 @@ public class TopService {
 
         if (rankedUserCategoriesFiltered.size() > TOP_COUNT) {
             StringBuilder textNeighbouringContestants = new StringBuilder();
-            rankedUserCategoriesFiltered.stream().filter(p -> p.getFirst() > TOP_COUNT).collect(toList()).forEach(u -> addContestant(u, textNeighbouringContestants));
+            rankedUserCategoriesFiltered.stream()
+                    .filter(p -> p.getFirst() > TOP_COUNT)
+                    .collect(toList())
+                    .forEach(u -> addContestant(u, textNeighbouringContestants));
 
             Attachment attachmentNeighbouringContestants = new Attachment();
             attachmentNeighbouringContestants.setText(textNeighbouringContestants.toString());
@@ -122,9 +128,13 @@ public class TopService {
                 .orElse(null);
 
         if (userCategoryPair != null) {
-            rankedUserCategoriesFiltered = rankedUserCategories.stream().filter(p -> (p.getFirst() <= TOP_COUNT) || Math.abs(p.getFirst() - userCategoryPair.getFirst()) <= 1).collect(toList());
+            rankedUserCategoriesFiltered = rankedUserCategories.stream()
+                    .filter(p -> (p.getFirst() <= TOP_COUNT) || Math.abs(p.getFirst() - userCategoryPair.getFirst()) <= 1)
+                    .collect(toList());
         } else {
-            rankedUserCategoriesFiltered = rankedUserCategories.stream().filter(p -> p.getFirst() <= TOP_COUNT).collect(toList());
+            rankedUserCategoriesFiltered = rankedUserCategories.stream()
+                    .filter(p -> p.getFirst() <= TOP_COUNT)
+                    .collect(toList());
         }
         return rankedUserCategoriesFiltered;
     }
@@ -142,9 +152,11 @@ public class TopService {
         stringBuilder.append(") <@");
         stringBuilder.append(userCategoryPair.getSecond().getUserCategoryPK().getUser().getUserId());
         stringBuilder.append("> [");
-        stringBuilder.append(userCategoryPair.getSecond().getContestWins());
+        stringBuilder.append(userCategoryPair.getSecond().getWins());
         stringBuilder.append("-");
-        stringBuilder.append(userCategoryPair.getSecond().getContestTotal() - userCategoryPair.getSecond().getContestWins());
+        stringBuilder.append(userCategoryPair.getSecond().getLosses());
+        stringBuilder.append("-");
+        stringBuilder.append(userCategoryPair.getSecond().getDraws());
         stringBuilder.append("]\n");
     }
 

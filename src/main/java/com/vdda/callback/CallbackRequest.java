@@ -1,4 +1,4 @@
-package com.vdda.action;
+package com.vdda.callback;
 
 import lombok.Getter;
 import lombok.Setter;

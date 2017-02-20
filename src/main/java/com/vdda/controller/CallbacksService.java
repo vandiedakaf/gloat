@@ -1,7 +1,7 @@
 package com.vdda.controller;
 
-import com.vdda.action.Callback;
-import com.vdda.action.CallbackRequest;
+import com.vdda.callback.Callback;
+import com.vdda.callback.CallbackRequest;
 import com.vdda.slack.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -48,6 +48,7 @@ public class CallbacksService implements ApplicationContextAware, InitializingBe
     @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, Callback> callbacksByName = applicationContext.getBeansOfType(Callback.class);
+        System.out.println(callbacksByName);
         callbacks = callbacksByName
                 .entrySet()
                 .stream()

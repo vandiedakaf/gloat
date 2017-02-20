@@ -18,7 +18,7 @@ public class UserCategoryTest {
         user.setId(1L);
 
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 2L);
-        UserCategory userCategory = new UserCategory(userCategoryPK, 1500);
+        UserCategory userCategory = new UserCategory(userCategoryPK);
 
         assertThat(userCategory.getUserCategoryPK(), equalTo(userCategoryPK));
 

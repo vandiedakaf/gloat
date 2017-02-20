@@ -21,11 +21,14 @@ public class Contest {
     @JoinColumn(name = "category_id")
     private Category category;
     @ManyToOne
-    @JoinColumn(name = "winner_id")
-    private User winner;
+    @JoinColumn(name = "reporter_id")
+    private User reporter;
     @ManyToOne
-    @JoinColumn(name = "loser_id")
-    private User loser;
+    @JoinColumn(name = "opponent_id")
+    private User opponent;
+    @Column(nullable = false)
+    @Convert(converter = ContestOutcomeConverter.class)
+    private ContestOutcome contestOutcome;
     @Column(nullable = false)
     private Boolean processed;
     @Basic(optional = false)
@@ -38,11 +41,12 @@ public class Contest {
         // this one is protected since it shouldn't be used directly
     }
 
-    public Contest(Category category, User winner, User loser) {
+    public Contest(Category category, User reporter, User opponent, ContestOutcome contestOutcome) {
         this.category = category;
-        this.winner = winner;
-        this.loser = loser;
+        this.reporter = reporter;
+        this.opponent = opponent;
         this.processed = false;
+        this.contestOutcome = contestOutcome;
     }
 }
 

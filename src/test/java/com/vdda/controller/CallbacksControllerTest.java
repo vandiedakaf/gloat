@@ -1,7 +1,7 @@
 package com.vdda.controller;
 
 import com.google.gson.Gson;
-import com.vdda.action.CallbackRequest;
+import com.vdda.callback.CallbackRequest;
 import com.vdda.slack.Response;
 import mockit.Expectations;
 import mockit.Mock;

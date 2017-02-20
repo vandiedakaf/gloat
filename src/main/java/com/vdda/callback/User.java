@@ -1,4 +1,4 @@
-package com.vdda.action;
+package com.vdda.callback;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class Channel {
+public class User {
     private String id;
     private String name;
 }

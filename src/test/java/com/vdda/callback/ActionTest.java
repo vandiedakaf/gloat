@@ -1,4 +1,4 @@
-package com.vdda.action;
+package com.vdda.callback;
 
 import org.junit.Test;
 import org.meanbean.test.BeanTester;

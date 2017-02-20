@@ -1,4 +1,4 @@
-package com.vdda.action;
+package com.vdda.callback;
 
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
@@ -8,10 +8,9 @@ import org.meanbean.test.BeanTester;
  * on 2017-01-03
  * for vandiedakaf solutions
  */
-public class TeamTest {
+public class UserTest {
     @Test
     public void meanBean() throws Exception {
-        new BeanTester().testBean(Team.class);
+        new BeanTester().testBean(User.class);
     }
-
 }

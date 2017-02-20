@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
  * Created by francois on 2016-10-23 for
  * vandiedakaf solutions
  */
-public interface UserRepository  extends CrudRepository<User, Long>{
+public interface UserRepository extends CrudRepository<User, Long> {
 
     User findByTeamIdAndUserId(String teamId, String userId);
 }

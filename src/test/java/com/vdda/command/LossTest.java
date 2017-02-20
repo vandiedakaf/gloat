@@ -1,12 +1,18 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
-import org.junit.Before;
+import com.vdda.slack.SlackParameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -14,36 +20,50 @@ import static org.junit.Assert.assertThat;
  * on 2017-01-05
  * for vandiedakaf solutions
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ActiveProfiles(profiles = "dev")
 public class LossTest {
 
-    private Draw draw;
+    @Autowired
+    private Loss loss;
 
-    @Before
-    public void setUp() throws Exception {
-        draw = new Draw();
+    @Test
+    public void missingArgs() throws Exception {
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
+        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
+        parameters.put(SlackParameters.TEXT.toString(), "loss");
+        Response response = loss.run(parameters);
+
+        assertThat(response.getText(), containsString("Usage: `loss @user`"));
     }
 
     @Test
-    public void runGolden() throws Exception {
-        Loss loss = new Loss();
-        Response response = loss.run(null);
+    public void lossGolden() throws Exception {
 
-        assertThat(response.getText(), containsString("COMING SOON"));
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
+        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
+        parameters.put(SlackParameters.TEXT.toString(), "loss user");
 
+        Response response = loss.run(parameters);
+        assertThat(response.getText(), containsString("We're processing your request..."));
     }
 
     @Test
     public void getCommand() throws Exception {
-        assertThat(draw.getCommand(), is(notNullValue()));
+        assertThat(loss.getCommand(), is(notNullValue()));
     }
 
     @Test
     public void getUsage() throws Exception {
-        assertThat(draw.getUsage(), is(notNullValue()));
+        assertThat(loss.getUsage(), is(notNullValue()));
     }
 
     @Test
     public void getShortDescription() throws Exception {
-        assertThat(draw.getShortDescription(), is(notNullValue()));
+        assertThat(loss.getShortDescription(), is(notNullValue()));
     }
 }

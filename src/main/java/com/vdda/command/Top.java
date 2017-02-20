@@ -34,8 +34,6 @@ public class Top implements Command {
 
         topService.processRequest(parameters);
 
-        Response response = new Response();
-        response.setText("We're processing your request...");
-        return response;
+        return null;
     }
 }

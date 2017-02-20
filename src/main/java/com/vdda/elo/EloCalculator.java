@@ -12,31 +12,33 @@ public class EloCalculator {
 
     private static final double FOUR_HUNDRED = 400;
 
-    private int playerRating;
+    private int reporterRating;
     private int opponentRating;
     private int k;
 
-    public EloCalculator(int playerRating, int opponentRating, int k) {
-        this.playerRating = playerRating;
+    public EloCalculator(int reporterRating, int opponentRating, int k) {
+        this.reporterRating = reporterRating;
         this.opponentRating = opponentRating;
         this.k = k;
     }
 
     // Code taken from http://chess.stackexchange.com/a/1379
     // Also see "Theory" section https://en.wikipedia.org/wiki/Elo_rating_system
-    private double getExpectedScorePlayer() {
-        return 1.0 / (1 + Math.pow(10, Math.min(opponentRating - playerRating, 400) / FOUR_HUNDRED));
+    private double getExpectedScoreReporter() {
+        return 1.0 / (1.0 + Math.pow(10, (opponentRating - reporterRating) / FOUR_HUNDRED));
     }
 
     private double getExpectedScoreOpponent() {
-        return 1.0 / (1 + Math.pow(10, Math.min(playerRating - opponentRating, 400) / FOUR_HUNDRED));
+        return 1.0 / (1.0 + Math.pow(10, (reporterRating - opponentRating) / FOUR_HUNDRED));
     }
 
     public Ratings adjustedRating(Outcome outcome) {
         Ratings ratings = new Ratings();
-        ratings.setPlayerRating(playerRating + k * (outcome.getValue() - getExpectedScorePlayer()));
+        double expectedScoreReporter = getExpectedScoreReporter();
+        ratings.setReporterRating(reporterRating + k * (outcome.getValue() - expectedScoreReporter));
 
-        ratings.setOpponentRating(opponentRating + k * ((1 - outcome.getValue()) - getExpectedScoreOpponent()));
+        double expectedScoreOpponent = getExpectedScoreOpponent();
+        ratings.setOpponentRating(opponentRating + k * ((1 - outcome.getValue()) - expectedScoreOpponent));
         return ratings;
     }
 
@@ -69,7 +71,7 @@ public class EloCalculator {
     @Getter
     @Setter
     public class Ratings {
-        private double playerRating;
+        private double reporterRating;
         private double opponentRating;
     }
 }

@@ -15,14 +15,19 @@ import javax.persistence.Entity;
 @Getter
 @Setter
 public class UserCategory {
+
+    Integer ELO_INIT = 1500; // TODO make this configuration
+
     @EmbeddedId
     private UserCategoryPK userCategoryPK;
     @Column(nullable = false)
     private Integer elo;
     @Column(nullable = false)
-    private Integer contestTotal;
+    private Integer wins;
     @Column(nullable = false)
-    private Integer contestWins;
+    private Integer losses;
+    @Column(nullable = false)
+    private Integer draws;
     @Column(nullable = false)
     private Integer k;
 
@@ -31,11 +36,12 @@ public class UserCategory {
         // this one is protected since it shouldn't be used directly
     }
 
-    public UserCategory(UserCategoryPK userCategoryPK, Integer elo) {
+    public UserCategory(UserCategoryPK userCategoryPK) {
         this.userCategoryPK = userCategoryPK;
-        this.elo = elo;
-        this.contestTotal = 0;
-        this.contestWins = 0;
+        this.elo = ELO_INIT;
+        this.wins = 0;
+        this.losses = 0;
+        this.draws = 0;
         this.k = 32;
     }
 }

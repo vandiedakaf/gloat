@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.vdda.callback.Callbacks.CONFIRM_VICTORY;
+import static com.vdda.callback.Callbacks.CONFIRM_LOSS;
 
 /**
  * Created by francois
@@ -22,10 +22,10 @@ import static com.vdda.callback.Callbacks.CONFIRM_VICTORY;
  */
 @Service
 @Slf4j
-public class VictoryService extends ContestService {
+public class LossService extends ContestService {
 
     @Autowired
-    public VictoryService(RestTemplateBuilder restTemplateBuilder, SlackUtilities slackUtilities) {
+    public LossService(RestTemplateBuilder restTemplateBuilder, SlackUtilities slackUtilities) {
         super(restTemplateBuilder.build(), slackUtilities);
     }
 
@@ -47,11 +47,11 @@ public class VictoryService extends ContestService {
         actionNo.setValue("no");
         actionNo.setStyle("danger");
         actions.add(actionNo);
-        attachment.setFallback("Victory Confirmation");
-        attachment.setTitle("Victory Confirmation");
-        attachment.setText("Confirm that you beat <@" + user.getId() + ">.");
+        attachment.setFallback("Loss Confirmation");
+        attachment.setTitle("Loss Confirmation");
+        attachment.setText("Confirm your loss to <@" + user.getId() + ">.");
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(CONFIRM_VICTORY.toString(), user.getId()));
+        attachment.setCallback_id(callbackBuilder(CONFIRM_LOSS.toString(), user.getId()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);
