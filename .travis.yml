@@ -14,6 +14,8 @@ services:
   - docker
 before_install:
   - chmod +x gradlew
+  - chmod +x deploy-staging.sh
+  - chmod +x deploy-production.sh
 # prevents ./gradlew assemble from running
 install: true
 before_cache:
