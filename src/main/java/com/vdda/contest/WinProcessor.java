@@ -1,5 +1,6 @@
 package com.vdda.contest;
 
+import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
 import com.vdda.repository.ContestRepository;
@@ -17,20 +18,19 @@ import org.springframework.stereotype.Service;
 public class WinProcessor extends ContestProcessor {
 
     @Autowired
-    public WinProcessor(ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
-        super(contestRepository, userCategoryRepository, slackUtilities);
+    public WinProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+        super(envProperties, contestRepository, userCategoryRepository, slackUtilities);
     }
 
+    @Override
     EloCalculator.Ratings getRatings(EloCalculator eloCalculator) {
         return eloCalculator.adjustedRating(EloCalculator.Outcome.WIN);
     }
 
+    @Override
     void adjustUserCategoryStats(UserCategory reporterCategory, UserCategory opponentCategory) {
-        // TODO
-        // http://www.byteslounge.com/tutorials/spring-transaction-isolation-tutorial
-        // http://stackoverflow.com/questions/8490852/spring-transactional-isolation-propagation
-        reporterCategory.setWins(reporterCategory.getWins() + 1); // TODO does this create a race condition?
-        opponentCategory.setLosses(opponentCategory.getLosses() + 1); // TODO does this create a race condition?
+        reporterCategory.setWins(reporterCategory.getWins() + 1);
+        opponentCategory.setLosses(opponentCategory.getLosses() + 1);
     }
 
 }

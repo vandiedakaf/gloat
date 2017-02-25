@@ -21,3 +21,6 @@ ALTER TABLE user_category
 
 CREATE INDEX contest__created_index
   ON contest (created DESC);
+
+ALTER TABLE user_category
+  MODIFY elo INT(11) NOT NULL;

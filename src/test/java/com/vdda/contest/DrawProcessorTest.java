@@ -1,5 +1,6 @@
 package com.vdda.contest;
 
+import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
 import com.vdda.repository.ContestRepository;
@@ -31,10 +32,12 @@ public class DrawProcessorTest {
     private UserCategory reporterCategory;
     @Mocked
     private UserCategory opponentCategory;
+    @Mocked
+    private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        drawProcessor = new DrawProcessor(contestRepository, userCategoryRepository, slackUtilities);
+        drawProcessor = new DrawProcessor(envProperties, contestRepository, userCategoryRepository, slackUtilities);
     }
 
     @Test

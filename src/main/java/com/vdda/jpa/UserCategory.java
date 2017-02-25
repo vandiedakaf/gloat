@@ -16,8 +16,6 @@ import javax.persistence.Entity;
 @Setter
 public class UserCategory {
 
-    Integer ELO_INIT = 1500; // TODO make this configuration
-
     @EmbeddedId
     private UserCategoryPK userCategoryPK;
     @Column(nullable = false)
@@ -38,7 +36,7 @@ public class UserCategory {
 
     public UserCategory(UserCategoryPK userCategoryPK) {
         this.userCategoryPK = userCategoryPK;
-        this.elo = ELO_INIT;
+        this.elo = 0;
         this.wins = 0;
         this.losses = 0;
         this.draws = 0;

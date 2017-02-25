@@ -28,7 +28,7 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "dev")
+@ActiveProfiles(profiles = "local")
 public class CommandsServiceTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();

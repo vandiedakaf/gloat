@@ -10,6 +10,8 @@ addons:
   sonarqube: true
 jdk:
 - oraclejdk8
+services:
+- docker
 before_install:
 - chmod +x gradlew
 # prevents ./gradlew assemble from running
@@ -24,16 +26,24 @@ cache:
   - "$HOME/.sonar"
 script:
   - "./gradlew build"
-deploy:
-  provider: heroku
-  api_key:
-    secure: f3gG/Rsle4h4AvlfVZg+zYGK0l4EOvzVGUFm0K5GYsKVkwm7AIvnBBYigPY6NYd5v6fIcUHKxS48f4GNBk53M5tg0HYZrvU3V3HtAUaWGXCg32+guOgHxF8gkw/uKpZh3wtckCNf+TcBex7H5ZvK/Ih0JSEl1boeIx+09dTBz43OmTsOfTTbxDEw5+Fj9SYfyTIy3FiAtxMUx5iLSILM+sEYg6F9UEFjlGwe47XLZLKsqQlqWCrAwEH+tU1iVBcXmmj4PeA1JnEhWM6TXIk/aaaaVAykDLybd/CRHfYY+Y6EZIw4uxmTZBgV/hQ/KCEwUTUU45xPL//1jf2rM405ptAPvBEH1iNeAQKTLxR2nyphcnLzaqRFC0YOnlqXie9OhB8Oq88CnMVEQ8prV6e7UOjmMx0X3oCpQukGhzkr6mZ70BrhpWRTrX9GjMNlxMVCKyU6G81PXmWFwfB/Wlo6Mvcjat1i1OKyVWj80uhbnrbup6ikNsnnbi2PDrqk+t18zmudU5tC+GXwXSMBl1k7AVWRXy/fSy6O9HNLq6tqjEUxP/d5Wel6Kz02y1hZkOIC6gZ5tQ//c/FKarVs6U802c/APOZpeg+Ih7iTiqF47aUAQx6oa3hyFfn4isehn3Mjjrgcg05dZd1fkb2KXhoNky7nVcurWA02py8F5Tq+pNg=
-  app: gloat
-  on:
-    repo: vandiedakaf/gloat
+#deploy:
+#  provider: heroku
+#  api_key:
+#    secure: f3gG/Rsle4h4AvlfVZg+zYGK0l4EOvzVGUFm0K5GYsKVkwm7AIvnBBYigPY6NYd5v6fIcUHKxS48f4GNBk53M5tg0HYZrvU3V3HtAUaWGXCg32+guOgHxF8gkw/uKpZh3wtckCNf+TcBex7H5ZvK/Ih0JSEl1boeIx+09dTBz43OmTsOfTTbxDEw5+Fj9SYfyTIy3FiAtxMUx5iLSILM+sEYg6F9UEFjlGwe47XLZLKsqQlqWCrAwEH+tU1iVBcXmmj4PeA1JnEhWM6TXIk/aaaaVAykDLybd/CRHfYY+Y6EZIw4uxmTZBgV/hQ/KCEwUTUU45xPL//1jf2rM405ptAPvBEH1iNeAQKTLxR2nyphcnLzaqRFC0YOnlqXie9OhB8Oq88CnMVEQ8prV6e7UOjmMx0X3oCpQukGhzkr6mZ70BrhpWRTrX9GjMNlxMVCKyU6G81PXmWFwfB/Wlo6Mvcjat1i1OKyVWj80uhbnrbup6ikNsnnbi2PDrqk+t18zmudU5tC+GXwXSMBl1k7AVWRXy/fSy6O9HNLq6tqjEUxP/d5Wel6Kz02y1hZkOIC6gZ5tQ//c/FKarVs6U802c/APOZpeg+Ih7iTiqF47aUAQx6oa3hyFfn4isehn3Mjjrgcg05dZd1fkb2KXhoNky7nVcurWA02py8F5Tq+pNg=
+#  app: gloat
+#  on:
+#    repo: vandiedakaf/gloat
+before_deploy:
+- if [ ! -d "$HOME/google-cloud-sdk/bin" ]; then rm -rf $HOME/google-cloud-sdk; export CLOUDSDK_CORE_DISABLE_PROMPTS=1; curl https://sdk.cloud.google.com | bash; fi
+- source /home/travis/google-cloud-sdk/path.bash.inc
+- gcloud --quiet version
+- gcloud --quiet components update
+- gcloud --quiet components beta update
+- gcloud --quiet components update kubectl
 branches:
   only:
   - master
+  - release
   - develop
 after_success:
   - "./gradlew jacocoTestReport coveralls"

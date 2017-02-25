@@ -21,8 +21,6 @@ public class UserCategoryTest {
         UserCategory userCategory = new UserCategory(userCategoryPK);
 
         assertThat(userCategory.getUserCategoryPK(), equalTo(userCategoryPK));
-
-        assertThat(userCategory.getElo(), equalTo(1500));
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.vdda.callback;
 
+import com.vdda.EnvProperties;
 import com.vdda.contest.ContestResolver;
 import com.vdda.jpa.*;
 import com.vdda.repository.CategoryRepository;
@@ -50,10 +51,12 @@ public class ConfirmContestTest {
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private SlackUtilities slackUtilities;
+    @Mocked
+    private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        confirmContest = new ConfirmContest(categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities) {
+        confirmContest = new ConfirmContest(envProperties, categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities) {
             @Override
             protected Attachment confirmAttachment(String opponentId) {
                 Attachment attachment = new Attachment();

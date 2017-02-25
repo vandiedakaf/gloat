@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "dev")
+@ActiveProfiles(profiles = "local")
 public class VictoryTest {
 
     @Autowired

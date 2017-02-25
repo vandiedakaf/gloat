@@ -1,5 +1,6 @@
 package com.vdda.contest;
 
+import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.*;
 import com.vdda.repository.ContestRepository;
@@ -31,13 +32,15 @@ public class ContestProcessorTest {
     @Mocked
     private ContestRepository contestRepository;
     @Mocked
+    private EnvProperties envProperties;
+    @Mocked
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private SlackUtilities slackUtilities;
 
     @Before
     public void setUp() throws Exception {
-        contestProcessor = new ContestProcessor(contestRepository, userCategoryRepository, slackUtilities) {
+        contestProcessor = new ContestProcessor(envProperties, contestRepository, userCategoryRepository, slackUtilities) {
             @Override
             EloCalculator.Ratings getRatings(EloCalculator eloCalculator) {
                 return eloCalculator.adjustedRating(EloCalculator.Outcome.WIN); // use any outcome

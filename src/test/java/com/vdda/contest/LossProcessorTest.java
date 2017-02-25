@@ -1,5 +1,6 @@
 package com.vdda.contest;
 
+import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
 import com.vdda.repository.ContestRepository;
@@ -31,10 +32,12 @@ public class LossProcessorTest {
     private UserCategory reporterCategory;
     @Mocked
     private UserCategory opponentCategory;
+    @Mocked
+    private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        lossProcessor = new LossProcessor(contestRepository, userCategoryRepository, slackUtilities);
+        lossProcessor = new LossProcessor(envProperties, contestRepository, userCategoryRepository, slackUtilities);
     }
 
     @Test

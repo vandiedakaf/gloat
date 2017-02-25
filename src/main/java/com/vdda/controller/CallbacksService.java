@@ -48,7 +48,6 @@ public class CallbacksService implements ApplicationContextAware, InitializingBe
     @Override
     public void afterPropertiesSet() throws Exception {
         Map<String, Callback> callbacksByName = applicationContext.getBeansOfType(Callback.class);
-        System.out.println(callbacksByName);
         callbacks = callbacksByName
                 .entrySet()
                 .stream()

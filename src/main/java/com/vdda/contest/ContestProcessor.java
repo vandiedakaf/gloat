@@ -1,5 +1,6 @@
 package com.vdda.contest;
 
+import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.Category;
 import com.vdda.jpa.Contest;
@@ -10,6 +11,7 @@ import com.vdda.repository.UserCategoryRepository;
 import com.vdda.slack.SlackUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -20,18 +22,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public abstract class ContestProcessor {
 
+    private EnvProperties envProperties;
     private ContestRepository contestRepository;
     private UserCategoryRepository userCategoryRepository;
     private SlackUtilities slackUtilities;
 
     @Autowired
-    public ContestProcessor(ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+    public ContestProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+        this.envProperties = envProperties;
         this.contestRepository = contestRepository;
         this.userCategoryRepository = userCategoryRepository;
         this.slackUtilities = slackUtilities;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     void processContest(Contest contest) {
 
         Category category = contest.getCategory();
@@ -67,6 +71,7 @@ public abstract class ContestProcessor {
         UserCategory userCategory = userCategoryRepository.findOne(userCategoryPK);
         if (userCategory == null) {
             userCategory = new UserCategory(userCategoryPK);
+            userCategory.setElo(envProperties.getEloInit());
             userCategory = userCategoryRepository.save(userCategory);
         }
         return userCategory;

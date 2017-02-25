@@ -1,5 +1,6 @@
 package com.vdda.callback;
 
+import com.vdda.EnvProperties;
 import com.vdda.contest.ContestResolver;
 import com.vdda.jpa.*;
 import com.vdda.jpa.User;
@@ -25,14 +26,16 @@ import java.util.List;
 @Slf4j
 public abstract class ConfirmContest implements Callback {
 
+    private final EnvProperties envProperties;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final ContestRepository contestRepository;
     private final ContestResolver contestResolver;
-    final UserCategoryRepository userCategoryRepository;
+    private final UserCategoryRepository userCategoryRepository;
     final SlackUtilities slackUtilities;
 
-    public ConfirmContest(CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+    public ConfirmContest(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+        this.envProperties = envProperties;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.contestRepository = contestRepository;
@@ -98,6 +101,7 @@ public abstract class ConfirmContest implements Callback {
         UserCategory userCategory = userCategoryRepository.findOne(userCategoryPK);
         if (userCategory == null) {
             userCategory = new UserCategory(userCategoryPK);
+            userCategory.setElo(envProperties.getEloInit());
             userCategory = userCategoryRepository.save(userCategory);
         }
         return userCategory;

@@ -1,5 +1,6 @@
 package com.vdda.contest;
 
+import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
 import com.vdda.repository.ContestRepository;
@@ -17,17 +18,19 @@ import org.springframework.stereotype.Service;
 public class DrawProcessor extends ContestProcessor {
 
     @Autowired
-    public DrawProcessor(ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
-        super(contestRepository, userCategoryRepository, slackUtilities);
+    public DrawProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+        super(envProperties, contestRepository, userCategoryRepository, slackUtilities);
     }
 
+    @Override
     EloCalculator.Ratings getRatings(EloCalculator eloCalculator) {
         return eloCalculator.adjustedRating(EloCalculator.Outcome.DRAW);
     }
 
+    @Override
     void adjustUserCategoryStats(UserCategory reporterCategory, UserCategory opponentCategory) {
-        reporterCategory.setDraws(opponentCategory.getDraws() + 1); // TODO does this create a race condition?
-        opponentCategory.setDraws(reporterCategory.getDraws() + 1); // TODO does this create a race condition?
+        reporterCategory.setDraws(opponentCategory.getDraws() + 1);
+        opponentCategory.setDraws(reporterCategory.getDraws() + 1);
     }
 
 }

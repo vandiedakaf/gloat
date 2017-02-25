@@ -1,5 +1,6 @@
 package com.vdda.callback;
 
+import com.vdda.EnvProperties;
 import com.vdda.contest.ContestResolver;
 import com.vdda.jpa.*;
 import com.vdda.repository.CategoryRepository;
@@ -22,9 +23,9 @@ import org.springframework.stereotype.Service;
 public class ConfirmContestVictory extends ConfirmContest {
 
     @Autowired
-    public ConfirmContestVictory(CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+    public ConfirmContestVictory(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
 
-        super(categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
+        super(envProperties, categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
     }
 
     @Override

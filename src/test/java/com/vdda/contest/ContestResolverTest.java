@@ -41,8 +41,6 @@ public class ContestResolverTest {
         contestResolver = new ContestResolver(contestRepository, contestProcessorFactory);
     }
 
-    // TODO test different ContestOutcomes
-
     @Test
     public void processContestsGolden() throws Exception {
 

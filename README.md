@@ -5,7 +5,7 @@
 Time to gloat!
 
 #Run
-gradle bootRun -Dspring.profiles.active=dev
+gradle bootRun -Dspring.profiles.active=local
 
 # Travis
 Required Environment Variables:
@@ -14,6 +14,7 @@ Required Environment Variables:
 * SLACK_TOKEN: *****
 
 # environment variables
+* GCLOUD_SERVICE_KEY
 * SLACK_CLIENT_ID: *****
 * SLACK_CLIENT_SECRET: *****
 * SLACK_TOKEN: *****

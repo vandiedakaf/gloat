@@ -1,5 +1,6 @@
 package com.vdda.callback;
 
+import com.vdda.EnvProperties;
 import com.vdda.contest.ContestResolver;
 import com.vdda.jpa.Category;
 import com.vdda.jpa.Contest;
@@ -50,10 +51,12 @@ public class ConfirmContestDrawTest {
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private SlackUtilities slackUtilities;
+    @Mocked
+    private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        confirmDraw = new ConfirmContestDraw(categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
+        confirmDraw = new ConfirmContestDraw(envProperties, categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
     }
 
     @Test

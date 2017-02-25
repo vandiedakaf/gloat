@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "dev")
+@ActiveProfiles(profiles = "local")
 public class CallbacksServiceTest {
 
     private static final String CALLBACK_ID = Callbacks.CONFIRM_VICTORY.toString() + "|userId";

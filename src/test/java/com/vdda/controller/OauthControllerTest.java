@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = "dev")
+@ActiveProfiles(profiles = "local")
 public class OauthControllerTest {
 
     private static final String TEAM_ID = "teamId";
