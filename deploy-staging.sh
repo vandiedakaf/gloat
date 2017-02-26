@@ -5,7 +5,6 @@ set -e
 docker build -t gcr.io/${GCLOUD_PROJECT_ID_STG}/${DOCKER_IMAGE_NAME}:$TRAVIS_COMMIT .
 
 echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
-cat ${HOME}/gcloud-service-key.json
 gcloud auth activate-service-account ${GCLOUD_ACCOUNT} --key-file ${HOME}/gcloud-service-key.json
 
 gcloud --quiet config set project $GCLOUD_PROJECT_ID_STG
