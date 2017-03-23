@@ -7,6 +7,9 @@ logging:
     com.vdda: INFO    
   file: gloat.log
 
+server:
+  port: 80
+
 spring:
   datasource:
     url: ${GLOAT_DB_URL}

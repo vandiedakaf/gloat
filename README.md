@@ -20,7 +20,11 @@ Required Environment Variables:
 * SLACK_TOKEN: *****
 
 # ngrok
-ngrok http 8080
+ngrok http 80
 
 # oauth
 https://slack.com/oauth/authorize?client_id=70045358465.121259295136&scope=commands,users:read,chat:write:bot,team:read
+
+
+# gcp
+https://cloud.google.com/sql/docs/mysql/connect-container-engine
