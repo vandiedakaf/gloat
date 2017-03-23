@@ -25,4 +25,4 @@ kubectl config view
 kubectl config current-context
 
 echo "K8 RUN"
-kubectl run kubernetes-bootcamp --image=${DOCKER_IMG_PATH}:$TRAVIS_COMMIT --port=80
+kubectl run kubernetes-bootcamp --image=${DOCKER_IMG_PATH}:$TRAVIS_COMMIT --port=8080
