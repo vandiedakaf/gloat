@@ -40,7 +40,7 @@ deploy:
     script: ./deploy-staging.sh
     skip_cleanup: true
     on:
-      branch: development
+      branch: develop
   - provider: script
     script: ./deploy-staging.sh
     skip_cleanup: true
