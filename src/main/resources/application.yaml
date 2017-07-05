@@ -15,9 +15,12 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate.ddl-auto: none # https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-creating-and-dropping-jpa-databases
+  output:
+    ansi:
+      enabled: always
 
 management:
-  port: 9000
+#  port: 9000
   security:
    enabled: true
 
@@ -32,9 +35,9 @@ env:
 spring:
   profiles: local
   datasource:
-    url: jdbc:mysql://localhost/gloat?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost/gloat?createDatabaseIfNotExist=true&useSSL=false
     username: root
-    password:
+    password: password
 
 logging:
   level:

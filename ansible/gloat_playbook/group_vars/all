@@ -1,0 +1,3 @@
+gcp_project_id: "gentle-broker-159521"
+gcp_region: "us-east1"
+gcp_zone: "us-east1-b"

@@ -1,0 +1,24 @@
+---
+- name: "Check if cloud SQL instance already exists"
+  shell: gcloud sql --project "{{ gcp_project_id }}" instances list --filter='NAME:"{{ gcp_zone }}-{{ gcp_sql_instance_name }}"' | grep -i [r]unnable
+  register: gcp_sql_instance_exists
+  ignore_errors: yes
+  tags:
+    - gcp-sql-instance-create
+
+- name: Create a new SQL instance
+  shell: gcloud beta sql \
+    --project "{{ gcp_project_id }}" \
+    instances create "{{ gcp_zone }}-{{ gcp_sql_instance_name }}" \
+    --gce-zone "{{ gcp_zone }}" \
+    --database-version "MYSQL_5_7"
+    --region "{{ gcp_region }}"
+    --tier "db-g1-small"
+    --storage-type "SSD"
+    --storage-size "10"
+    --backup
+    --backup-start-time "04:00"
+    --enable-bin-log
+  when: gcp_sql_instance_exists.stdout == ""
+  tags:
+    - gcp-sql-instance-create

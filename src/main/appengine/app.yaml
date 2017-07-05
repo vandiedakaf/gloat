@@ -1,0 +1,17 @@
+env: flex
+runtime: java
+#service: springboot
+
+health_check:
+  enable_health_check: True
+
+manual_scaling:
+  instances: 1
+
+env_variables:
+  GLOAT_DB_PASSWORD: 'tada'
+  GLOAT_DB_URL: '|GLOAT_DB_URL'
+  GLOAT_DB_USERNAME: '|GLOAT_DB_USERNAME'
+  SLACK_CLIENT_ID: '|SLACK_CLIENT_ID'
+  SLACK_CLIENT_SECRET: '|SLACK_CLIENT_SECRET'
+  SLACK_TOKEN: '|SLACK_TOKEN'
