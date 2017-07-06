@@ -113,7 +113,7 @@ public class ContestServiceTest {
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
 
-            assertThat(response.getText(), containsString("can't compete against yourself of slackbot"));
+            assertThat(response.getText(), containsString("can't compete against yourself or slackbot"));
         }};
     }
 
@@ -133,7 +133,7 @@ public class ContestServiceTest {
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
 
-            assertThat(response.getText(), containsString("can't compete against yourself of slackbot"));
+            assertThat(response.getText(), containsString("can't compete against yourself or slackbot"));
         }};
     }
 
@@ -153,7 +153,7 @@ public class ContestServiceTest {
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
 
-            assertThat(response.getText(), containsString("can't compete against yourself of slackbot"));
+            assertThat(response.getText(), containsString("can't compete against yourself or slackbot"));
         }};
     }
 
