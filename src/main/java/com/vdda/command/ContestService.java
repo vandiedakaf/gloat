@@ -49,7 +49,7 @@ public abstract class ContestService {
                 || "@slackbot".equals(args.get(0))
                 || parameters.get(SlackParameters.USER_ID.toString()).equals(user.get().getId())) {
             Response response = new Response();
-            response.setText("Sorry, you can't compete against yourself of slackbot.");
+            response.setText("Sorry, you can't compete against yourself or slackbot.");
             sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return new AsyncResult<>(null);
         }

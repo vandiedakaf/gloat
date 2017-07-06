@@ -39,8 +39,8 @@ branches:
   - release
   - develop
 after_success:
-#  - "./gradlew jacocoTestReport coveralls"
-#  - "sonar-scanner -Dsonar.login=$SONAR_TOKEN"
+  - "./gradlew jacocoTestReport coveralls"
+  - "sonar-scanner -Dsonar.login=$SONAR_TOKEN"
 notifications:
   email: false
 env:
