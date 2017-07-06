@@ -4,8 +4,7 @@
 logging:
   level:
     org.springframework.web: INFO
-    com.vdda: INFO    
-  file: gloat.log
+    com.vdda: DEBUG
 
 spring:
   datasource: # these credentials are typically replaced with environment variables
@@ -32,8 +31,10 @@ env:
   elo-init: 1500
 
 ---
+spring:
+  profiles: local
+
 logging:
   level:
     org.springframework.web: INFO
-    com.vdda: DEBUG    
-  file: gloat.log
+    com.vdda: DEBUG

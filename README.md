@@ -17,12 +17,10 @@ Required Environment Variables:
 * SONAR_TOKEN: *****
 * SLACK_TOKEN: *****
 
-# environment variables
-* GLOAT_DB_PASSWORD: *****
-* GLOAT_DB_URL: *****
-* GLOAT_DB_USERNAME: *****
+# Heroku Environment Variables
 * SLACK_CLIENT_ID: *****
 * SLACK_CLIENT_SECRET: *****
+* SLACK_TOKEN: *****
 
 # ngrok
 Use ngrok for local development with slack integration
