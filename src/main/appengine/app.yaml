@@ -9,7 +9,7 @@ manual_scaling:
   instances: 1
 
 env_variables:
-  GLOAT_DB_PASSWORD: 'tada'
+  GLOAT_DB_PASSWORD: '|GLOAT_DB_PASSWORD'
   GLOAT_DB_URL: '|GLOAT_DB_URL'
   GLOAT_DB_USERNAME: '|GLOAT_DB_USERNAME'
   SLACK_CLIENT_ID: '|SLACK_CLIENT_ID'
