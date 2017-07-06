@@ -1,7 +1,0 @@
----
-- name: Provision cloud environment for gloat
-  hosts: localhost
-  connection: local
-
-  roles:
-    - cloud-sql

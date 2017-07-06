@@ -14,12 +14,10 @@ Access MySQL docker bash via `docker exec -i -t mysql /bin/bash`.
 
 # Travis
 Required Environment Variables:
-* SPRING_PROFILES_ACTIVE: travis
 * SONAR_TOKEN: *****
 * SLACK_TOKEN: *****
 
 # environment variables
-* GCLOUD_SERVICE_KEY
 * GLOAT_DB_PASSWORD: *****
 * GLOAT_DB_URL: *****
 * GLOAT_DB_USERNAME: *****
