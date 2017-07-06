@@ -29,8 +29,8 @@ public class DrawProcessor extends ContestProcessor {
 
     @Override
     void adjustUserCategoryStats(UserCategory reporterCategory, UserCategory opponentCategory) {
-        reporterCategory.setDraws(opponentCategory.getDraws() + 1);
-        opponentCategory.setDraws(reporterCategory.getDraws() + 1);
+        reporterCategory.setDraws(reporterCategory.getDraws() + 1);
+        opponentCategory.setDraws(opponentCategory.getDraws() + 1);
     }
 
 }

@@ -12,6 +12,8 @@ import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by francois
  * on 2017-02-20
@@ -27,11 +29,6 @@ public class LossProcessorTest {
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private SlackUtilities slackUtilities;
-
-    @Mocked
-    private UserCategory reporterCategory;
-    @Mocked
-    private UserCategory opponentCategory;
     @Mocked
     private EnvProperties envProperties;
 
@@ -52,12 +49,15 @@ public class LossProcessorTest {
 
     @Test
     public void adjustUserCategoryStats() throws Exception {
+        UserCategory reporterCategory = new UserCategory(null);
+        reporterCategory.setLosses(3);
+
+        UserCategory opponentCategory = new UserCategory(null);
+        opponentCategory.setWins(5);
 
         lossProcessor.adjustUserCategoryStats(reporterCategory, opponentCategory);
 
-        new Verifications() {{
-            reporterCategory.setLosses(1);
-            opponentCategory.setWins(1);
-        }};
+        assertEquals((Integer) 4, reporterCategory.getLosses());
+        assertEquals((Integer) 6, opponentCategory.getWins());
     }
 }

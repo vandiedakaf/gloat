@@ -29,8 +29,8 @@ public class LossProcessor extends ContestProcessor {
 
     @Override
     void adjustUserCategoryStats(UserCategory reporterCategory, UserCategory opponentCategory) {
-        reporterCategory.setLosses(opponentCategory.getLosses() + 1);
-        opponentCategory.setWins(reporterCategory.getWins() + 1);
+        reporterCategory.setLosses(reporterCategory.getLosses() + 1);
+        opponentCategory.setWins(opponentCategory.getWins() + 1);
     }
 
 }

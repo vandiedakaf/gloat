@@ -12,6 +12,8 @@ import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * Created by francois
  * on 2017-02-20
@@ -27,11 +29,6 @@ public class WinProcessorTest {
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private SlackUtilities slackUtilities;
-
-    @Mocked
-    private UserCategory reporterCategory;
-    @Mocked
-    private UserCategory opponentCategory;
     @Mocked
     private EnvProperties envProperties;
 
@@ -53,11 +50,15 @@ public class WinProcessorTest {
     @Test
     public void adjustUserCategoryStats() throws Exception {
 
+        UserCategory reporterCategory = new UserCategory(null);
+        reporterCategory.setWins(3);
+
+        UserCategory opponentCategory = new UserCategory(null);
+        opponentCategory.setLosses(5);
+
         winProcessor.adjustUserCategoryStats(reporterCategory, opponentCategory);
 
-        new Verifications() {{
-            reporterCategory.setWins(1);
-            opponentCategory.setLosses(1);
-        }};
+        assertEquals((Integer) 4, reporterCategory.getWins());
+        assertEquals((Integer) 6, opponentCategory.getLosses());
     }
 }

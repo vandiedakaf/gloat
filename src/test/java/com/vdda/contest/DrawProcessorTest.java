@@ -3,6 +3,7 @@ package com.vdda.contest;
 import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
+import com.vdda.jpa.UserCategoryPK;
 import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
 import com.vdda.slack.SlackUtilities;
@@ -11,6 +12,8 @@ import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by francois
@@ -27,11 +30,6 @@ public class DrawProcessorTest {
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private SlackUtilities slackUtilities;
-
-    @Mocked
-    private UserCategory reporterCategory;
-    @Mocked
-    private UserCategory opponentCategory;
     @Mocked
     private EnvProperties envProperties;
 
@@ -52,12 +50,15 @@ public class DrawProcessorTest {
 
     @Test
     public void adjustUserCategoryStats() throws Exception {
+        UserCategory reporterCategory = new UserCategory(null);
+        reporterCategory.setDraws(3);
+
+        UserCategory opponentCategory = new UserCategory(null);
+        opponentCategory.setDraws(5);
 
         drawProcessor.adjustUserCategoryStats(reporterCategory, opponentCategory);
 
-        new Verifications() {{
-            reporterCategory.setDraws(1);
-            opponentCategory.setDraws(1);
-        }};
+        assertEquals((Integer) 4, reporterCategory.getDraws());
+        assertEquals((Integer) 6, opponentCategory.getDraws());
     }
 }
