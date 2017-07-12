@@ -1,6 +1,6 @@
 package com.vdda.controller;
 
-import com.vdda.command.Gloat;
+import com.vdda.command.*;
 import com.vdda.slack.Response;
 import mockit.Mock;
 import mockit.MockUp;
@@ -16,9 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -37,7 +39,7 @@ public class CommandsServiceTest {
     private Gloat gloat;
 
     @Autowired
-    private CommandsService commandsHandler;
+    private CommandsService commandsService;
 
     @BeforeClass
     public static void applySharedMockups() {
@@ -56,7 +58,7 @@ public class CommandsServiceTest {
 
         String parameters = "";
 
-        Response response = commandsHandler.run(parameters);
+        Response response = commandsService.run(parameters);
 
         assertThat(response.getText(), containsString("The available gloat commands are"));
     }
@@ -68,7 +70,7 @@ public class CommandsServiceTest {
 
         String parameters = "token=NOT_A_TOKEN";
 
-        Response response = commandsHandler.run(parameters);
+        Response response = commandsService.run(parameters);
 
         assertThat(response.getText(), containsString("The available gloat commands are"));
     }
@@ -78,7 +80,7 @@ public class CommandsServiceTest {
 
         String parameters = "token=SLACK_TOKEN";
 
-        Response response = commandsHandler.run(parameters);
+        Response response = commandsService.run(parameters);
 
         assertThat(response.getText(), containsString("The available gloat commands are"));
     }
@@ -88,7 +90,7 @@ public class CommandsServiceTest {
 
         String parameters = "token=SLACK_TOKEN&text=";
 
-        Response response = commandsHandler.run(parameters);
+        Response response = commandsService.run(parameters);
 
         assertThat(response.getText(), containsString("The available gloat commands are"));
     }
@@ -98,7 +100,7 @@ public class CommandsServiceTest {
 
         String parameters = "token=SLACK_TOKEN&text=test";
 
-        Response response = commandsHandler.run(parameters);
+        Response response = commandsService.run(parameters);
 
         assertThat(response.getText(), containsString("The available gloat commands are"));
     }
@@ -108,7 +110,7 @@ public class CommandsServiceTest {
 
         String parameters = "token=SLACK_TOKEN&text=gloat";
 
-        commandsHandler.run(parameters);
+        commandsService.run(parameters);
 
         new Verifications() {{
             Map<String, String> parametersMap;
@@ -116,5 +118,23 @@ public class CommandsServiceTest {
 
             assertThat(parametersMap.get("text"), is(equalTo("gloat")));
         }};
+    }
+
+    @Test
+    public void confirmCommandsSort() throws Exception {
+
+        Map<String, Command> unsortedMap = new HashMap<>();
+
+        unsortedMap.put("v", new Victory(null));
+        unsortedMap.put("d", new Draw(null));
+        unsortedMap.put("l", new Loss(null));
+
+        Map<String, Command> sortedMap = commandsService.toTreeMap(unsortedMap);
+
+        String prevCommand = "";
+        for (Command command : sortedMap.values()) {
+            assertThat(command.getCommand(), is(greaterThan(prevCommand)));
+            prevCommand = command.getCommand();
+        }
     }
 }

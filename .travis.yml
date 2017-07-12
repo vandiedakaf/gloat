@@ -29,7 +29,7 @@ deploy:
   api_key:
     secure: QahG7hlJi0s3p5s9z0YhwLoe4lRfLM+ESoBhem5NWcOTQwL9U7Qai4EFklOVGL2P2nPCtupsJpYg+lw+EJrbP3QN1FBtQmCnMwqAjHXZLUy0m33EcpYnhKODfv+g9/MIU/sHTvzoqtUfGTdm6zp7Ize6IfDe8T5M2MSasVD4tU0PXk5nJFr3q9ixxja4VLzBqIocNBVCAKZBxKCmhpQBlIMYffxMh+XK9bfoAXvR7Bzp84OcVlIj5odIRWTea926WDiqgn8WXYUGlTGvjt9IBMovfUfaAU6D7MxhuILgt++KuIMf9Yuv0g25Mhb+FNAIXpO/w75XxVzDZwL7KXTjnwp0GD5KGsYqz720RIIMRv8EeTdby9ujb+nex5WF1j2F/m/gWq6GerP/6vUtogvaeZ1/bsh3VSATB9VVsn+SUJvj1KXaDJGkbm4BvkoV579gEvbzUs+hK0+YF1OPyI7YJ8lX0EnCAjo7Vox9/FPRqhfg2SmQ35+qggqhiCXsiXbAkhzIo7cXvE9uTXZmI1WD3NYV2CDgxiXE0NicTgUVZHeXwIkrIJSinyE68kHYhbQ/F/g57KgpqviEWP7BDGnsvCMKIfVzX6Hjix5isqvjyF+JYa2lKyqWfmiGIQ6jaNRXvUwc+fVFko415lyymf44Z3SSK4J/cUD+ZnnXcnqtGLg=
   app:
-    develop: gloat-staging # change this to gloat-staging in due time
+    develop: gloat-develop
     master: gloat
   on:
     repo: vandiedakaf/gloat

@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by francois
@@ -50,7 +52,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
         StringBuilder stringBuilder = new StringBuilder("The available gloat commands are:\n");
 
         for (Command command : commands.values()) {
-            stringBuilder.append(String.format("`%" + maxLen + "s - %s Usage: %s`\n", command.getCommand(), command.getShortDescription(), command.getUsage()));
+            stringBuilder.append(String.format("`%-" + maxLen + "s - %s Usage: %s`\n", command.getCommand(), command.getShortDescription(), command.getUsage()));
         }
 
         Response response = new Response();
@@ -65,7 +67,24 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        commands = applicationContext.getBeansOfType(Command.class); // TODO sort
+        Map<String, Command> applicationCommands = applicationContext.getBeansOfType(Command.class);
+
+        commands = toTreeMap(applicationCommands);
         commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
+    }
+
+    /**
+     * Easy sorting by converting to TreeMap
+     * @param map A map created by applicationContext.getBeansOfType(Command.class)
+     * @return A TreeMap version of the input Map
+     */
+    Map<String, Command> toTreeMap(Map<String, Command> map) {
+        return map.entrySet().stream()
+                .collect(Collectors.toMap(
+                        e -> e.getValue().getCommand(),
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        TreeMap::new
+                ));
     }
 }
