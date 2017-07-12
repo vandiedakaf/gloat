@@ -11,7 +11,7 @@ import org.meanbean.test.BeanTester;
 public class TeamTest {
     @Test
     public void meanBean() throws Exception {
-        //new BeanTester().testBean(Team.class);
+        new BeanTester().testBean(Team.class);
     }
 
 }

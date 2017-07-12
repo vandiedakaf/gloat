@@ -12,6 +12,6 @@ public class ResponseTest {
 
     @Test
     public void meanBean() throws Exception {
-        //new BeanTester().testBean(Response.class);
+        new BeanTester().testBean(Response.class);
     }
 }

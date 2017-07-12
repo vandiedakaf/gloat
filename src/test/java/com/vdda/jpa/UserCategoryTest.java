@@ -25,7 +25,7 @@ public class UserCategoryTest {
 
     @Test
     public void meanBean() throws Exception {
-        //new BeanTester().testBean(UserCategory.class);
+        new BeanTester().testBean(UserCategory.class);
     }
 
 }

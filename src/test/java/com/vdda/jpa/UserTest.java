@@ -21,7 +21,7 @@ public class UserTest {
 
     @Test
     public void meanBean() {
-        //new BeanTester().testBean(User.class);
+        new BeanTester().testBean(User.class);
     }
 
 }
