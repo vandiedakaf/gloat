@@ -10,7 +10,7 @@ spring:
   datasource: # these credentials are typically replaced with environment variables
     url: jdbc:mysql://localhost/gloat?createDatabaseIfNotExist=true&useSSL=false
     username: root
-    password: password
+    password:
     driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate.ddl-auto: none # https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-creating-and-dropping-jpa-databases
