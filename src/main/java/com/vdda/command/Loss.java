@@ -22,7 +22,7 @@ public class Loss implements Command {
 
     private final String command = "loss";
     private final String usage = "loss @user";
-    private final String shortDescription = "Hey now, at least you can be first at acknowledging defeat.";
+    private final String shortDescription = "Acknowledge your defeat.";
 
     @Getter(AccessLevel.NONE)
     private final LossService lossService;

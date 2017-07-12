@@ -65,7 +65,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        commands = applicationContext.getBeansOfType(Command.class);
+        commands = applicationContext.getBeansOfType(Command.class); // TODO sort
         commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
     }
 }

@@ -19,7 +19,7 @@ public class Top implements Command {
 
     private final String command = "top";
     private final String usage = "top";
-    private final String shortDescription = "Lists the top ranking players (also known as the winners).";
+    private final String shortDescription = "Lists the top ranking players.";
 
     @Getter(AccessLevel.NONE)
     private final TopService topService;
