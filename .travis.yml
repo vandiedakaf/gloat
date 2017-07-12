@@ -23,7 +23,7 @@ cache:
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.sonar"
 script:
-  - "./gradlew build --debug"
+  - "./gradlew build --info"
 deploy:
   provider: heroku
   api_key:
