@@ -64,7 +64,8 @@ public abstract class ContestProcessor {
         contest.setProcessed(true);
         contest = contestRepository.save(contest);
 
-        notifyChannelAfter(contest, userCategoryReporter, userCategoryOpponent);
+        // TODO: disabling this until a better post contest processing notification process is determined
+//        notifyChannelAfter(contest, userCategoryReporter, userCategoryOpponent);
     }
 
     private UserCategory getOrCreateUserCategory(UserCategoryPK userCategoryPK) {
