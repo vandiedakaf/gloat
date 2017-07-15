@@ -1,4 +1,4 @@
-package com.vdda.command;
+package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
 import com.vdda.slack.Action;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.vdda.callback.Callbacks.CONFIRM_DRAW;
+import static com.vdda.callback.Callbacks.CONFIRM_VICTORY;
 
 /**
  * Created by francois
@@ -22,10 +22,10 @@ import static com.vdda.callback.Callbacks.CONFIRM_DRAW;
  */
 @Service
 @Slf4j
-public class DrawService extends ContestService {
+public class VictoryService extends ContestService {
 
     @Autowired
-    public DrawService(RestTemplateBuilder restTemplateBuilder, SlackUtilities slackUtilities) {
+    public VictoryService(RestTemplateBuilder restTemplateBuilder, SlackUtilities slackUtilities) {
         super(restTemplateBuilder.build(), slackUtilities);
     }
 
@@ -47,11 +47,11 @@ public class DrawService extends ContestService {
         actionNo.setValue("no");
         actionNo.setStyle("danger");
         actions.add(actionNo);
-        attachment.setFallback("Draw Confirmation");
-        attachment.setTitle("Draw Confirmation");
-        attachment.setText("Confirm that you drew with <@" + user.getId() + ">.");
+        attachment.setFallback("Victory Confirmation");
+        attachment.setTitle("Victory Confirmation");
+        attachment.setText("Confirm that you beat <@" + user.getId() + ">.");
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(CONFIRM_DRAW.toString(), user.getId()));
+        attachment.setCallback_id(callbackBuilder(CONFIRM_VICTORY.toString(), user.getId()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);

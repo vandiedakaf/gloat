@@ -1,4 +1,4 @@
-package com.vdda.command;
+package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
 import com.vdda.slack.*;
@@ -31,7 +31,7 @@ public abstract class ContestService {
     }
 
     @Async
-    Future<?> processRequest(Map<String, String> parameters, List<String> args) {
+    public Future<?> processRequest(Map<String, String> parameters, List<String> args) {
 
         final String teamId = parameters.get(SlackParameters.TEAM_ID.toString());
 

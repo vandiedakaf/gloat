@@ -1,4 +1,4 @@
-package com.vdda.command;
+package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
 import com.vdda.slack.Response;

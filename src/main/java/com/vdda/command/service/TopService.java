@@ -1,4 +1,4 @@
-package com.vdda.command;
+package com.vdda.command.service;
 
 import com.vdda.jpa.Category;
 import com.vdda.jpa.UserCategory;
@@ -20,15 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
-/**
- * Created by francois
- * on 2016-12-30
- * for vandiedakaf solutions
- */
 @Service
 @Slf4j
 public class TopService {
@@ -47,7 +43,7 @@ public class TopService {
     }
 
     @Async
-    Future<?> processRequest(Map<String, String> parameters) {
+    public Future<?> processRequest(Map<String, String> parameters) {
 
         Response response = getTopUsers(parameters);
 
@@ -58,10 +54,11 @@ public class TopService {
 
     private Response getTopUsers(Map<String, String> parameters) {
 
+        Response response = new Response();
+
         Category category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
 
         if (category == null) {
-            Response response = new Response();
             response.setText("No contests have been registered in this category.");
             return response;
         }
@@ -69,16 +66,14 @@ public class TopService {
         List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId());
 
         if (userCategories.isEmpty()) {
-            Response response = new Response();
             response.setText("No contests have been registered in this category.");
             return response;
         }
 
-        List<Pair<Integer, UserCategory>> rankedUserCategories = getRankedPairs(userCategories);
+        List<Pair<Integer, UserCategory>> rankedUserCategories = determineRankedPairs(userCategories);
 
         List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(parameters.get(SlackParameters.USER_ID.toString()), rankedUserCategories);
 
-        Response response = new Response();
         response.setText("Top Contestants");
 
         List<Attachment> attachments = new ArrayList<>();
@@ -123,23 +118,31 @@ public class TopService {
 
         Pair<Integer, UserCategory> userCategoryPair = rankedUserCategories
                 .stream()
-                .filter(u -> u.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
+                .filter(p -> p.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
                 .findFirst()
                 .orElse(null);
 
+        Predicate<Pair<Integer, UserCategory>> topFilterPredicate = topPlayersOnly();
         if (userCategoryPair != null) {
-            rankedUserCategoriesFiltered = rankedUserCategories.stream()
-                    .filter(p -> (p.getFirst() <= TOP_COUNT) || Math.abs(p.getFirst() - userCategoryPair.getFirst()) <= 1)
-                    .collect(toList());
-        } else {
-            rankedUserCategoriesFiltered = rankedUserCategories.stream()
-                    .filter(p -> p.getFirst() <= TOP_COUNT)
-                    .collect(toList());
+            topFilterPredicate = topPlayersAndNeighbours(userCategoryPair.getFirst());
         }
+
+        rankedUserCategoriesFiltered = rankedUserCategories.stream()
+                .filter(topFilterPredicate)
+                .collect(toList());
+
         return rankedUserCategoriesFiltered;
     }
 
-    private List<Pair<Integer, UserCategory>> getRankedPairs(List<UserCategory> userCategories) {
+    private Predicate<Pair<Integer, UserCategory>> topPlayersOnly() {
+        return p -> p.getFirst() <= TOP_COUNT;
+    }
+
+    private Predicate<Pair<Integer, UserCategory>> topPlayersAndNeighbours(Integer userRank) {
+        return p -> (p.getFirst() <= TOP_COUNT) || Math.abs(p.getFirst() - userRank) <= 1;
+    }
+
+    private List<Pair<Integer, UserCategory>> determineRankedPairs(List<UserCategory> userCategories) {
         return IntStream.range(0, userCategories.size())
                 .mapToObj(i -> Pair.of(i + 1, userCategories.get(i)))
                 .collect(toList());

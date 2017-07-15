@@ -1,5 +1,6 @@
 package com.vdda.command;
 
+import com.vdda.command.service.TopService;
 import com.vdda.slack.Response;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -8,11 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-/**
- * Created by francois
- * on 2016-12-25
- * for vandiedakaf solutions
- */
 @Service
 @Getter
 public class Top implements Command {

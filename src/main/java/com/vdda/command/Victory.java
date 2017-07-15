@@ -1,5 +1,6 @@
 package com.vdda.command;
 
+import com.vdda.command.service.VictoryService;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import lombok.AccessLevel;

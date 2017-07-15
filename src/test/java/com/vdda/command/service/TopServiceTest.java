@@ -1,4 +1,4 @@
-package com.vdda.command;
+package com.vdda.command.service;
 
 import com.vdda.jpa.User;
 import com.vdda.jpa.UserCategory;
@@ -21,9 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 

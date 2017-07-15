@@ -1,4 +1,4 @@
-package com.vdda.command;
+package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
 import com.vdda.slack.Response;
@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * on 2017-01-04
  * for vandiedakaf solutions
  */
-public class LossServiceTest {
+public class DrawServiceTest {
 
     private static final String USER_NAME = "@userName";
     private static final String USER_ID = "userId";
@@ -32,7 +32,7 @@ public class LossServiceTest {
     private static final String TEST_USER_ID = "testUserId";
 
     @Tested
-    private LossService lossService;
+    private DrawService drawService;
 
     @Mocked
     private RestTemplateBuilder restTemplateBuilder;
@@ -46,7 +46,7 @@ public class LossServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        lossService = new LossService(restTemplateBuilder, slackUtilities);
+        drawService = new DrawService(restTemplateBuilder, slackUtilities);
 
         parameters = new HashMap<>();
         parameters.put(SlackParameters.TEAM_ID.toString(), TEAM_ID);
@@ -65,7 +65,7 @@ public class LossServiceTest {
             result = mockUser();
         }};
 
-        lossService.processRequest(parameters, args);
+        drawService.processRequest(parameters, args);
 
         new Verifications() {{
             Response response;

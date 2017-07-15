@@ -1,25 +1,26 @@
 package com.vdda.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
-/**
- * Created by francois
- * on 2016-10-22
- * for vandiedakaf solutions
- */
 @Controller
 @RequestMapping("/install")
 @Slf4j
 public class InstallController {
 
+    @Value("${SLACK_CLIENT_ID}")
+    private String slackClientId;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String install() {
+    public ModelAndView install() {
 
-        return "install";
+        ModelAndView mav = new ModelAndView("install");
+        mav.addObject("slackClientId", slackClientId);
+        return mav;
     }
 
 }

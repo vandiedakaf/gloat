@@ -1,16 +1,14 @@
 package com.vdda.command;
 
+import com.vdda.command.service.GloatService;
 import com.vdda.slack.Response;
+import lombok.AccessLevel;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-/**
- * Created by francois
- * on 2016-12-25
- * for vandiedakaf solutions
- */
 @Service
 @Getter
 public class Gloat implements Command {
@@ -19,10 +17,19 @@ public class Gloat implements Command {
     private final String usage = "gloat";
     private final String shortDescription = "Let them know who's king of this channel! Coming soon.";
 
+    @Getter(AccessLevel.NONE)
+    private final GloatService gloatService;
+
+    @Autowired
+    public Gloat(GloatService gloatService) {
+        this.gloatService = gloatService;
+    }
+
     @Override
     public Response run(Map<String, String> parameters) {
-        Response response = new Response();
-        response.setText("COMING SOON.");
-        return response;
+
+        gloatService.processRequest(parameters);
+
+        return null;
     }
 }
