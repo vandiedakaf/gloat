@@ -55,7 +55,13 @@ jacocoTestReport {
 }
 
 bootRun {
-    // locally run with script parameter: -Dspring.profiles.active=local
+    // Ensure that `gradle bootRun` honours -Dspring.profiles.active=***
+    // http://stackoverflow.com/a/31328621/792287
+    systemProperties System.properties
+}
+
+test {
+    // Ensure that `gradle test` honours -Dspring.profiles.active=***
     // http://stackoverflow.com/a/31328621/792287
     systemProperties System.properties
 }

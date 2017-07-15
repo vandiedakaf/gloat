@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = "local")
+//@ActiveProfiles(profiles = "local")
 public class SimpleErrorControllerTest {
     @Autowired
     private MockMvc mvc;

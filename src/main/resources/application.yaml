@@ -5,7 +5,6 @@ logging:
   level:
     org.springframework.web: INFO
     com.vdda: DEBUG
-    org.meanbean: INFO
 
 spring:
   datasource: # these credentials are typically replaced with environment variables
@@ -39,5 +38,4 @@ spring:
 
 logging:
   level:
-    org.springframework.web: INFO
     com.vdda: DEBUG

@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles(profiles = "local")
+//@ActiveProfiles(profiles = "local")
 public class GloatTest {
 
     @Autowired
