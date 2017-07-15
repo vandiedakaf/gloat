@@ -41,7 +41,7 @@ public abstract class ContestService {
             log.debug("User not found");
             Response response = new Response();
             response.setText("Sorry, seems like " + args.get(0) + " is some imaginary person.");
-            sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+            restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return new AsyncResult<>(null);
         }
 
@@ -50,13 +50,13 @@ public abstract class ContestService {
                 || parameters.get(SlackParameters.USER_ID.toString()).equals(user.get().getId())) {
             Response response = new Response();
             response.setText("Sorry, you can't compete against yourself or slackbot.");
-            sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+            restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return new AsyncResult<>(null);
         }
 
         Response response = confirmationButton(user.get());
 
-        sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+        restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
 
         return new AsyncResult<>(null);
     }
@@ -65,9 +65,5 @@ public abstract class ContestService {
 
     String callbackBuilder(String callbackId, String userId) {
         return callbackId + "|" + userId;
-    }
-
-    private void sendResponse(String responseUrl, Response response) {
-        restTemplate.postForLocation(responseUrl, response);
     }
 }

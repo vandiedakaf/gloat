@@ -47,7 +47,7 @@ public class TopService {
 
         Response response = getTopUsers(parameters);
 
-        sendResponse(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+        restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
 
         return new AsyncResult<>(null);
     }
@@ -161,9 +161,5 @@ public class TopService {
         stringBuilder.append("-");
         stringBuilder.append(userCategoryPair.getSecond().getDraws());
         stringBuilder.append("]\n");
-    }
-
-    private void sendResponse(String responseUrl, Response response) {
-        restTemplate.postForLocation(responseUrl, response);
     }
 }
