@@ -1,8 +1,13 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
-import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
@@ -12,21 +17,20 @@ import static org.junit.Assert.assertThat;
  * on 2017-01-05
  * for vandiedakaf solutions
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ActiveProfiles(profiles = "local")
 public class GloatTest {
 
+    @Autowired
     private Gloat gloat;
 
-    @Before
-    public void setUp() throws Exception {
-        gloat = new Gloat();
-    }
-
     @Test
+    @Ignore
     public void runGolden() throws Exception {
         Response response = gloat.run(null);
 
         assertThat(response.getText(), containsString("COMING SOON"));
-
     }
 
     @Test
