@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class InstallController {
 
-    @Value("${SLACK_CLIENT_ID:slack-client-id-not-set}")
+    @Value("${SLACK_CLIENT_ID:SLACK-CLIENT-ID-NOT-SET}")
     private String slackClientId;
 
     @RequestMapping(method = RequestMethod.GET)

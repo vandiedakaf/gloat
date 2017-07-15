@@ -63,7 +63,7 @@ public class GloatService {
             return response;
         }
 
-        if (!(userCategories.get(1).getUserCategoryPK().getUser().getUserId().equals(parameters.get(SlackParameters.USER_ID.toString())))) {
+        if (!(userCategories.get(0).getUserCategoryPK().getUser().getUserId().equals(parameters.get(SlackParameters.USER_ID.toString())))) {
             response.setText("You can only gloat if you are ranked #1 in this category.");
             return response;
         }
@@ -73,7 +73,7 @@ public class GloatService {
 
         StringBuilder champDetails = new StringBuilder();
         champDetails.append("<@");
-        champDetails.append(userCategories.get(1).getUserCategoryPK().getUser().getUserId());
+        champDetails.append(userCategories.get(0).getUserCategoryPK().getUser().getUserId());
         champDetails.append("> would like you all to bow before their greatness.");
 
         Attachment attachmentTitle = new Attachment();
