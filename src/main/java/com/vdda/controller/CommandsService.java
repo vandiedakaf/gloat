@@ -28,7 +28,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
     private Map<String, Command> commands;
     private int maxLen = 0;
     private ApplicationContext applicationContext;
-    @Value("${SLACK_TOKEN:SLACK-TOKEN-NOT-SET}")
+    @Value("${SLACK_TOKEN:SLACK_TOKEN}")
     private String slackToken;
 
     Response run(String parametersString) {

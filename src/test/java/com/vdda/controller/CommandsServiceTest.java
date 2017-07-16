@@ -76,7 +76,7 @@ public class CommandsServiceTest {
     @Test
     public void noCommand() throws Exception {
 
-        String parameters = "token=SLACK-TOKEN-NOT-SET";
+        String parameters = "token=SLACK_TOKEN";
 
         Response response = commandsService.run(parameters);
 
@@ -86,7 +86,7 @@ public class CommandsServiceTest {
     @Test
     public void textEmpty() throws Exception {
 
-        String parameters = "token=SLACK-TOKEN-NOT-SET&text=";
+        String parameters = "token=SLACK_TOKEN&text=";
 
         Response response = commandsService.run(parameters);
 
@@ -96,7 +96,7 @@ public class CommandsServiceTest {
     @Test
     public void containsText() throws Exception {
 
-        String parameters = "token=SLACK-TOKEN-NOT-SET&text=test";
+        String parameters = "token=SLACK_TOKEN&text=test";
 
         Response response = commandsService.run(parameters);
 
@@ -106,7 +106,7 @@ public class CommandsServiceTest {
     @Test
     public void gloat() throws Exception {
 
-        String parameters = "token=SLACK-TOKEN-NOT-SET&text=gloat";
+        String parameters = "token=SLACK_TOKEN&text=gloat";
 
         commandsService.run(parameters);
 
