@@ -1,17 +1,17 @@
 package com.vdda.command;
 
+import com.vdda.command.service.DrawService;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
+import mockit.Mocked;
+import mockit.Verifications;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -19,12 +19,17 @@ import static org.junit.Assert.assertThat;
  * on 2017-01-05
  * for vandiedakaf solutions
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class DrawTest {
 
-    @Autowired
     private Draw draw;
+
+    @Mocked
+    DrawService drawService;
+
+    @Before
+    public void setUp() throws Exception {
+        draw = new Draw(drawService);
+    }
 
     @Test
     public void missingArgs() throws Exception {
@@ -39,7 +44,7 @@ public class DrawTest {
     }
 
     @Test
-    public void lossGolden() throws Exception {
+    public void drawGolden() throws Exception {
 
         Map<String, String> parameters = new HashMap<>();
         parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
@@ -47,6 +52,14 @@ public class DrawTest {
         parameters.put(SlackParameters.TEXT.toString(), "draw user");
 
         Response response = draw.run(parameters);
+
+
+        new Verifications() {{
+            Map<String, String> parameters;
+            drawService.processRequest(parameters = withCapture(), withNotNull());
+
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+        }};
         assertThat(response.getText(), containsString("We're processing your request..."));
     }
 

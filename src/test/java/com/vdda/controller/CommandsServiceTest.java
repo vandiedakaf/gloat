@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
@@ -76,7 +76,7 @@ public class CommandsServiceTest {
     @Test
     public void noCommand() throws Exception {
 
-        String parameters = "token=SLACK_TOKEN";
+        String parameters = "token=SLACK-TOKEN-NOT-SET";
 
         Response response = commandsService.run(parameters);
 
@@ -86,7 +86,7 @@ public class CommandsServiceTest {
     @Test
     public void textEmpty() throws Exception {
 
-        String parameters = "token=SLACK_TOKEN&text=";
+        String parameters = "token=SLACK-TOKEN-NOT-SET&text=";
 
         Response response = commandsService.run(parameters);
 
@@ -96,7 +96,7 @@ public class CommandsServiceTest {
     @Test
     public void containsText() throws Exception {
 
-        String parameters = "token=SLACK_TOKEN&text=test";
+        String parameters = "token=SLACK-TOKEN-NOT-SET&text=test";
 
         Response response = commandsService.run(parameters);
 
@@ -106,7 +106,7 @@ public class CommandsServiceTest {
     @Test
     public void gloat() throws Exception {
 
-        String parameters = "token=SLACK_TOKEN&text=gloat";
+        String parameters = "token=SLACK-TOKEN-NOT-SET&text=gloat";
 
         commandsService.run(parameters);
 

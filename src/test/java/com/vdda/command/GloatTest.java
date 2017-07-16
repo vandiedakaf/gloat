@@ -1,14 +1,13 @@
 package com.vdda.command;
 
+import com.vdda.command.service.GloatService;
 import com.vdda.slack.Response;
+import mockit.Mocked;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -16,12 +15,17 @@ import static org.junit.Assert.assertThat;
  * on 2017-01-05
  * for vandiedakaf solutions
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class GloatTest {
 
-    @Autowired
     private Gloat gloat;
+
+    @Mocked
+    GloatService gloatService;
+
+    @Before
+    public void setUp() throws Exception {
+        gloat = new Gloat(gloatService);
+    }
 
     @Test
     @Ignore

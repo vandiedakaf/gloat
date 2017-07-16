@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Service
 @Getter
-public class Tender implements Command {
+public class Tender extends Command {
 
     private final String command = "tender";
     private final String usage = "tender";

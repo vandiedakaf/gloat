@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**

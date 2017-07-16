@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Service
 @Getter
-public class Draw implements Command {
+public class Draw extends Command {
 
     private final String command = "draw";
     private final String usage = "draw @user";
@@ -36,8 +36,7 @@ public class Draw implements Command {
     @Override
     public Response run(Map<String, String> parameters) {
 
-        String[] argsArray = parameters.get(SlackParameters.TEXT.toString()).split(" ");
-        List<String> args = Arrays.asList(argsArray).subList(1, argsArray.length);
+        List<String> args = getArguments(parameters);
 
         if (args.isEmpty()) {
             Response response = new Response();

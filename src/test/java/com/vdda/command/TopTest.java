@@ -1,18 +1,17 @@
 package com.vdda.command;
 
+import com.vdda.command.service.TopService;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
+import mockit.Mocked;
+import mockit.Verifications;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -20,12 +19,17 @@ import static org.junit.Assert.assertThat;
  * on 2017-01-05
  * for vandiedakaf solutions
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class TopTest {
 
-    @Autowired
     Top top;
+
+    @Mocked
+    TopService topService;
+
+    @Before
+    public void setUp() throws Exception {
+        top = new Top(topService);
+    }
 
     @Test
     public void runGolden() throws Exception {
@@ -36,10 +40,14 @@ public class TopTest {
         parameters.put(SlackParameters.TEXT.toString(), "top");
 
         Response response = top.run(parameters);
+        assertThat(response.getText(), containsString("We're processing your request..."));
 
-        // TODO: mock test if topService.processRequest(parameters) is called (also do this for other Commands
-//        assertThat(response.getText(), containsString("We're processing your request..."));
+        new Verifications() {{
+            Map<String, String> parameters;
+            topService.processRequest(parameters = withCapture());
 
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+        }};
     }
 
     @Test

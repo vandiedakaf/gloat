@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 @Service
 @Getter
-public class Victory implements Command {
+public class Victory extends Command {
 
     private final String command = "victory";
     private final String usage = "victory @user";
@@ -38,8 +38,7 @@ public class Victory implements Command {
     @Override
     public Response run(Map<String, String> parameters) {
 
-        String[] argsArray = parameters.get(SlackParameters.TEXT.toString()).split(" ");
-        List<String> args = Arrays.asList(argsArray).subList(1, argsArray.length);
+        List<String> args = getArguments(parameters);
 
         if (args.isEmpty()) {
             Response response = new Response();

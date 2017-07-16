@@ -11,11 +11,11 @@ import java.util.Map;
 
 @Service
 @Getter
-public class Gloat implements Command {
+public class Gloat extends Command {
 
     private final String command = "gloat";
     private final String usage = "gloat";
-    private final String shortDescription = "Let them know who's king of this channel! Coming soon.";
+    private final String shortDescription = "Gloat about your reign at the top of the logs.";
 
     @Getter(AccessLevel.NONE)
     private final GloatService gloatService;

@@ -1,17 +1,17 @@
 package com.vdda.command;
 
+import com.vdda.command.service.LossService;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
+import mockit.Mocked;
+import mockit.Verifications;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -19,12 +19,17 @@ import static org.junit.Assert.assertThat;
  * on 2017-01-05
  * for vandiedakaf solutions
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class LossTest {
 
-    @Autowired
     private Loss loss;
+
+    @Mocked
+    LossService lossService;
+
+    @Before
+    public void setUp() throws Exception {
+        loss = new Loss(lossService);
+    }
 
     @Test
     public void missingArgs() throws Exception {
@@ -39,7 +44,7 @@ public class LossTest {
     }
 
     @Test
-    public void lossGolden() throws Exception {
+    public void runGolden() throws Exception {
 
         Map<String, String> parameters = new HashMap<>();
         parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
@@ -48,6 +53,13 @@ public class LossTest {
 
         Response response = loss.run(parameters);
         assertThat(response.getText(), containsString("We're processing your request..."));
+
+        new Verifications() {{
+            Map<String, String> parameters;
+            lossService.processRequest(parameters = withCapture(), withNotNull());
+
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+        }};
     }
 
     @Test

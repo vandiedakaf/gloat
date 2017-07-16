@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Service
 @Getter
-public class Top implements Command {
+public class Top extends Command {
 
     private final String command = "top";
     private final String usage = "top";
@@ -30,6 +30,8 @@ public class Top implements Command {
 
         topService.processRequest(parameters);
 
-        return null;
+        Response response = new Response();
+        response.setText("We're processing your request...");
+        return response;
     }
 }

@@ -7,6 +7,7 @@ import com.vdda.tool.Parameters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,14 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
     private Map<String, Command> commands;
     private int maxLen = 0;
     private ApplicationContext applicationContext;
+    @Value("${SLACK_TOKEN:SLACK-TOKEN-NOT-SET}")
+    private String slackToken;
 
     Response run(String parametersString) {
 
         Map<String, String> parametersMap = Parameters.parse(parametersString);
 
-        if (!System.getenv("SLACK_TOKEN").equals(parametersMap.get(SlackParameters.TOKEN.toString()))) {
+        if (!slackToken.equals(parametersMap.get(SlackParameters.TOKEN.toString()))) {
             log.warn("Incorrect Token");
             throw new IllegalArgumentException("Incorrect Token");
         }

@@ -3,8 +3,8 @@ package com.vdda.slack;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**

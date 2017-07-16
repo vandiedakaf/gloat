@@ -19,7 +19,7 @@ public class Parameters {
     }
 
     /**
-     * Seems that slack sends only one value per parameter (i.e no value lists are require)
+     * Seems that slack sends only one value per parameter (i.e no value lists are required)
      */
     public static Map<String, String> parse(String parameters) {
 
