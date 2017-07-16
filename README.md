@@ -15,7 +15,6 @@ Access MySQL docker bash via `docker exec -i -t mysql /bin/bash`.
 # Travis
 Required Environment Variables:
 * SONAR_TOKEN: *****
-* SLACK_TOKEN: *****
 
 # Heroku Environment Variables
 * SLACK_CLIENT_ID: *****
