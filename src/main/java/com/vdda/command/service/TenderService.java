@@ -61,7 +61,7 @@ public class TenderService {
             return;
         }
 
-        User user = userRepository.findByTeamIdAndUserId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
+        User user = userRepository.findByTeamIdAndUserId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.USER_ID.toString()));
 
         if (user == null) {
             noRank(parameters, tenderDetails);
