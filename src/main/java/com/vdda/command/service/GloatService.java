@@ -51,7 +51,7 @@ public class GloatService {
         Category category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
 
         if (category == null) {
-            response.setText("You can only gloat if you are ranked #1 in this category.");
+            response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return;
         }
@@ -59,20 +59,22 @@ public class GloatService {
         List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId());
 
         if (userCategories.isEmpty()) {
-            response.setText("You can only gloat if you are ranked #1 in this category.");
+            response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return;
         }
 
-        if (!(userCategories.get(0).getUserCategoryPK().getUser().getUserId().equals(parameters.get(SlackParameters.USER_ID.toString())))) {
-            response.setText("You can only gloat if you are ranked #1 in this category.");
+        String topUserId = userCategories.get(0).getUserCategoryPK().getUser().getUserId();
+
+        if (!(topUserId.equals(parameters.get(SlackParameters.USER_ID.toString())))) {
+            response.setText("You can only gloat if you are ranked #1 in this category. Currently this rank belongs to <@" + topUserId + ">.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return;
         }
 
         StringBuilder champDetails = new StringBuilder();
         champDetails.append("<@");
-        champDetails.append(userCategories.get(0).getUserCategoryPK().getUser().getUserId());
+        champDetails.append(topUserId);
         champDetails.append("> would like you all to bow before their greatness.");
         slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), champDetails.toString());
     }

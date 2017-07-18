@@ -77,11 +77,20 @@ public class TopService {
 
         response.setText("Top Contestants");
 
+        int drawSum = rankedUserCategoriesFiltered.stream()
+                .mapToInt(u -> u.getSecond().getDraws())
+                .sum();
+        boolean containsDraws = drawSum > 0;
+
         List<Attachment> attachments = new ArrayList<>();
 
         Attachment attachmentTitle = new Attachment();
         attachmentTitle.setFallback("Top Contestants");
-        attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses-Draws]");
+        if (containsDraws) {
+            attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses-Draws]");
+        } else {
+            attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses]");
+        }
         attachmentTitle.setColor("#86C53C");
         attachments.add(attachmentTitle);
 
@@ -89,7 +98,7 @@ public class TopService {
         rankedUserCategoriesFiltered.stream()
                 .filter(p -> p.getFirst() <= TOP_COUNT)
                 .collect(toList())
-                .forEach(u -> addContestant(u, textTopContestants));
+                .forEach(u -> addContestant(u, textTopContestants, containsDraws));
 
         Attachment attachmentTopContestants = new Attachment();
         attachmentTopContestants.setText(textTopContestants.toString());
@@ -101,7 +110,7 @@ public class TopService {
             rankedUserCategoriesFiltered.stream()
                     .filter(p -> p.getFirst() > TOP_COUNT)
                     .collect(toList())
-                    .forEach(u -> addContestant(u, textNeighbouringContestants));
+                    .forEach(u -> addContestant(u, textNeighbouringContestants, containsDraws));
 
             Attachment attachmentNeighbouringContestants = new Attachment();
             attachmentNeighbouringContestants.setText(textNeighbouringContestants.toString());
@@ -149,7 +158,7 @@ public class TopService {
                 .collect(toList());
     }
 
-    private void addContestant(Pair<Integer, UserCategory> userCategoryPair, StringBuilder stringBuilder) {
+    private void addContestant(Pair<Integer, UserCategory> userCategoryPair, StringBuilder stringBuilder, boolean containsDraws) {
         stringBuilder.append(userCategoryPair.getFirst());
         stringBuilder.append(". (");
         stringBuilder.append(userCategoryPair.getSecond().getElo());
@@ -159,8 +168,10 @@ public class TopService {
         stringBuilder.append(userCategoryPair.getSecond().getWins());
         stringBuilder.append("-");
         stringBuilder.append(userCategoryPair.getSecond().getLosses());
-        stringBuilder.append("-");
-        stringBuilder.append(userCategoryPair.getSecond().getDraws());
+        if (containsDraws) {
+            stringBuilder.append("-");
+            stringBuilder.append(userCategoryPair.getSecond().getDraws());
+        }
         stringBuilder.append("]\n");
     }
 }

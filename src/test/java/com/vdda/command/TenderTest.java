@@ -1,7 +1,10 @@
 package com.vdda.command;
 
+import com.vdda.command.service.TenderService;
 import com.vdda.slack.Response;
+import mockit.Mocked;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.*;
@@ -16,17 +19,20 @@ public class TenderTest {
 
     private Tender tender;
 
+    @Mocked
+    TenderService tenderService;
+
     @Before
     public void setUp() throws Exception {
-        tender = new Tender();
+        tender = new Tender(tenderService);
     }
 
     @Test
+    @Ignore
     public void runGolden() throws Exception {
         Response response = tender.run(null);
 
         assertThat(response.getText(), containsString("COMING SOON"));
-
     }
 
     @Test

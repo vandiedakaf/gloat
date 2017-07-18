@@ -15,4 +15,6 @@ public interface UserCategoryRepository extends CrudRepository<UserCategory, Use
 
     @Query(value = "SELECT * FROM user_category WHERE category_id = ? ORDER BY elo DESC", nativeQuery = true)
     List<UserCategory> findAllByCategoryIdOrderByEloDesc(Long categoryId);
+
+    UserCategory findUserCategoryByUserCategoryPK(UserCategoryPK userCategoryPK);
 }
