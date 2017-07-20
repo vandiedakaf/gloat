@@ -1,7 +1,5 @@
-package com.vdda.controller;
+package com.vdda.callback;
 
-import com.vdda.callback.Callback;
-import com.vdda.callback.CallbackRequest;
 import com.vdda.slack.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -26,7 +24,7 @@ public class CallbacksService implements ApplicationContextAware, InitializingBe
     private Map<String, Callback> callbacks;
     private ApplicationContext applicationContext;
 
-    Response run(CallbackRequest callbackRequest) {
+    public Response run(CallbackRequest callbackRequest) {
 
         if (callbackRequest != null && callbackRequest.getCallbackId() != null) {
             String callbackId = callbackRequest.getCallbackId().split("\\|")[0];

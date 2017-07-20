@@ -1,4 +1,4 @@
-package com.vdda.controller;
+package com.vdda.command;
 
 import com.vdda.command.*;
 import com.vdda.slack.Response;

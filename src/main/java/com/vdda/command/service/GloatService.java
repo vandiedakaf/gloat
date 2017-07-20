@@ -73,9 +73,9 @@ public class GloatService {
         }
 
         StringBuilder champDetails = new StringBuilder();
-        champDetails.append("<@");
+        champDetails.append(":trophy: <@");
         champDetails.append(topUserId);
-        champDetails.append("> would like you all to bow before their greatness.");
+        champDetails.append("> would like you all to bow before their greatness :trophy:");
         slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), champDetails.toString());
     }
 }

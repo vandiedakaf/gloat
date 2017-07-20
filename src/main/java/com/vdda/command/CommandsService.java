@@ -1,6 +1,5 @@
-package com.vdda.controller;
+package com.vdda.command;
 
-import com.vdda.command.Command;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.tool.Parameters;
@@ -31,7 +30,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
     @Value("${SLACK_TOKEN:SLACK_TOKEN}")
     private String slackToken;
 
-    Response run(String parametersString) {
+    public Response run(String parametersString) {
 
         Map<String, String> parametersMap = Parameters.parse(parametersString);
 

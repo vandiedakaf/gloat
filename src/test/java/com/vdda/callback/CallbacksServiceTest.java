@@ -1,7 +1,8 @@
-package com.vdda.controller;
+package com.vdda.callback;
 
 import com.vdda.callback.CallbackRequest;
 import com.vdda.callback.Callbacks;
+import com.vdda.callback.CallbacksService;
 import com.vdda.callback.ConfirmContestVictory;
 import com.vdda.slack.Response;
 import mockit.Mocked;

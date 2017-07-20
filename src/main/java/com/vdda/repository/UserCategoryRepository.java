@@ -13,6 +13,7 @@ import java.util.List;
  */
 public interface UserCategoryRepository extends CrudRepository<UserCategory, UserCategoryPK> {
 
+    // TODO replace with List<UserCategory> findAllByUserCategoryPK_CategoryIdOrderByEloDesc(Long categoryId);
     @Query(value = "SELECT * FROM user_category WHERE category_id = ? ORDER BY elo DESC", nativeQuery = true)
     List<UserCategory> findAllByCategoryIdOrderByEloDesc(Long categoryId);
 
