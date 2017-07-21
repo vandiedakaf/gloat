@@ -61,7 +61,7 @@ public class ConfirmContestVictory extends ConfirmContest {
         UserCategoryPK opponentCategoryPK = new UserCategoryPK(contest.getOpponent(), contest.getCategory().getId());
         UserCategory userCategoryOpponent = getOrCreateUserCategory(opponentCategoryPK);
 
-        String message = "<@" + contest.getReporter().getUserId() + "> (" + userCategoryReporter.getElo() + ") is gloating about their victory over <@" + contest.getOpponent().getUserId() + "> (" + userCategoryOpponent.getElo() + ").";
+        String message = "<@" + contest.getReporter().getUserId() + "> (" + userCategoryReporter.getElo() + ") is gloating about their victory over <@" + contest.getOpponent().getUserId() + "> (" + userCategoryOpponent.getElo() + ") :tada:";
 
         slackUtilities.sendChatMessage(contest.getCategory().getTeamId(), contest.getCategory().getChannelId(), message);
     }
