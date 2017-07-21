@@ -78,12 +78,12 @@ public class TenderService {
 
         tenderDetails.append(" (");
         tenderDetails.append(userCategory.getElo());
-        tenderDetails.append(") is looking for a challenger!");
+        tenderDetails.append(") is looking for a challenger :mega:");
         slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), tenderDetails.toString());
     }
 
     private void noRank(Map<String, String> parameters, StringBuilder tenderDetails) {
-        tenderDetails.append(" (no rank) is looking for a challenger!");
+        tenderDetails.append(" (no rank) is looking for a challenger :mega:");
         slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), tenderDetails.toString());
     }
 }
