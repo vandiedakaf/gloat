@@ -100,7 +100,7 @@ public class EloCalculatorTest {
         k = EloCalculator.determineK(10);
         assertThat(k, is(24));
 
-        k = EloCalculator.determineK(50);
+        k = EloCalculator.determineK(30);
         assertThat(k, is(16));
     }
 }

@@ -43,7 +43,7 @@ public class EloCalculator {
     }
 
     public static Integer determineK(int contestTotal) {
-        if (contestTotal >= 50) {
+        if (contestTotal >= 30) {
             return 16;
         } else if (contestTotal >= 10) {
             return 24;
