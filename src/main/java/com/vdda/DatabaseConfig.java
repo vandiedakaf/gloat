@@ -15,16 +15,19 @@ import java.net.URISyntaxException;
 @Configuration
 public class DatabaseConfig {
     @Bean
-    @Profile("default")
     public MysqlDataSource dataSource() throws URISyntaxException {
-        URI dbUri = new URI(System.getenv("JAWSDB_URL"));
+        String dbUrl = System.getenv("JAWSDB_URL");
+        if (dbUrl == null) {
+            dbUrl = System.getenv("GLOAT_DB_URL");
+        }
+        URI dbUri = new URI(dbUrl);
 
         String username = dbUri.getUserInfo().split(":")[0];
         String password = dbUri.getUserInfo().split(":")[1];
-        String dbUrl = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath() + "?createDatabaseIfNotExist=true";
+        String url = "jdbc:mysql://" + dbUri.getHost() + dbUri.getPath() + "?createDatabaseIfNotExist=true";
 
         MysqlDataSource basicDataSource = new MysqlDataSource();
-        basicDataSource.setUrl(dbUrl);
+        basicDataSource.setUrl(url);
         basicDataSource.setUser(username);
         basicDataSource.setPassword(password);
 

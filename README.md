@@ -9,12 +9,15 @@ Start a MySQL docker container with `sudo docker run --name mysql -e MYSQL_ROOT_
 
 Access MySQL docker bash via `docker exec -i -t mysql /bin/bash`.
 
+Export the env variable: GLOAT_DB_URL=mysql://root:password@localhost:3306/gloat
+
 #Run
-`gradle bootRun -Dspring.profiles.active=local`
+`gradle bootRun -Dspring.profiles.active=debug`
 
 # Travis
 Required Environment Variables:
 * SONAR_TOKEN: *****
+* GLOAT_DB_URL: mysql://root:@localhost:3306/gloat
 
 # Heroku Environment Variables
 * SLACK_CLIENT_ID: *****
