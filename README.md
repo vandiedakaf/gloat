@@ -23,6 +23,7 @@ Required Environment Variables:
 * SLACK_CLIENT_ID: *****
 * SLACK_CLIENT_SECRET: *****
 * SLACK_TOKEN: *****
+* GLOAT_DB_URL: *****
 
 # ngrok
 Use ngrok for local development with slack integration
