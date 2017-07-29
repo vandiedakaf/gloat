@@ -22,8 +22,11 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.sonar"
+before_script:
+# setting password because we don't want to deal with empty passwords
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('password') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
 script:
-  - "./gradlew build --debug"
+  - "./gradlew build"
 deploy:
   provider: heroku
   api_key:

@@ -17,7 +17,7 @@ Export the env variable: GLOAT_DB_URL=mysql://root:password@localhost:3306/gloat
 # Travis
 Required Environment Variables:
 * SONAR_TOKEN: *****
-* GLOAT_DB_URL: mysql://root:@localhost:3306/gloat
+* GLOAT_DB_URL: mysql://root:password@localhost:3306/gloat
 
 # Heroku Environment Variables
 * SLACK_CLIENT_ID: *****
