@@ -56,7 +56,7 @@ public class GloatService {
             return;
         }
 
-        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId());
+        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId(), 10); // TODO replace with global constant
 
         if (userCategories.isEmpty()) {
             response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");
