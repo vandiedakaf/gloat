@@ -10,7 +10,7 @@ plugins {
     id 'jacoco'
     id 'org.flywaydb.flyway' version '4.0.3'
     id 'org.sonarqube' version '2.5'
-    id 'org.springframework.boot' version '1.5.4.RELEASE'
+    id 'org.springframework.boot' version '1.5.6.RELEASE'
 }
 
 jar {

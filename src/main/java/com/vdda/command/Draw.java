@@ -39,9 +39,7 @@ public class Draw extends Command {
         List<String> args = getArguments(parameters);
 
         if (args.isEmpty()) {
-            Response response = new Response();
-            response.setText(getShortDescription() + "\nUsage: `" + getUsage() + "`");
-            return response;
+            return createUsageResponse();
         }
 
         // The below is a Future

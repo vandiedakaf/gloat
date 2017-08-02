@@ -64,7 +64,7 @@ public class ConfirmContestLoss extends ConfirmContest {
         UserCategoryPK opponentCategoryPK = new UserCategoryPK(contest.getOpponent(), contest.getCategory().getId());
         UserCategory userCategoryOpponent = getOrCreateUserCategory(opponentCategoryPK);
 
-        String message = "<@" + contest.getReporter().getUserId() + "> (" + userCategoryReporter.getElo() + ") has lost to <@" + contest.getOpponent().getUserId() + "> (" + userCategoryOpponent.getElo() + ").";
+        String message = "<@" + contest.getReporter().getUserId() + "> (" + userCategoryReporter.getElo() + ") has lost to <@" + contest.getOpponent().getUserId() + "> (" + userCategoryOpponent.getElo() + ") :face_with_head_bandage:";
 
         slackUtilities.sendChatMessage(contest.getCategory().getTeamId(), contest.getCategory().getChannelId(), message);
     }

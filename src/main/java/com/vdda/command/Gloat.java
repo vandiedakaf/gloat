@@ -30,6 +30,8 @@ public class Gloat extends Command {
 
         gloatService.processRequest(parameters);
 
+        // TODO make this async
+
         return null;
     }
 }

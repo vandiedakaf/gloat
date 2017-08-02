@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -14,7 +15,7 @@ import java.util.Map;
 public class Top extends Command {
 
     private final String command = "top";
-    private final String usage = "top";
+    private final String usage = "top [number of top players]";
     private final String shortDescription = "Lists the top ranking players.";
 
     @Getter(AccessLevel.NONE)
@@ -28,10 +29,29 @@ public class Top extends Command {
     @Override
     public Response run(Map<String, String> parameters) {
 
-        topService.processRequest(parameters);
+        List<String> args = getArguments(parameters);
+
+        if (!(validateArgs(args))) {
+            return createUsageResponse();
+        }
+
+        if (args.isEmpty()) {
+            topService.processRequest(parameters);
+        } else {
+            topService.processRequest(parameters, Integer.parseInt(args.get(0)));
+        }
+
 
         Response response = new Response();
         response.setText("We're processing your request...");
         return response;
+    }
+
+    boolean validateArgs(List<String> args) {
+        if (!args.isEmpty()) {
+            return args.get(0) != null && args.get(0).matches("^[1-9]\\d*"); // positive integer
+        }
+
+        return true;
     }
 }

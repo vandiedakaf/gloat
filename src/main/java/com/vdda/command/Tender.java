@@ -35,6 +35,8 @@ public class Tender extends Command {
 
         tenderService.processRequest(parameters);
 
+        // TODO make this async
+
         return null;
     }
 }

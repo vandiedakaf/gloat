@@ -25,4 +25,10 @@ public abstract class Command {
         String[] argsArray = parameters.get(SlackParameters.TEXT.toString()).split(" ");
         return Arrays.asList(argsArray).subList(1, argsArray.length);
     }
+
+    Response createUsageResponse(){
+        Response response = new Response();
+        response.setText(getShortDescription() + "\nUsage: `" + getUsage() + "`");
+        return response;
+    }
 }

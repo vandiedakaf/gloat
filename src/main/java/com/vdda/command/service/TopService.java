@@ -8,7 +8,6 @@ import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import lombok.extern.slf4j.Slf4j;
-import org.codehaus.groovy.runtime.powerassert.SourceText;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.util.Pair;
@@ -20,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -30,11 +30,15 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class TopService {
 
-    private static final int TOP_COUNT = 3;
+    private static final int NUM_TOP_USERS = 3;
 
     private final RestTemplate restTemplate;
     private final UserCategoryRepository userCategoryRepository;
     private final CategoryRepository categoryRepository;
+
+    private static final String COLOUR_GREEN = "#86C53C";
+    private static final String COLOUR_GOLD = "#FFD700";
+    private static final String COLOUR_BRONZE = "#CD7F32";
 
     @Autowired
     public TopService(RestTemplateBuilder restTemplateBuilder, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository) {
@@ -46,14 +50,20 @@ public class TopService {
     @Async
     public Future<?> processRequest(Map<String, String> parameters) {
 
-        Response response = getTopUsers(parameters);
+        return processRequest(parameters, NUM_TOP_USERS);
+    }
+
+    @Async
+    public Future<?> processRequest(Map<String, String> parameters, int numTopUsers) {
+
+        Response response = getTopUsers(parameters, numTopUsers);
 
         restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
 
         return new AsyncResult<>(null);
     }
 
-    private Response getTopUsers(Map<String, String> parameters) {
+    private Response getTopUsers(Map<String, String> parameters, int numTopUsers) {
 
         Response response = new Response();
 
@@ -73,7 +83,7 @@ public class TopService {
 
         List<Pair<Integer, UserCategory>> rankedUserCategories = determineRankedPairs(userCategories);
 
-        List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(parameters.get(SlackParameters.USER_ID.toString()), rankedUserCategories);
+        List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(parameters.get(SlackParameters.USER_ID.toString()), rankedUserCategories, numTopUsers);
 
         response.setText("Top Contestants");
 
@@ -91,30 +101,30 @@ public class TopService {
         } else {
             attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses]");
         }
-        attachmentTitle.setColor("#86C53C");
+        attachmentTitle.setColor(COLOUR_GREEN);
         attachments.add(attachmentTitle);
 
         StringBuilder textTopContestants = new StringBuilder();
         rankedUserCategoriesFiltered.stream()
-                .filter(p -> p.getFirst() <= TOP_COUNT)
+                .filter(p -> p.getFirst() <= numTopUsers)
                 .collect(toList())
                 .forEach(u -> addContestant(u, textTopContestants, containsDraws));
 
         Attachment attachmentTopContestants = new Attachment();
         attachmentTopContestants.setText(textTopContestants.toString());
-        attachmentTopContestants.setColor("#FFD700");
+        attachmentTopContestants.setColor(COLOUR_GOLD);
         attachments.add(attachmentTopContestants);
 
-        if (rankedUserCategoriesFiltered.size() > TOP_COUNT) {
+        if (rankedUserCategoriesFiltered.size() > numTopUsers) {
             StringBuilder textNeighbouringContestants = new StringBuilder();
             rankedUserCategoriesFiltered.stream()
-                    .filter(p -> p.getFirst() > TOP_COUNT)
+                    .filter(p -> p.getFirst() > numTopUsers)
                     .collect(toList())
                     .forEach(u -> addContestant(u, textNeighbouringContestants, containsDraws));
 
             Attachment attachmentNeighbouringContestants = new Attachment();
             attachmentNeighbouringContestants.setText(textNeighbouringContestants.toString());
-            attachmentNeighbouringContestants.setColor("#CD7F32");
+            attachmentNeighbouringContestants.setColor(COLOUR_BRONZE);
             attachments.add(attachmentNeighbouringContestants);
         }
 
@@ -122,7 +132,7 @@ public class TopService {
         return response;
     }
 
-    private List<Pair<Integer, UserCategory>> getFilteredList(String userId, List<Pair<Integer, UserCategory>> rankedUserCategories) {
+    private List<Pair<Integer, UserCategory>> getFilteredList(String userId, List<Pair<Integer, UserCategory>> rankedUserCategories, int numTopUsers) {
 
         List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered;
 
@@ -132,9 +142,9 @@ public class TopService {
                 .findFirst()
                 .orElse(null);
 
-        Predicate<Pair<Integer, UserCategory>> topFilterPredicate = topPlayersOnly();
+        Predicate<Pair<Integer, UserCategory>> topFilterPredicate = topPlayersOnly(numTopUsers);
         if (userCategoryPair != null) {
-            topFilterPredicate = topPlayersAndNeighbours(userCategoryPair.getFirst());
+            topFilterPredicate = topPlayersAndNeighbours(numTopUsers, userCategoryPair.getFirst());
         }
 
         rankedUserCategoriesFiltered = rankedUserCategories.stream()
@@ -144,12 +154,12 @@ public class TopService {
         return rankedUserCategoriesFiltered;
     }
 
-    private Predicate<Pair<Integer, UserCategory>> topPlayersOnly() {
-        return p -> p.getFirst() <= TOP_COUNT;
+    private Predicate<Pair<Integer, UserCategory>> topPlayersOnly(Integer topCount) {
+        return p -> p.getFirst() <= topCount;
     }
 
-    private Predicate<Pair<Integer, UserCategory>> topPlayersAndNeighbours(Integer userRank) {
-        return p -> (p.getFirst() <= TOP_COUNT) || Math.abs(p.getFirst() - userRank) <= 1;
+    private Predicate<Pair<Integer, UserCategory>> topPlayersAndNeighbours(Integer topCount, Integer userRank) {
+        return p -> (p.getFirst() <= topCount) || Math.abs(p.getFirst() - userRank) <= 1;
     }
 
     private List<Pair<Integer, UserCategory>> determineRankedPairs(List<UserCategory> userCategories) {
