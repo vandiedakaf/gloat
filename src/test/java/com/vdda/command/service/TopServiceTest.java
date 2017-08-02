@@ -72,7 +72,7 @@ public class TopServiceTest {
     public void processGolden() throws Exception {
 
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
             result = mockUserCategoriesGolden();
         }};
 
@@ -94,7 +94,7 @@ public class TopServiceTest {
     @Test
     public void userInTop() throws Exception {
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
             result = mockUserCategoriesUserInTop();
         }};
 
@@ -114,7 +114,7 @@ public class TopServiceTest {
     @Test
     public void userNotFound() throws Exception {
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
             result = mockUserCategoriesUserNotFound();
         }};
 
@@ -135,7 +135,7 @@ public class TopServiceTest {
     @Test
     public void noUsers() throws Exception {
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
             result = new ArrayList<>();
         }};
 
@@ -144,7 +144,7 @@ public class TopServiceTest {
         new Verifications() {{
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
-            assertThat(response.getText(), containsString("No contests"));
+            assertThat(response.getText(), containsString("No ranked"));
         }};
 
     }

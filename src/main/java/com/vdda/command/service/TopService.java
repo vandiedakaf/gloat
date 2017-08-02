@@ -77,7 +77,7 @@ public class TopService {
         List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId(), 10); // TODO replace with global constant
 
         if (userCategories.isEmpty()) {
-            response.setText("No contests have been registered in this category.");
+            response.setText("No ranked players have been found in this category. Players might still be in calibration phase."); // TODO add calibration phase requirement
             return response;
         }
 
