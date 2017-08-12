@@ -5,7 +5,7 @@
 Time to gloat!
 
 # Local Setup
-Start a MySQL docker container with `sudo docker run --name mysql -e MYSQL_ROOT_PASSWORD=password -d -p 3306:3306 mysql:5.7.17`.
+Start a MySQL docker container with `docker run --name mysql -e MYSQL_ROOT_PASSWORD=password -d -p 3306:3306 mysql:5.7.17`.
 
 Access MySQL docker bash via `docker exec -i -t mysql /bin/bash`.
 

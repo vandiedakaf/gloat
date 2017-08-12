@@ -26,8 +26,6 @@ import java.util.Optional;
 @Service
 public class SlackUtilities {
     private final Slack slack = Slack.getInstance();
-    private String token;
-
     private OauthRepository oauthRepository;
 
     @Autowired
@@ -35,7 +33,7 @@ public class SlackUtilities {
         this.oauthRepository = oauthRepository;
     }
 
-    private UsersListResponse usersList() {
+    private UsersListResponse usersList(String token) {
 
         UsersListResponse usersListResponse = new UsersListResponse();
 
@@ -58,15 +56,15 @@ public class SlackUtilities {
 
     public Optional<User> getUser(String teamId, String userName) {
 
-        token = getAccessToken(teamId);
-        if (token == null) {
+        Optional<String> token = getAccessToken(teamId);
+        if (!token.isPresent()) {
             return Optional.empty();
         }
 
-        // remove '@'
+        // remove potential '@' from username
         String userNameSanitised = userName.replaceAll("@", "");
 
-        UsersListResponse usersListResponse = usersList();
+        UsersListResponse usersListResponse = usersList(token.get());
 
         List<User> users = usersListResponse.getMembers();
 
@@ -77,19 +75,19 @@ public class SlackUtilities {
         return users.stream().filter(u -> u.getName().equals(userNameSanitised)).findFirst();
     }
 
-    private String getAccessToken(String teamId){
+    private Optional<String> getAccessToken(String teamId){
         Oauth oauth = oauthRepository.findOne(teamId);
         if (oauth == null) {
             log.warn("Oauth token not found");
-            return null;
+            return Optional.empty();
         }
-        return oauth.getAccessToken();
+        return Optional.of(oauth.getAccessToken());
     }
 
     public boolean sendChatMessage(String teamId, String channelId, String message) {
 
-        token = getAccessToken(teamId);
-        if (token == null) {
+        Optional<String> token = getAccessToken(teamId);
+        if (!token.isPresent()) {
             return false;
         }
 
@@ -97,7 +95,7 @@ public class SlackUtilities {
         try {
             chatPostMessageResponse = slack.methods().chatPostMessage(
                     ChatPostMessageRequest.builder()
-                            .token(token)
+                            .token(token.get())
                             .channel(channelId)
                             .text(message)
                             .build());
