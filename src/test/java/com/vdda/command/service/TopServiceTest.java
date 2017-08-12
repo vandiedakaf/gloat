@@ -13,7 +13,6 @@ import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -21,9 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Created by francois
@@ -48,8 +46,6 @@ public class TopServiceTest {
     private TopService topService;
 
     @Mocked
-    private RestTemplateBuilder restTemplateBuilder;
-    @Mocked
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private CategoryRepository categoryRepository;
@@ -60,7 +56,7 @@ public class TopServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        topService = new TopService(restTemplateBuilder, userCategoryRepository, categoryRepository);
+        topService = new TopService(restTemplate, userCategoryRepository, categoryRepository);
 
         parameters = new HashMap<>();
         parameters.put(SlackParameters.TEAM_ID.toString(), TEAM_ID);

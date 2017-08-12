@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
  */
 @ConfigurationProperties(value = "env")
 @Getter
-@Setter
+//@Setter
 @Component
 public class EnvProperties {
 
+    // TODO replace with config server
     private int eloInit;
 }

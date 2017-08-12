@@ -9,7 +9,6 @@ import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
@@ -29,8 +28,8 @@ public class GloatService {
     private final SlackUtilities slackUtilities;
 
     @Autowired
-    public GloatService(RestTemplateBuilder restTemplateBuilder, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository, SlackUtilities slackUtilities) {
-        this.restTemplate = restTemplateBuilder.build();
+    public GloatService(RestTemplate restTemplate, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository, SlackUtilities slackUtilities) {
+        this.restTemplate = restTemplate;
         this.userCategoryRepository = userCategoryRepository;
         this.categoryRepository = categoryRepository;
         this.slackUtilities = slackUtilities;

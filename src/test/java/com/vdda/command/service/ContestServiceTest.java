@@ -10,13 +10,12 @@ import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 /**
  * Created by francois
@@ -38,8 +37,6 @@ public class ContestServiceTest {
     private ContestService contestService;
 
     @Mocked
-    private RestTemplateBuilder restTemplateBuilder;
-    @Mocked
     private SlackUtilities slackUtilities;
     @Mocked
     private RestTemplate restTemplate;
@@ -49,7 +46,7 @@ public class ContestServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        contestService = new ContestService(restTemplateBuilder.build(), slackUtilities) {
+        contestService = new ContestService(restTemplate, slackUtilities) {
             @Override
             protected Response confirmationButton(User user) {
                 Response response = new Response();

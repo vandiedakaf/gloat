@@ -9,7 +9,6 @@ import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -19,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -41,8 +39,8 @@ public class TopService {
     private static final String COLOUR_BRONZE = "#CD7F32";
 
     @Autowired
-    public TopService(RestTemplateBuilder restTemplateBuilder, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository) {
-        this.restTemplate = restTemplateBuilder.build();
+    public TopService(RestTemplate restTemplate, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository) {
+        this.restTemplate = restTemplate;
         this.userCategoryRepository = userCategoryRepository;
         this.categoryRepository = categoryRepository;
     }

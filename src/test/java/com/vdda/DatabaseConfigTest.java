@@ -1,6 +1,7 @@
 package com.vdda;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+import com.vdda.config.DatabaseConfig;
 import mockit.*;
 import org.junit.Before;
 import org.junit.Test;

@@ -11,11 +11,9 @@ import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -24,15 +22,14 @@ import java.util.concurrent.Future;
 @Slf4j
 public class TenderService {
 
-    private final RestTemplate restTemplate;
+
     private final UserCategoryRepository userCategoryRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final SlackUtilities slackUtilities;
 
     @Autowired
-    public TenderService(RestTemplateBuilder restTemplateBuilder, UserCategoryRepository userCategoryRepository, UserRepository userRepository, CategoryRepository categoryRepository, SlackUtilities slackUtilities) {
-        this.restTemplate = restTemplateBuilder.build();
+    public TenderService(UserCategoryRepository userCategoryRepository, UserRepository userRepository, CategoryRepository categoryRepository, SlackUtilities slackUtilities) {
         this.userCategoryRepository = userCategoryRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;

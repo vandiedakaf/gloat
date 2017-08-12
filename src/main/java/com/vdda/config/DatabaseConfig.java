@@ -1,4 +1,4 @@
-package com.vdda;
+package com.vdda.config;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 import org.springframework.context.annotation.Bean;
@@ -7,10 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-/**
- * Created by francois on 2016-10-23 for
- * vandiedakaf solutions
- */
 @Configuration
 public class DatabaseConfig {
     @Bean

@@ -10,7 +10,6 @@ import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -35,8 +34,6 @@ public class VictoryServiceTest {
     private VictoryService victoryService;
 
     @Mocked
-    private RestTemplateBuilder restTemplateBuilder;
-    @Mocked
     private SlackUtilities slackUtilities;
     @Mocked
     private RestTemplate restTemplate;
@@ -46,7 +43,7 @@ public class VictoryServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        victoryService = new VictoryService(restTemplateBuilder, slackUtilities);
+        victoryService = new VictoryService(restTemplate, slackUtilities);
 
         parameters = new HashMap<>();
         parameters.put(SlackParameters.TEAM_ID.toString(), TEAM_ID);

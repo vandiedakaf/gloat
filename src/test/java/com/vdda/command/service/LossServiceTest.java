@@ -10,7 +10,6 @@ import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -35,8 +34,6 @@ public class LossServiceTest {
     private LossService lossService;
 
     @Mocked
-    private RestTemplateBuilder restTemplateBuilder;
-    @Mocked
     private SlackUtilities slackUtilities;
     @Mocked
     private RestTemplate restTemplate;
@@ -46,7 +43,7 @@ public class LossServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        lossService = new LossService(restTemplateBuilder, slackUtilities);
+        lossService = new LossService(restTemplate, slackUtilities);
 
         parameters = new HashMap<>();
         parameters.put(SlackParameters.TEAM_ID.toString(), TEAM_ID);

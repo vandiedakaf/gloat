@@ -7,8 +7,8 @@ import com.vdda.slack.Response;
 import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ import static com.vdda.callback.Callbacks.CONFIRM_DRAW;
 public class DrawService extends ContestService {
 
     @Autowired
-    public DrawService(RestTemplateBuilder restTemplateBuilder, SlackUtilities slackUtilities) {
-        super(restTemplateBuilder.build(), slackUtilities);
+    public DrawService(RestTemplate restTemplate, SlackUtilities slackUtilities) {
+        super(restTemplate, slackUtilities);
     }
 
     @Override
