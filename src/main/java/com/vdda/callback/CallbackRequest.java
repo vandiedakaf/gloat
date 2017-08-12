@@ -5,11 +5,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-/**
- * Created by francois
- * on 2017-01-01
- * for vandiedakaf solutions
- */
 @Getter
 @Setter
 public class CallbackRequest {

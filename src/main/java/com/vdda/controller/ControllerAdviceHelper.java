@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by francois on 2016-10-31 for
- * vandiedakaf solutions
- */
 @ControllerAdvice
 class ControllerAdviceHelper {
     @ExceptionHandler({IllegalArgumentException.class})

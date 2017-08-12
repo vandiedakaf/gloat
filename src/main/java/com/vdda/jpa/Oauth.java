@@ -7,10 +7,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/**
- * Created by francois on 2016-10-23 for
- * vandiedakaf solutions
- */
 @Entity
 @Getter
 @Setter

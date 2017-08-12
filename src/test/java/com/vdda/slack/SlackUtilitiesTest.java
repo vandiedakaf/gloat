@@ -22,11 +22,6 @@ import java.util.Optional;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2016-12-29
- * for vandiedakaf solutions
- */
 public class SlackUtilitiesTest {
 
     private static final String TEAM_ID = "teamId";

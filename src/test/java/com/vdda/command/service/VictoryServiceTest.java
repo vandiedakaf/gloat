@@ -17,11 +17,6 @@ import java.util.*;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-/**
- * Created by francois
- * on 2017-01-04
- * for vandiedakaf solutions
- */
 public class VictoryServiceTest {
 
     private static final String USER_NAME = "@userName";

@@ -1,10 +1,5 @@
 package com.vdda.slack;
 
-/**
- * Created by francois
- * on 2016-12-28
- * for vandiedakaf solutions
- */
 public enum SlackParameters {
     CHANNEL_ID("channel_id"),
     USER_ID("user_id"),

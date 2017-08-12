@@ -10,11 +10,6 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2017-01-05
- * for vandiedakaf solutions
- */
 public class TenderTest {
 
     private Tender tender;

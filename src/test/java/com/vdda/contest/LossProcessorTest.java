@@ -14,11 +14,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by francois
- * on 2017-02-20
- * for vandiedakaf solutions
- */
 public class LossProcessorTest {
     @Tested
     LossProcessor lossProcessor;

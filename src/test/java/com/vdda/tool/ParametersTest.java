@@ -17,11 +17,6 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by francois
- * on 2016-12-25
- * for vandiedakaf solutions
- */
 public class ParametersTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();

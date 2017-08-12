@@ -7,20 +7,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by francois
- * on 2016-12-25
- * for vandiedakaf solutions
- */
 public class Parameters {
 
     private Parameters() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Seems that slack sends only one value per parameter (i.e no value lists are required)
-     */
+
     public static Map<String, String> parse(String parameters) {
 
         Map<String, String> list = new HashMap<>();

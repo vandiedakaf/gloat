@@ -17,11 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by francois
- * on 2016-12-25
- * for vandiedakaf solutions
- */
 @Service
 @Slf4j
 public abstract class ConfirmContest implements Callback {

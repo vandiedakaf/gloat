@@ -11,11 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.Future;
 
-/**
- * Created by francois
- * on 2017-01-14
- * for vandiedakaf solutions
- */
 @Service
 @Slf4j
 public class ContestResolver {

@@ -14,11 +14,6 @@ import java.util.Map;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2016-12-28
- * for vandiedakaf solutions
- */
 public class VictoryTest {
 
     Victory victory;

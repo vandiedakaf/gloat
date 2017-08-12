@@ -17,11 +17,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by francois
- * on 2016-12-28
- * for vandiedakaf solutions
- */
 @Slf4j
 @Service
 public class SlackUtilities {

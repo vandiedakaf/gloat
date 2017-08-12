@@ -17,11 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 
-/**
- * Created by francois
- * on 2016-10-22
- * for vandiedakaf solutions
- */
 @Controller
 @RequestMapping("/oauth")
 @Slf4j

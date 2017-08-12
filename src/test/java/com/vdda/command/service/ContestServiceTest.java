@@ -17,11 +17,6 @@ import java.util.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-/**
- * Created by francois
- * on 2017-01-04
- * for vandiedakaf solutions
- */
 public class ContestServiceTest {
 
     private static final String CALLBACK_ID = "callbackId";

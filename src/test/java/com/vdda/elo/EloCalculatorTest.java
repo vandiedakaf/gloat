@@ -6,11 +6,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.IsCloseTo.closeTo;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2017-01-14
- * for vandiedakaf solutions
- */
 public class EloCalculatorTest {
     private static final int ratingA = 1500;
     private static final int ratingB = 1700;

@@ -6,10 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * Created by francois on 2016-10-23 for
- * vandiedakaf solutions
- */
 @Entity
 @Getter
 @Setter

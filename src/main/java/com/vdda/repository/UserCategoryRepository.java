@@ -7,10 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-/**
- * Created by francois on 2016-10-23 for
- * vandiedakaf solutions
- */
 public interface UserCategoryRepository extends CrudRepository<UserCategory, UserCategoryPK> {
 
     // TODO replace with List<UserCategory> findAllByUserCategoryPK_CategoryIdOrderByEloDesc(Long categoryId);

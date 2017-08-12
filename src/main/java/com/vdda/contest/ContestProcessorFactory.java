@@ -4,11 +4,6 @@ import com.vdda.jpa.ContestOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by francois
- * on 2017-02-19
- * for vandiedakaf solutions
- */
 @Service
 public class ContestProcessorFactory {
 

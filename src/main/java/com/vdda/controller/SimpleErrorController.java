@@ -9,11 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * Created by francois
- * on 2017-01-31
- * for vandiedakaf solutions
- */
 @Controller
 @RequestMapping("/error")
 public class SimpleErrorController implements ErrorController {

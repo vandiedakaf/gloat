@@ -13,11 +13,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Future;
 
-/**
- * Created by francois
- * on 2016-12-30
- * for vandiedakaf solutions
- */
 @Service
 @Slf4j
 public abstract class ContestService {

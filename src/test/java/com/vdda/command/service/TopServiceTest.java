@@ -23,11 +23,6 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-/**
- * Created by francois
- * on 2017-01-19
- * for vandiedakaf solutions
- */
 public class TopServiceTest {
 
     private static final String RESPONSE_URL = "responseUrl";

@@ -9,10 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-/**
- * Created by francois on 2016-10-23 for
- * vandiedakaf solutions
- */
 @Entity
 @Getter
 @Setter

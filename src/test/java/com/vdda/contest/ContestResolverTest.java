@@ -21,11 +21,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2017-01-15
- * for vandiedakaf solutions
- */
 public class ContestResolverTest {
 
     @Tested

@@ -25,11 +25,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2017-01-03
- * for vandiedakaf solutions
- */
 public class ConfirmContestLossTest {
 
     private static final String CHANNEL_ID = "channelId";

@@ -5,10 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-/**
- * Created by francois on 2016-10-23 for
- * vandiedakaf solutions
- */
 @SpringBootApplication
 @EnableConfigurationProperties
 @EnableAsync

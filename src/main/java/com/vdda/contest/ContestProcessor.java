@@ -14,11 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Created by francois
- * on 2017-02-19
- * for vandiedakaf solutions
- */
 @Service
 public abstract class ContestProcessor {
 

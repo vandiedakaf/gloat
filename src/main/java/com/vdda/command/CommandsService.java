@@ -15,11 +15,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-/**
- * Created by francois
- * on 2016-12-25
- * for vandiedakaf solutions
- */
 @Slf4j
 @Service
 public class CommandsService implements ApplicationContextAware, InitializingBean {
@@ -75,11 +70,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
         commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
     }
 
-    /**
-     * Easy sorting by converting to TreeMap
-     * @param map A map created by applicationContext.getBeansOfType(Command.class)
-     * @return A TreeMap version of the input Map
-     */
+
     Map<String, Command> toTreeMap(Map<String, Command> map) {
         return map.entrySet().stream()
                 .collect(Collectors.toMap(

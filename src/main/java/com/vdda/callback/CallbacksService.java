@@ -12,11 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by francois
- * on 2016-12-25
- * for vandiedakaf solutions
- */
 @Service
 @Slf4j
 public class CallbacksService implements ApplicationContextAware, InitializingBean {

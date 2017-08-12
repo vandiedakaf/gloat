@@ -8,11 +8,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 
-/**
- * Created by francois
- * on 2017-02-19
- * for vandiedakaf solutions
- */
 public class ContestOutcomeTest {
 
     @Test

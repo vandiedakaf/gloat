@@ -1,10 +1,5 @@
 package com.vdda.callback;
 
-/**
- * Created by francois
- * on 2017-01-01
- * for vandiedakaf solutions
- */
 public enum Callbacks {
     CONFIRM_DRAW("confirm_draw"),
     CONFIRM_LOSS("confirm_loss"),

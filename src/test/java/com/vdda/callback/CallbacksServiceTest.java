@@ -16,11 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2017-01-05
- * for vandiedakaf solutions
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CallbacksServiceTest {

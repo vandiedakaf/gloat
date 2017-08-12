@@ -22,11 +22,6 @@ import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by francois
- * on 2016-12-26
- * for vandiedakaf solutions
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CommandsServiceTest {

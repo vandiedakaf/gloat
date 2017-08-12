@@ -3,11 +3,6 @@ package com.vdda.elo;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * Created by francois
- * on 2017-01-02
- * for vandiedakaf solutions
- */
 public class EloCalculator {
 
     private static final double FOUR_HUNDRED = 400;

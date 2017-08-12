@@ -5,11 +5,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-/**
- * Created by francois
- * on 2016-12-27
- * for vandiedakaf solutions
- */
 @Getter
 @Setter
 public class Attachment {

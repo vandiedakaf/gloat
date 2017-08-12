@@ -15,11 +15,6 @@ import java.util.List;
 
 import static com.vdda.callback.Callbacks.CONFIRM_LOSS;
 
-/**
- * Created by francois
- * on 2016-12-30
- * for vandiedakaf solutions
- */
 @Service
 @Slf4j
 public class LossService extends ContestService {
