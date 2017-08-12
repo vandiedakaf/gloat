@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 @Service
 @Slf4j
@@ -25,12 +24,10 @@ public class ContestResolver {
     }
 
     @Async
-    public Future<?> processContests() {
+    public void processContests() {
         List<Contest> contests = contestRepository.findByProcessedOrderByCreatedAsc(false);
 
         contests.forEach(c -> contestProcessorFactory.getContestProcessor(c.getContestOutcome()).processContest(c));
-
-        return new AsyncResult<>(null);
     }
 
 }

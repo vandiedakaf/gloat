@@ -16,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 @Service
 @Slf4j
@@ -36,11 +35,9 @@ public class GloatService {
     }
 
     @Async
-    public Future<?> processRequest(Map<String, String> parameters) {
+    public void processRequest(Map<String, String> parameters) {
 
         gloat(parameters);
-
-        return new AsyncResult<>(null);
     }
 
     private void gloat(Map<String, String> parameters) {

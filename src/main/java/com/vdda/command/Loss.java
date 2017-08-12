@@ -37,7 +37,6 @@ public class Loss extends Command {
             return createUsageResponse();
         }
 
-        // The below is a Future
         lossService.processRequest(parameters, args);
 
         Response response = new Response();

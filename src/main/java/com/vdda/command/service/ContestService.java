@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Future;
 
 @Service
 @Slf4j
@@ -26,7 +25,7 @@ public abstract class ContestService {
     }
 
     @Async
-    public Future<?> processRequest(Map<String, String> parameters, List<String> args) {
+    public void processRequest(Map<String, String> parameters, List<String> args) {
 
         final String teamId = parameters.get(SlackParameters.TEAM_ID.toString());
 
@@ -37,7 +36,7 @@ public abstract class ContestService {
             Response response = new Response();
             response.setText("Sorry, seems like " + args.get(0) + " is some imaginary person.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
-            return new AsyncResult<>(null);
+            return;
         }
 
         if ("slackbot".equals(args.get(0))
@@ -46,14 +45,12 @@ public abstract class ContestService {
             Response response = new Response();
             response.setText("Sorry, you can't compete against yourself or slackbot.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
-            return new AsyncResult<>(null);
+            return;
         }
 
         Response response = confirmationButton(user.get());
 
         restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
-
-        return new AsyncResult<>(null);
     }
 
     protected abstract Response confirmationButton(User user);

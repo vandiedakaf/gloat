@@ -16,7 +16,6 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.concurrent.Future;
 
 @Service
 @Slf4j
@@ -37,11 +36,9 @@ public class TenderService {
     }
 
     @Async
-    public Future<?> processRequest(Map<String, String> parameters) {
+    public void processRequest(Map<String, String> parameters) {
 
         tender(parameters);
-
-        return new AsyncResult<>(null);
     }
 
     private void tender(Map<String, String> parameters) {

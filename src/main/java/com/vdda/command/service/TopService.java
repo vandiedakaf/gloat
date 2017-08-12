@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -46,19 +45,17 @@ public class TopService {
     }
 
     @Async
-    public Future<?> processRequest(Map<String, String> parameters) {
+    public void processRequest(Map<String, String> parameters) {
 
-        return processRequest(parameters, NUM_TOP_USERS);
+        processRequest(parameters, NUM_TOP_USERS);
     }
 
     @Async
-    public Future<?> processRequest(Map<String, String> parameters, int numTopUsers) {
+    public void processRequest(Map<String, String> parameters, int numTopUsers) {
 
         Response response = getTopUsers(parameters, numTopUsers);
 
         restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
-
-        return new AsyncResult<>(null);
     }
 
     private Response getTopUsers(Map<String, String> parameters, int numTopUsers) {

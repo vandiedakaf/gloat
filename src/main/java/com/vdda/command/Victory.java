@@ -39,7 +39,6 @@ public class Victory extends Command {
             return createUsageResponse();
         }
 
-        // The below is a Future
         victoryService.processRequest(parameters, args);
 
         Response response = new Response();

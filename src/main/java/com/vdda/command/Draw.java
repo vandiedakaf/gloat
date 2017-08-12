@@ -37,7 +37,6 @@ public class Draw extends Command {
             return createUsageResponse();
         }
 
-        // The below is a Future
         drawService.processRequest(parameters, args);
 
         Response response = new Response();
