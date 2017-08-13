@@ -95,6 +95,7 @@ public class TopServiceTest {
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
 
+            assertThat(response.getAttachments().get(0).getTitle(), containsString("Rank. (Rating) Name [Wins-Losses]"));
             assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_1));
             assertThat(response.getAttachments().get(1).getText(), containsString(USER_ID));
             assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_3));
@@ -115,10 +116,7 @@ public class TopServiceTest {
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
 
-            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_1));
-            assertThat(response.getAttachments().get(1).getText(), containsString(USER_ID));
-            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_3));
-            assertThat(response.getAttachments().size(), is(lessThan(3)));
+            assertThat(response.getAttachments().get(0).getTitle(), containsString("Rank. (Rating) Name [Wins-Losses-Draws]"));
         }};
     }
 

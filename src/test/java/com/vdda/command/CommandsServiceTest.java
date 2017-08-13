@@ -142,4 +142,10 @@ public class CommandsServiceTest {
 
         assertThat(sortedMap.size(), equalTo(1));
     }
+
+    @Test
+    public void mergeTest() throws Exception {
+        Command command = CommandsService.mergeCommandsCollision(new Gloat(null), new Victory(null));
+        assertThat(command, instanceOf(Victory.class));
+    }
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -75,8 +76,12 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
                 .collect(Collectors.toMap(
                         e -> e.getValue().getCommand(),
                         Map.Entry::getValue,
-                        (e1, e2) -> e1,
+                        CommandsService::mergeCommandsCollision,
                         TreeMap::new
                 ));
+    }
+
+    static Command mergeCommandsCollision(Command c1, Command c2) {
+        return c2;
     }
 }
