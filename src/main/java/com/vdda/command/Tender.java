@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Service
 @Getter
-public class Tender extends Command {
+public class Tender implements Command {
 
     private final String command = "tender";
     private final String usage = "tender";

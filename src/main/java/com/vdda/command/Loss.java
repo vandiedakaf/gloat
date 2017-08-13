@@ -2,19 +2,17 @@ package com.vdda.command;
 
 import com.vdda.command.service.LossService;
 import com.vdda.slack.Response;
-import com.vdda.slack.SlackParameters;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @Getter
-public class Loss extends Command {
+public class Loss implements Command {
 
     private final String command = "loss";
     private final String usage = "loss @user";

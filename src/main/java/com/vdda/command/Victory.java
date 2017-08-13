@@ -2,21 +2,19 @@ package com.vdda.command;
 
 import com.vdda.command.service.VictoryService;
 import com.vdda.slack.Response;
-import com.vdda.slack.SlackParameters;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
 @Service
 @Getter
-public class Victory extends Command {
+public class Victory implements Command {
 
     private final String command = "victory";
     private final String usage = "victory @user";

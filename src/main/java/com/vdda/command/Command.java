@@ -7,21 +7,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Command {
-    abstract public Response run(Map<String, String> parameters);
+public interface Command {
+    Response run(Map<String, String> parameters);
 
-    abstract public String getCommand();
+    String getCommand();
 
-    abstract public String getUsage();
+    String getUsage();
 
-    abstract public String getShortDescription();
+    String getShortDescription();
 
-    List<String> getArguments(Map<String, String> parameters) {
+    default List<String> getArguments(Map<String, String> parameters) {
         String[] argsArray = parameters.get(SlackParameters.TEXT.toString()).split(" ");
         return Arrays.asList(argsArray).subList(1, argsArray.length);
     }
 
-    Response createUsageResponse(){
+    default Response createUsageResponse(){
         Response response = new Response();
         response.setText(getShortDescription() + "\nUsage: `" + getUsage() + "`");
         return response;

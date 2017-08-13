@@ -3,10 +3,8 @@ package com.vdda.contest;
 import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
-import com.vdda.jpa.UserCategoryPK;
 import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
-import com.vdda.slack.SlackUtilities;
 import mockit.Mocked;
 import mockit.Tested;
 import mockit.Verifications;
@@ -24,13 +22,11 @@ public class DrawProcessorTest {
     @Mocked
     private UserCategoryRepository userCategoryRepository;
     @Mocked
-    private SlackUtilities slackUtilities;
-    @Mocked
     private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        drawProcessor = new DrawProcessor(envProperties, contestRepository, userCategoryRepository, slackUtilities);
+        drawProcessor = new DrawProcessor(envProperties, contestRepository, userCategoryRepository);
     }
 
     @Test

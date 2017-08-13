@@ -2,19 +2,17 @@ package com.vdda.command;
 
 import com.vdda.command.service.DrawService;
 import com.vdda.slack.Response;
-import com.vdda.slack.SlackParameters;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @Getter
-public class Draw extends Command {
+public class Draw implements Command {
 
     private final String command = "draw";
     private final String usage = "draw @user";

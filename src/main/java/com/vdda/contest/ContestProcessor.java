@@ -8,7 +8,6 @@ import com.vdda.jpa.UserCategory;
 import com.vdda.jpa.UserCategoryPK;
 import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
-import com.vdda.slack.SlackUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -20,14 +19,12 @@ public abstract class ContestProcessor {
     private EnvProperties envProperties;
     private ContestRepository contestRepository;
     private UserCategoryRepository userCategoryRepository;
-    private SlackUtilities slackUtilities;
 
     @Autowired
-    public ContestProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+    public ContestProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository) {
         this.envProperties = envProperties;
         this.contestRepository = contestRepository;
         this.userCategoryRepository = userCategoryRepository;
-        this.slackUtilities = slackUtilities;
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
@@ -53,14 +50,11 @@ public abstract class ContestProcessor {
 
         adjustUserCategoryStats(userCategoryReporter, userCategoryOpponent);
 
-        userCategoryReporter = userCategoryRepository.save(userCategoryReporter);
-        userCategoryOpponent = userCategoryRepository.save(userCategoryOpponent);
+        userCategoryRepository.save(userCategoryReporter);
+        userCategoryRepository.save(userCategoryOpponent);
 
         contest.setProcessed(true);
-        contest = contestRepository.save(contest);
-
-        // TODO: disabling this until a better post contest processing notification process is determined
-//        notifyChannelAfter(contest, userCategoryReporter, userCategoryOpponent);
+        contestRepository.save(contest);
     }
 
     private UserCategory getOrCreateUserCategory(UserCategoryPK userCategoryPK) {
@@ -71,13 +65,6 @@ public abstract class ContestProcessor {
             userCategory = userCategoryRepository.save(userCategory);
         }
         return userCategory;
-    }
-
-    private void notifyChannelAfter(Contest contest, UserCategory userCategoryReporter, UserCategory userCategoryOpponent) {
-
-        String message = "\nTheir new ratings are <@" + contest.getReporter().getUserId() + "> (" + userCategoryReporter.getElo() + ") and <@" + contest.getOpponent().getUserId() + "> (" + userCategoryOpponent.getElo() + ").";
-
-        slackUtilities.sendChatMessage(contest.getCategory().getTeamId(), contest.getCategory().getChannelId(), message);
     }
 
     abstract EloCalculator.Ratings getRatings(EloCalculator eloCalculator);

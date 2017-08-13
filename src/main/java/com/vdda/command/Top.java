@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Service
 @Getter
-public class Top extends Command {
+public class Top implements Command {
 
     private final String command = "top";
     private final String usage = "top [number of top players]";

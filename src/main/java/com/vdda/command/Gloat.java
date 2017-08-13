@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Service
 @Getter
-public class Gloat extends Command {
+public class Gloat implements Command {
 
     private final String command = "gloat";
     private final String usage = "gloat";

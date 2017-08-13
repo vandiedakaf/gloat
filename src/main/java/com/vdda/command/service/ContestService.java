@@ -1,10 +1,11 @@
 package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
-import com.vdda.slack.*;
+import com.vdda.slack.Response;
+import com.vdda.slack.SlackParameters;
+import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

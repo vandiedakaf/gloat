@@ -5,7 +5,6 @@ import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
 import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
-import com.vdda.slack.SlackUtilities;
 import mockit.Mocked;
 import mockit.Tested;
 import mockit.Verifications;
@@ -23,13 +22,11 @@ public class LossProcessorTest {
     @Mocked
     private UserCategoryRepository userCategoryRepository;
     @Mocked
-    private SlackUtilities slackUtilities;
-    @Mocked
     private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        lossProcessor = new LossProcessor(envProperties, contestRepository, userCategoryRepository, slackUtilities);
+        lossProcessor = new LossProcessor(envProperties, contestRepository, userCategoryRepository);
     }
 
     @Test

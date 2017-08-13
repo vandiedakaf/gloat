@@ -5,7 +5,6 @@ import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
 import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
-import com.vdda.slack.SlackUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +12,8 @@ import org.springframework.stereotype.Service;
 public class LossProcessor extends ContestProcessor {
 
     @Autowired
-    public LossProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
-        super(envProperties, contestRepository, userCategoryRepository, slackUtilities);
+    public LossProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository) {
+        super(envProperties, contestRepository, userCategoryRepository);
     }
 
     @Override
