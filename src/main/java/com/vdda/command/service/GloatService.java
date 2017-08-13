@@ -51,7 +51,9 @@ public class GloatService {
             return;
         }
 
-        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId(), 10); // TODO replace with global constant
+        // TODO remove calibration game constraint and use streaming (e.g. filter and first) to get top user.
+        // TODO replace literal "10" with global config
+        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId(), 10);
 
         if (userCategories.isEmpty()) {
             response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");
@@ -67,10 +69,9 @@ public class GloatService {
             return;
         }
 
-        StringBuilder champDetails = new StringBuilder();
-        champDetails.append(":trophy: <@");
-        champDetails.append(topUserId);
-        champDetails.append("> would like you all to bow before their greatness :trophy:");
-        slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), champDetails.toString());
+        String champDetails = ":trophy: <@" +
+                topUserId +
+                "> would like you all to bow before their greatness :trophy:";
+        slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), champDetails);
     }
 }

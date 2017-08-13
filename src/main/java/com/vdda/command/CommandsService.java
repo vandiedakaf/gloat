@@ -70,7 +70,6 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
         commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
     }
 
-
     Map<String, Command> toTreeMap(Map<String, Command> map) {
         return map.entrySet().stream()
                 .collect(Collectors.toMap(

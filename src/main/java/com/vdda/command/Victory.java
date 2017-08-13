@@ -34,7 +34,7 @@ public class Victory implements Command {
         List<String> args = getArguments(parameters);
 
         if (args.isEmpty()) {
-            return createUsageResponse();
+            return commandUsageResponse();
         }
 
         victoryService.processRequest(parameters, args);

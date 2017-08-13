@@ -67,6 +67,18 @@ public class TopTest {
     }
 
     @Test
+    public void runWithIncorrectArg() throws Exception {
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
+        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
+        parameters.put(SlackParameters.TEXT.toString(), "top -5");
+
+        Response response = top.run(parameters);
+        assertThat(response.getText(), containsString("Usage"));
+    }
+
+    @Test
     public void getCommand() throws Exception {
         assertThat(top.getCommand(), is(notNullValue()));
     }

@@ -1,6 +1,5 @@
 package com.vdda.command;
 
-import com.vdda.command.*;
 import com.vdda.slack.Response;
 import mockit.Mock;
 import mockit.MockUp;
@@ -19,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -129,5 +127,19 @@ public class CommandsServiceTest {
             assertThat(command.getCommand(), is(greaterThan(prevCommand)));
             prevCommand = command.getCommand();
         }
+    }
+
+    @Test
+    public void treeMapCollision() throws Exception {
+
+        Map<String, Command> unsortedMap = new HashMap<>();
+
+        unsortedMap.put("v", new Victory(null));
+        unsortedMap.put("v", new Victory(null));
+        unsortedMap.put("v", new Victory(null));
+
+        Map<String, Command> sortedMap = commandsService.toTreeMap(unsortedMap);
+
+        assertThat(sortedMap.size(), equalTo(1));
     }
 }

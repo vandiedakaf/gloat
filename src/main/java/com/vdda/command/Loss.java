@@ -32,7 +32,7 @@ public class Loss implements Command {
         List<String> args = getArguments(parameters);
 
         if (args.isEmpty()) {
-            return createUsageResponse();
+            return commandUsageResponse();
         }
 
         lossService.processRequest(parameters, args);

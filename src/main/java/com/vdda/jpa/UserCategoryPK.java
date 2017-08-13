@@ -31,7 +31,4 @@ public class UserCategoryPK implements Serializable {
         this.user = user;
         this.categoryId = categoryId;
     }
-
-
-
 }

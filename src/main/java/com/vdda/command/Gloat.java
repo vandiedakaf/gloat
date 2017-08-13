@@ -30,8 +30,8 @@ public class Gloat implements Command {
 
         gloatService.processRequest(parameters);
 
-        // TODO make this async
-
-        return null;
+        Response response = new Response();
+        response.setText("We're processing your request...");
+        return response;
     }
 }

@@ -32,7 +32,7 @@ public class Top implements Command {
         List<String> args = getArguments(parameters);
 
         if (!(validateArgs(args))) {
-            return createUsageResponse();
+            return commandUsageResponse();
         }
 
         if (args.isEmpty()) {

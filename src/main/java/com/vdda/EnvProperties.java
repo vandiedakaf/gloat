@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @ConfigurationProperties(value = "env")
 @Getter
-//@Setter
+@Setter // makes this class meanbean testable
 @Component
 public class EnvProperties {
 

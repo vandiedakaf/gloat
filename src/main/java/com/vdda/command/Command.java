@@ -21,7 +21,7 @@ public interface Command {
         return Arrays.asList(argsArray).subList(1, argsArray.length);
     }
 
-    default Response createUsageResponse(){
+    default Response commandUsageResponse(){
         Response response = new Response();
         response.setText(getShortDescription() + "\nUsage: `" + getUsage() + "`");
         return response;

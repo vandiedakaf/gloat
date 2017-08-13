@@ -2,10 +2,15 @@ package com.vdda.command;
 
 import com.vdda.command.service.GloatService;
 import com.vdda.slack.Response;
+import com.vdda.slack.SlackParameters;
 import mockit.Mocked;
+import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -23,11 +28,20 @@ public class GloatTest {
     }
 
     @Test
-    @Ignore
     public void runGolden() throws Exception {
-        Response response = gloat.run(null);
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
+        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
 
-        assertThat(response.getText(), containsString("COMING SOON"));
+        Response response = gloat.run(parameters);
+        assertThat(response.getText(), containsString("We're processing your request..."));
+
+        new Verifications() {{
+            Map<String, String> parameters;
+            gloatService.processRequest(parameters = withCapture());
+
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+        }};
     }
 
     @Test

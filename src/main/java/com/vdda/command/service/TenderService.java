@@ -44,20 +44,20 @@ public class TenderService {
 
         Category category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
 
-        StringBuilder tenderDetails = new StringBuilder();
-        tenderDetails.append("<@");
-        tenderDetails.append(parameters.get(SlackParameters.USER_ID.toString()));
-        tenderDetails.append(">");
+        StringBuilder tenderMessage = new StringBuilder();
+        tenderMessage.append("<@");
+        tenderMessage.append(parameters.get(SlackParameters.USER_ID.toString()));
+        tenderMessage.append(">");
 
         if (category == null) {
-            noRank(parameters, tenderDetails);
+            noRank(parameters, tenderMessage);
             return;
         }
 
         User user = userRepository.findByTeamIdAndUserId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.USER_ID.toString()));
 
         if (user == null) {
-            noRank(parameters, tenderDetails);
+            noRank(parameters, tenderMessage);
             return;
         }
 
@@ -65,14 +65,14 @@ public class TenderService {
         UserCategory userCategory = userCategoryRepository.findUserCategoryByUserCategoryPK(userCategoryPK);
 
         if (userCategory == null) {
-            noRank(parameters, tenderDetails);
+            noRank(parameters, tenderMessage);
             return;
         }
 
-        tenderDetails.append(" (");
-        tenderDetails.append(userCategory.getElo());
-        tenderDetails.append(") is looking for a challenger :mega:");
-        slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), tenderDetails.toString());
+        tenderMessage.append(" (");
+        tenderMessage.append(userCategory.getElo());
+        tenderMessage.append(") is looking for a challenger :mega:");
+        slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), tenderMessage.toString());
     }
 
     private void noRank(Map<String, String> parameters, StringBuilder tenderDetails) {

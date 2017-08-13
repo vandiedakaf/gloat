@@ -32,7 +32,7 @@ public class Draw implements Command {
         List<String> args = getArguments(parameters);
 
         if (args.isEmpty()) {
-            return createUsageResponse();
+            return commandUsageResponse();
         }
 
         drawService.processRequest(parameters, args);

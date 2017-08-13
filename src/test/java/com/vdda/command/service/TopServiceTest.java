@@ -63,7 +63,7 @@ public class TopServiceTest {
     public void processGolden() throws Exception {
 
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = mockUserCategoriesGolden();
         }};
 
@@ -83,10 +83,30 @@ public class TopServiceTest {
     }
 
     @Test
-    public void userInTop() throws Exception {
+    public void processGoldenUserInTop() throws Exception {
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = mockUserCategoriesUserInTop();
+        }};
+
+        topService.processRequest(parameters);
+
+        new Verifications() {{
+            Response response;
+            restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_1));
+            assertThat(response.getAttachments().get(1).getText(), containsString(USER_ID));
+            assertThat(response.getAttachments().get(1).getText(), containsString(TEST_USER_ID_3));
+            assertThat(response.getAttachments().size(), is(lessThan(3)));
+        }};
+    }
+
+    @Test
+    public void processGoldenUserDrawsIncluded() throws Exception {
+        new Expectations() {{
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+            result = mockUserCategoriesDrawsIncluded();
         }};
 
         topService.processRequest(parameters);
@@ -105,7 +125,7 @@ public class TopServiceTest {
     @Test
     public void userNotFound() throws Exception {
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = mockUserCategoriesUserNotFound();
         }};
 
@@ -126,7 +146,7 @@ public class TopServiceTest {
     @Test
     public void noUsers() throws Exception {
         new Expectations() {{
-            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, 10);
+            userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = new ArrayList<>();
         }};
 
@@ -254,6 +274,37 @@ public class TopServiceTest {
         userCategoryPK = new UserCategoryPK(user, 1L);
         userCategory = new UserCategory(userCategoryPK);
         userCategory.setElo(4);
+        userCategories.add(userCategory);
+
+        user = new User(TEAM_ID, TEST_USER_ID_3);
+        userCategoryPK = new UserCategoryPK(user, 1L);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(3);
+        userCategories.add(userCategory);
+
+        user = new User(TEAM_ID, TEST_USER_ID_4);
+        userCategoryPK = new UserCategoryPK(user, 1L);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(2);
+        userCategories.add(userCategory);
+
+        return userCategories;
+    }
+
+    private List<UserCategory> mockUserCategoriesDrawsIncluded() {
+        List<UserCategory> userCategories = new ArrayList<>();
+
+        User user = new User(TEAM_ID, TEST_USER_ID_1);
+        UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
+        UserCategory userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(5);
+        userCategories.add(userCategory);
+
+        user = new User(TEAM_ID, USER_ID);
+        userCategoryPK = new UserCategoryPK(user, 1L);
+        userCategory = new UserCategory(userCategoryPK);
+        userCategory.setElo(1);
+        userCategory.setDraws(1);
         userCategories.add(userCategory);
 
         user = new User(TEAM_ID, TEST_USER_ID_3);
