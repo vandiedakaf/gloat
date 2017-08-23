@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -43,9 +44,9 @@ public class GloatService {
 
         Response response = new Response();
 
-        Category category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
+        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
 
-        if (category == null) {
+        if (!category.isPresent()) {
             response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return;
@@ -53,7 +54,7 @@ public class GloatService {
 
         // TODO remove calibration game constraint and use streaming (e.g. filter and first) to get top user.
         // TODO replace literal "10" with global config
-        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId(), 10);
+        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.get().getId(), 10);
 
         if (userCategories.isEmpty()) {
             response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");

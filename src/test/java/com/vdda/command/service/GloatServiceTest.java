@@ -17,10 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -102,7 +99,7 @@ public class GloatServiceTest {
     public void noCategory() throws Exception {
         new Expectations() {{
             categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
-            result = null;
+            result = Optional.empty();
         }};
 
         gloatService.processRequest(parameters);
@@ -134,8 +131,8 @@ public class GloatServiceTest {
         }};
     }
 
-    private Category mockCategoryGolden() {
-        return new Category(TEAM_ID, CHANNEL_ID);
+    private Optional<Category> mockCategoryGolden() {
+        return Optional.of(new Category(TEAM_ID, CHANNEL_ID));
     }
 
     private List<UserCategory> mockUserCategoriesGolden() {

@@ -41,7 +41,6 @@ public class Top implements Command {
             topService.processRequest(parameters, Integer.parseInt(args.get(0)));
         }
 
-
         Response response = new Response();
         response.setText("We're processing your request...");
         return response;

@@ -17,10 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -86,7 +83,7 @@ public class TenderServiceTest {
     public void noCategory() throws Exception {
         new Expectations() {{
             categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
-            result = null;
+            result = Optional.empty();
         }};
 
         tenderService.processRequest(parameters);
@@ -105,7 +102,7 @@ public class TenderServiceTest {
             result = mockCategoryGolden();
 
             userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
-            result = null;
+            result = Optional.empty();
         }};
 
         tenderService.processRequest(parameters);
@@ -127,7 +124,7 @@ public class TenderServiceTest {
             result = mockUserGolden();
 
             userCategoryRepository.findUserCategoryByUserCategoryPK((UserCategoryPK) any);
-            result = null;
+            result = Optional.empty();
         }};
 
         tenderService.processRequest(parameters);
@@ -139,23 +136,20 @@ public class TenderServiceTest {
         }};
     }
 
-    private Category mockCategoryGolden() {
-        return new Category(TEAM_ID, CHANNEL_ID);
+    private Optional<Category> mockCategoryGolden() {
+        return Optional.of(new Category(TEAM_ID, CHANNEL_ID));
     }
 
-    private User mockUserGolden() {
-        return new User(TEAM_ID, CHANNEL_ID);
+    private Optional<User> mockUserGolden() {
+        return Optional.of(new User(TEAM_ID, CHANNEL_ID));
     }
 
-    private List<UserCategory> mockUserCategoriesGolden() {
-        List<UserCategory> userCategories = new ArrayList<>();
-
+    private Optional<UserCategory> mockUserCategoriesGolden() {
         User user = new User(TEAM_ID, USER_ID);
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
         UserCategory userCategory = new UserCategory(userCategoryPK);
         userCategory.setElo(1);
-        userCategories.add(userCategory);
 
-        return userCategories;
+        return Optional.of(userCategory);
     }
 }

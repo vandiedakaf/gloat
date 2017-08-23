@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserCategoryRepository extends CrudRepository<UserCategory, UserCategoryPK> {
 
@@ -14,5 +15,5 @@ public interface UserCategoryRepository extends CrudRepository<UserCategory, Use
     @Query(value = "SELECT * FROM user_category WHERE category_id = ? AND (wins + losses + draws) >= ? ORDER BY elo DESC", nativeQuery = true)
     List<UserCategory> findAllByCategoryIdOrderByEloDesc(Long categoryId, Integer calibrationGames);
 
-    UserCategory findUserCategoryByUserCategoryPK(UserCategoryPK userCategoryPK);
+    Optional<UserCategory> findUserCategoryByUserCategoryPK(UserCategoryPK userCategoryPK);
 }

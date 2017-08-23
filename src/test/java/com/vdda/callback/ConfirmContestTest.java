@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -151,7 +152,7 @@ public class ConfirmContestTest {
             result = mockCategory();
 
             userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
-            result = null;
+            result = Optional.empty();
         }};
 
         CallbackRequest callbackRequest = new CallbackRequest();
@@ -193,7 +194,7 @@ public class ConfirmContestTest {
 
         new Expectations() {{
             categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
-            result = null;
+            result = Optional.empty();
 
             userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
             result = mockUser();
@@ -273,16 +274,16 @@ public class ConfirmContestTest {
         }};
     }
 
-    private Category mockCategory() {
+    private Optional<Category> mockCategory() {
         Category category = new Category(TEAM_ID, CHANNEL_ID);
         category.setId(1L);
-        return category;
+        return Optional.of(category);
     }
 
-    private com.vdda.jpa.User mockUser() {
+    private Optional<com.vdda.jpa.User> mockUser() {
         com.vdda.jpa.User user = new com.vdda.jpa.User(TEAM_ID, USER_ID);
         user.setId(1L);
-        return user;
+        return Optional.of(user);
     }
 
 }

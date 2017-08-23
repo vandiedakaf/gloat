@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -40,6 +41,7 @@ public abstract class ConfirmContest implements Callback {
     }
 
     @Override
+
     public Response run(CallbackRequest callbackRequest) {
 
         String actionName = callbackRequest.getActions().get(0).getName();
@@ -75,21 +77,21 @@ public abstract class ConfirmContest implements Callback {
     }
 
     private User getOrCreateUser(String teamId, String userId) {
-        User user = userRepository.findByTeamIdAndUserId(teamId, userId);
-        if (user == null) {
-            user = new User(teamId, userId);
-            user = userRepository.save(user);
+        Optional<User> userOptional = userRepository.findByTeamIdAndUserId(teamId, userId);
+        if (!userOptional.isPresent()) {
+            User user = new User(teamId, userId);
+            return userRepository.save(user);
         }
-        return user;
+        return userOptional.get();
     }
 
     private Category getOrCreateByTeamIdAndChannelId(String teamId, String channelId) {
-        Category category = categoryRepository.findByTeamIdAndChannelId(teamId, channelId);
-        if (category == null) {
-            category = new Category(teamId, channelId);
-            category = categoryRepository.save(category);
+        Optional<Category> categoryOptional = categoryRepository.findByTeamIdAndChannelId(teamId, channelId);
+        if (!categoryOptional.isPresent()) {
+            Category category = new Category(teamId, channelId);
+            return categoryRepository.save(category);
         }
-        return category;
+        return categoryOptional.get();
     }
 
     UserCategory getOrCreateUserCategory(UserCategoryPK userCategoryPK) {

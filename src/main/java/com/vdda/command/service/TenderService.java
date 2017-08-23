@@ -15,11 +15,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class TenderService {
-
 
     private final UserCategoryRepository userCategoryRepository;
     private final UserRepository userRepository;
@@ -42,35 +42,35 @@ public class TenderService {
 
     private void tender(Map<String, String> parameters) {
 
-        Category category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
+        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
 
         StringBuilder tenderMessage = new StringBuilder();
         tenderMessage.append("<@");
         tenderMessage.append(parameters.get(SlackParameters.USER_ID.toString()));
         tenderMessage.append(">");
 
-        if (category == null) {
+        if (!category.isPresent()) {
             noRank(parameters, tenderMessage);
             return;
         }
 
-        User user = userRepository.findByTeamIdAndUserId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.USER_ID.toString()));
+        Optional<User> user = userRepository.findByTeamIdAndUserId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.USER_ID.toString()));
 
-        if (user == null) {
+        if (!user.isPresent()) {
             noRank(parameters, tenderMessage);
             return;
         }
 
-        UserCategoryPK userCategoryPK = new UserCategoryPK(user, category.getId());
-        UserCategory userCategory = userCategoryRepository.findUserCategoryByUserCategoryPK(userCategoryPK);
+        UserCategoryPK userCategoryPK = new UserCategoryPK(user.get(), category.get().getId());
+        Optional<UserCategory> userCategory = userCategoryRepository.findUserCategoryByUserCategoryPK(userCategoryPK);
 
-        if (userCategory == null) {
+        if (!userCategory.isPresent()) {
             noRank(parameters, tenderMessage);
             return;
         }
 
         tenderMessage.append(" (");
-        tenderMessage.append(userCategory.getElo());
+        tenderMessage.append(userCategory.get().getElo());
         tenderMessage.append(") is looking for a challenger :mega:");
         slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), tenderMessage.toString());
     }

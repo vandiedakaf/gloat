@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -61,14 +62,14 @@ public class TopService {
 
         Response response = new Response();
 
-        Category category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
+        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
 
-        if (category == null) {
+        if (!category.isPresent()) {
             response.setText("No contests have been registered in this category.");
             return response;
         }
 
-        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.getId(), 10); // TODO replace with global constant
+        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.get().getId(), 10); // TODO replace with global constant
 
         if (userCategories.isEmpty()) {
             response.setText("No ranked players have been found in this category. Players might still be in calibration phase."); // TODO add calibration phase requirement

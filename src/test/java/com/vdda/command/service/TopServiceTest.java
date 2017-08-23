@@ -1,5 +1,6 @@
 package com.vdda.command.service;
 
+import com.vdda.jpa.Category;
 import com.vdda.jpa.User;
 import com.vdda.jpa.UserCategory;
 import com.vdda.jpa.UserCategoryPK;
@@ -15,10 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -27,6 +25,7 @@ public class TopServiceTest {
 
     private static final String RESPONSE_URL = "responseUrl";
     private static final String TEAM_ID = "teamId";
+    private static final String CHANNEL_ID = "channelId";
     private static final String USER_ID = "userId";
     private static final String TEST_USER_ID_1 = "testUserId1";
     private static final String TEST_USER_ID_2 = "testUserId2";
@@ -63,6 +62,9 @@ public class TopServiceTest {
     public void processGolden() throws Exception {
 
         new Expectations() {{
+            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
+            result = mockCategory();
+
             userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = mockUserCategoriesGolden();
         }};
@@ -85,6 +87,9 @@ public class TopServiceTest {
     @Test
     public void processGoldenUserInTop() throws Exception {
         new Expectations() {{
+            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
+            result = mockCategory();
+
             userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = mockUserCategoriesUserInTop();
         }};
@@ -106,6 +111,9 @@ public class TopServiceTest {
     @Test
     public void processGoldenUserDrawsIncluded() throws Exception {
         new Expectations() {{
+            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
+            result = mockCategory();
+
             userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = mockUserCategoriesDrawsIncluded();
         }};
@@ -123,6 +131,9 @@ public class TopServiceTest {
     @Test
     public void userNotFound() throws Exception {
         new Expectations() {{
+            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
+            result = mockCategory();
+
             userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = mockUserCategoriesUserNotFound();
         }};
@@ -144,6 +155,9 @@ public class TopServiceTest {
     @Test
     public void noUsers() throws Exception {
         new Expectations() {{
+            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
+            result = mockCategory();
+
             userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
             result = new ArrayList<>();
         }};
@@ -162,7 +176,7 @@ public class TopServiceTest {
     public void noCategory() throws Exception {
         new Expectations() {{
             categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
-            result = null;
+            result = Optional.empty();
         }};
 
         topService.processRequest(parameters);
@@ -173,6 +187,12 @@ public class TopServiceTest {
             assertThat(response.getText(), containsString("No contests"));
         }};
 
+    }
+
+    private Optional<Category> mockCategory() {
+        Category category = new Category(TEAM_ID, CHANNEL_ID);
+        category.setId(1L);
+        return Optional.of(category);
     }
 
     private List<UserCategory> mockUserCategoriesGolden() {

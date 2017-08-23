@@ -33,7 +33,6 @@ public abstract class ContestService {
         Optional<User> user = slackUtilities.getUser(teamId, args.get(0));
 
         if (!user.isPresent()) {
-            log.debug("User not found");
             Response response = new Response();
             response.setText("Sorry, seems like " + args.get(0) + " is some imaginary person.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);

@@ -1,6 +1,6 @@
 package com.vdda.command;
 
-import com.vdda.command.service.DrawService;
+import com.vdda.command.service.StatsService;
 import com.vdda.slack.Response;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,18 +12,18 @@ import java.util.Map;
 
 @Service
 @Getter
-public class Draw implements Command {
+public class Stats implements Command {
 
-    private final String command = "draw";
-    private final String usage = "draw @user";
-    private final String shortDescription = "Declare that there are no winners here.";
+    private final String command = "stats";
+    private final String usage = "stats [@user]";
+    private final String shortDescription = "Returns statistics about yourself (or another user).";
 
     @Getter(AccessLevel.NONE)
-    private final DrawService drawService;
+    private final StatsService statsService;
 
     @Autowired
-    public Draw(DrawService drawService) {
-        this.drawService = drawService;
+    public Stats(StatsService statsService) {
+        this.statsService = statsService;
     }
 
     @Override
@@ -32,10 +32,10 @@ public class Draw implements Command {
         List<String> args = getArguments(parameters);
 
         if (args.isEmpty()) {
-            return commandUsageResponse();
+            statsService.processRequest(parameters);
+        } else {
+            statsService.processRequest(parameters, args.get(0));
         }
-
-        drawService.processRequest(parameters, args);
 
         Response response = new Response();
         response.setText("We're processing your request...");
