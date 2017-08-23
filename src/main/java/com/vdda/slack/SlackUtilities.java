@@ -56,7 +56,7 @@ public class SlackUtilities {
             return Optional.empty();
         }
 
-        // remove potential '@' from username
+        // remove potential '@' from userName
         String userNameSanitised = userName.replaceAll("@", "");
 
         UsersListResponse usersListResponse = usersList(token.get());

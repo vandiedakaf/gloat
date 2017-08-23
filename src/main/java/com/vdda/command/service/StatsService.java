@@ -47,21 +47,15 @@ public class StatsService {
     }
 
     @Async
-    public void processRequest(Map<String, String> parameters) {
-
-        processRequest(parameters, parameters.get(SlackParameters.USER_ID.toString()));
-    }
-
-    @Async
-    public void processRequest(Map<String, String> parameters, String userId) {
+    public void processRequest(Map<String, String> parameters, String userName) {
 
         final String teamId = parameters.get(SlackParameters.TEAM_ID.toString());
         final String channelId = parameters.get(SlackParameters.CHANNEL_ID.toString());
 
-        Optional<User> slackUser = slackUtilities.getUser(teamId, userId);
+        Optional<User> slackUser = slackUtilities.getUser(teamId, userName);
         if (!slackUser.isPresent()) {
             Response response = new Response();
-            response.setText("Sorry, seems like " + userId + " is some imaginary person.");
+            response.setText("Sorry, seems like " + userName + " is some imaginary person.");
             restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
             return;
         }
@@ -74,7 +68,9 @@ public class StatsService {
             return;
         }
 
-        Optional<com.vdda.jpa.User> user = userRepository.findByTeamIdAndUserId(teamId, slackUser.get().getId());
+        String userId = userName.isEmpty() ? parameters.get(SlackParameters.USER_ID.toString()) : slackUser.get().getId();
+        Optional<com.vdda.jpa.User> user = userRepository.findByTeamIdAndUserId(teamId, userId);
+
         if (!user.isPresent()) {
             Response response = new Response();
             response.setText("No contests have been registered for this user.");
@@ -86,7 +82,7 @@ public class StatsService {
         UserCategory userCategory = userCategoryRepository.findOne(userCategoryPK);
 
         Response response = new Response();
-        response.setText("This user has won " + userCategory.getWins() + "games.");
+        response.setText("The Win:Loss:Draw values for this user is: " + userCategory.getWins() + ":" + userCategory.getLosses() + ":" + userCategory.getDraws());
 
         restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
     }
