@@ -2,6 +2,7 @@ package com.vdda.command;
 
 import com.vdda.command.service.StatsService;
 import com.vdda.slack.Response;
+import com.vdda.slack.SlackParameters;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class Stats implements Command {
 
         List<String> args = getArguments(parameters);
 
-        statsService.processRequest(parameters, args.get(0));
+        statsService.processRequest(parameters, args);
 
         Response response = new Response();
         response.setText("We're processing your request...");
