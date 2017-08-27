@@ -2,7 +2,6 @@ package com.vdda.command;
 
 import com.vdda.command.service.StatsService;
 import com.vdda.slack.Response;
-import com.vdda.slack.SlackParameters;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
