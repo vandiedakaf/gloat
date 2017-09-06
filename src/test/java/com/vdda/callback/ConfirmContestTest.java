@@ -150,9 +150,6 @@ public class ConfirmContestTest {
         new Expectations() {{
             categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
             result = mockCategory();
-
-            userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
-            result = Optional.empty();
         }};
 
         CallbackRequest callbackRequest = new CallbackRequest();
@@ -193,9 +190,6 @@ public class ConfirmContestTest {
     public void runGoldenYesNewCategory() throws Exception {
 
         new Expectations() {{
-            categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
-            result = Optional.empty();
-
             userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
             result = mockUser();
         }};

@@ -8,12 +8,12 @@ import java.util.List;
 @Getter
 @Setter
 public class Attachment {
-    public List<Action> actions;
-    public String callback_id;
-    public String color;
-    public String fallback;
-    public List<String> mrkdwn_in;
-    public String text;
-    public String thumb_url;
-    public String title;
+    private List<Action> actions;
+    private String callback_id;
+    private String color;
+    private String fallback;
+    private List<String> mrkdwn_in;
+    private String text;
+    private String thumb_url;
+    private String title;
 }

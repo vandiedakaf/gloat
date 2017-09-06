@@ -174,10 +174,6 @@ public class TopServiceTest {
 
     @Test
     public void noCategory() throws Exception {
-        new Expectations() {{
-            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
-            result = Optional.empty();
-        }};
 
         topService.processRequest(parameters);
 

@@ -97,10 +97,6 @@ public class GloatServiceTest {
 
     @Test
     public void noCategory() throws Exception {
-        new Expectations() {{
-            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
-            result = Optional.empty();
-        }};
 
         gloatService.processRequest(parameters);
 

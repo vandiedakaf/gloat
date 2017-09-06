@@ -81,10 +81,6 @@ public class TenderServiceTest {
 
     @Test
     public void noCategory() throws Exception {
-        new Expectations() {{
-            categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
-            result = Optional.empty();
-        }};
 
         tenderService.processRequest(parameters);
 
@@ -100,9 +96,6 @@ public class TenderServiceTest {
         new Expectations() {{
             categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
             result = mockCategoryGolden();
-
-            userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
-            result = Optional.empty();
         }};
 
         tenderService.processRequest(parameters);
@@ -122,9 +115,6 @@ public class TenderServiceTest {
 
             userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
             result = mockUserGolden();
-
-            userCategoryRepository.findUserCategoryByUserCategoryPK((UserCategoryPK) any);
-            result = Optional.empty();
         }};
 
         tenderService.processRequest(parameters);

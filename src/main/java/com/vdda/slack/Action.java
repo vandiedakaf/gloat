@@ -9,10 +9,10 @@ import lombok.Setter;
 public class Action {
     private static final String BUTTON = "button";
 
-    public String name;
-    public String text;
+    private String name;
+    private String text;
     @Setter(AccessLevel.NONE)
-    public String type = BUTTON;
-    public String value;
-    public String style;
+    private String type = BUTTON;
+    private String value;
+    private String style;
 }

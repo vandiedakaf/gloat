@@ -16,7 +16,7 @@ public class Stats implements Command {
 
     private final String command = "stats";
     private final String usage = "stats [@user]";
-    private final String shortDescription = "IN ALPHA: Returns statistics about yourself (or another user).";
+    private final String shortDescription = "Returns statistics about yourself (or another user).";
 
     @Getter(AccessLevel.NONE)
     private final StatsService statsService;

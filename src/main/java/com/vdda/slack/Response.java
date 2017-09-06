@@ -10,6 +10,6 @@ import java.util.List;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Response {
-    public String text;
-    public List<Attachment> attachments;
+    private String text;
+    private List<Attachment> attachments;
 }

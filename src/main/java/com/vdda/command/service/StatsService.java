@@ -7,25 +7,18 @@ import com.vdda.jpa.UserCategoryPK;
 import com.vdda.repository.CategoryRepository;
 import com.vdda.repository.UserCategoryRepository;
 import com.vdda.repository.UserRepository;
-import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -54,7 +47,7 @@ public class StatsService {
 
         Response response = new Response();
 
-        String userId = null;
+        String userId;
 
         if (args.isEmpty()) {
             userId = parameters.get(SlackParameters.USER_ID.toString());
@@ -84,7 +77,11 @@ public class StatsService {
 
         UserCategoryPK userCategoryPK = new UserCategoryPK(user.get(), category.get().getId());
         UserCategory userCategory = userCategoryRepository.findOne(userCategoryPK);
-
+        if (userCategory == null) {
+            response.setText("No contests have been registered for this user.");
+            restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+            return;
+        }
 
         response.setText("The Win:Loss:Draw ratio for this user is: " + userCategory.getWins() + ":" + userCategory.getLosses() + ":" + userCategory.getDraws());
 
