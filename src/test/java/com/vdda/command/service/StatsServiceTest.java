@@ -77,7 +77,7 @@ public class StatsServiceTest {
         new Verifications() {{
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
-            assertThat(response.getText(), containsString("Channel Stats"));
+            assertThat(response.getAttachments().get(0).getTitle(), containsString("Channel Stats"));
         }};
     }
 
@@ -105,7 +105,7 @@ public class StatsServiceTest {
         new Verifications() {{
             Response response;
             restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
-            assertThat(response.getText(), containsString("Channel Stats"));
+            assertThat(response.getAttachments().get(0).getTitle(), containsString("Channel Stats"));
         }};
     }
 
