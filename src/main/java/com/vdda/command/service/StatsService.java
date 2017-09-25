@@ -34,6 +34,10 @@ public class StatsService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
+    private static final String COLOUR_GREEN = "#86C53C";
+    private static final String COLOUR_GOLD = "#FFD700";
+    private static final String COLOUR_BRONZE = "#CD7F32";
+
     @Autowired
     public StatsService(RestTemplate restTemplate, SlackUtilities slackUtilities, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
         this.restTemplate = restTemplate;
@@ -87,21 +91,20 @@ public class StatsService {
             return;
         }
 
-        response.setText("Channel Stats");
-
         List<Attachment> attachments = new ArrayList<>();
 
-        Attachment attachmentTitle = new Attachment();
-        attachmentTitle.setFallback("Channel Stats");
-        attachmentTitle.setTitle("Channel Stats");
-        attachments.add(attachmentTitle);
-
         Attachment channelStats = new Attachment();
+        channelStats.setFallback("Channel Stats");
+        channelStats.setTitle("Channel Stats");
         channelStats.setText("There have been " + categoryRepository.sumTotalPlayedByCategory(category.get().getId()) + " games played in this channel");
+        channelStats.setColor(COLOUR_GREEN);
         attachments.add(channelStats);
 
         Attachment playerStats = new Attachment();
+        playerStats.setFallback("Player Stats");
+        playerStats.setTitle("Player Stats");
         playerStats.setText("The Win:Loss:Draw ratio for the enquired user is: " + userCategory.getWins() + ":" + userCategory.getLosses() + ":" + userCategory.getDraws());
+        playerStats.setColor(COLOUR_GREEN);
         attachments.add(playerStats);
 
         response.setAttachments(attachments);
