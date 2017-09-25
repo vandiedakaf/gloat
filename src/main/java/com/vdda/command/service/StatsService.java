@@ -7,6 +7,7 @@ import com.vdda.jpa.UserCategoryPK;
 import com.vdda.repository.CategoryRepository;
 import com.vdda.repository.UserCategoryRepository;
 import com.vdda.repository.UserRepository;
+import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
@@ -16,9 +17,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -83,7 +87,24 @@ public class StatsService {
             return;
         }
 
-        response.setText("The Win:Loss:Draw ratio for this user is: " + userCategory.getWins() + ":" + userCategory.getLosses() + ":" + userCategory.getDraws());
+        response.setText("Channel Stats");
+
+        List<Attachment> attachments = new ArrayList<>();
+
+        Attachment attachmentTitle = new Attachment();
+        attachmentTitle.setFallback("Channel Stats");
+        attachmentTitle.setTitle("Channel Stats");
+        attachments.add(attachmentTitle);
+
+        Attachment channelStats = new Attachment();
+        channelStats.setText("There have been " + categoryRepository.sumTotalPlayedByCategory(category.get().getId()) + " games played in this channel");
+        attachments.add(channelStats);
+
+        Attachment playerStats = new Attachment();
+        playerStats.setText("The Win:Loss:Draw ratio for the enquired user is: " + userCategory.getWins() + ":" + userCategory.getLosses() + ":" + userCategory.getDraws());
+        attachments.add(playerStats);
+
+        response.setAttachments(attachments);
 
         restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
     }
