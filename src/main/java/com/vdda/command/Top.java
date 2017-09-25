@@ -16,6 +16,7 @@ public class Top implements Command {
 
     private final String command = "top";
     private final String usage = "top [number of top players]";
+    private final String usageAdvanced = usage;
     private final String shortDescription = "Lists the top ranking players.";
 
     @Getter(AccessLevel.NONE)

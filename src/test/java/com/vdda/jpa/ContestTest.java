@@ -3,7 +3,7 @@ package com.vdda.jpa;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class ContestTest {
@@ -15,9 +15,9 @@ public class ContestTest {
 
         Contest contest = new Contest(category, reporter, opponent, ContestOutcome.WIN);
 
-        assertThat(contest.getCategory().getChannelId(), equalTo("channelId"));
-        assertThat(contest.getReporter().getUserId(), equalTo("reporterId"));
-        assertThat(contest.getOpponent().getUserId(), equalTo("opponentId"));
+        assertThat(contest.getCategory().getChannelId(), is("channelId"));
+        assertThat(contest.getReporter().getUserId(), is("reporterId"));
+        assertThat(contest.getOpponent().getUserId(), is("opponentId"));
     }
 
     @Test

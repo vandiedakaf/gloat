@@ -16,6 +16,7 @@ public class Draw implements Command {
 
     private final String command = "draw";
     private final String usage = "draw @user";
+    private final String usageAdvanced = usage;
     private final String shortDescription = "Declare that there are no winners here.";
 
     @Getter(AccessLevel.NONE)

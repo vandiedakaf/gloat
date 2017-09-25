@@ -107,7 +107,7 @@ public class CommandsServiceTest {
             Map<String, String> parametersMap;
             gloat.run(parametersMap = withCapture());
 
-            assertThat(parametersMap.get("text"), is(equalTo("gloat")));
+            assertThat(parametersMap.get("text"), is(("gloat")));
         }};
     }
 

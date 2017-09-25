@@ -47,7 +47,7 @@ public class StatsTest {
             //noinspection unchecked
             statsService.processRequest(parameters = withCapture(), (List<String>) any);
 
-            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(("channelId")));
         }};
     }
 

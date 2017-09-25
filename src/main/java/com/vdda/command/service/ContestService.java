@@ -19,6 +19,7 @@ public abstract class ContestService {
 
     private final RestTemplate restTemplate;
     private final SlackUtilities slackUtilities;
+    List<String> contestArguments;
 
     public ContestService(RestTemplate restTemplate, SlackUtilities slackUtilities) {
         this.restTemplate = restTemplate;
@@ -27,6 +28,8 @@ public abstract class ContestService {
 
     @Async
     public void processRequest(Map<String, String> parameters, List<String> args) {
+
+        this.contestArguments = args;
 
         final String teamId = parameters.get(SlackParameters.TEAM_ID.toString());
 
@@ -55,6 +58,7 @@ public abstract class ContestService {
 
     protected abstract Response confirmationButton(User user);
 
+    // TODO callbackBuilder needs improvement, maybe some serialisation?
     String callbackBuilder(String callbackId, String userId) {
         return callbackId + "|" + userId;
     }

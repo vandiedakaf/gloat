@@ -43,7 +43,7 @@ public class TopTest {
             Map<String, String> parameters;
             topService.processRequest(parameters = withCapture());
 
-            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(("channelId")));
         }};
     }
 
@@ -62,7 +62,7 @@ public class TopTest {
             Map<String, String> parameters;
             topService.processRequest(parameters = withCapture(), 5);
 
-            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(("channelId")));
         }};
     }
 
@@ -97,34 +97,34 @@ public class TopTest {
     public void validateArgsGolden() throws Exception {
         List<String> args = new ArrayList<>();
         args.add("123");
-        assertThat(top.validateArgs(args), is(equalTo(true)));
+        assertThat(top.validateArgs(args), is((true)));
     }
 
     @Test
     public void validateArgsNotAnInt() throws Exception {
         List<String> args = new ArrayList<>();
         args.add("notAnInt");
-        assertThat(top.validateArgs(args), is(equalTo(false)));
+        assertThat(top.validateArgs(args), is((false)));
     }
 
     @Test
     public void validateArgsNegative() throws Exception {
         List<String> args = new ArrayList<>();
         args.add("-123");
-        assertThat(top.validateArgs(args), is(equalTo(false)));
+        assertThat(top.validateArgs(args), is((false)));
     }
 
     @Test
     public void validateArgsDecimal() throws Exception {
         List<String> args = new ArrayList<>();
         args.add("-123.321");
-        assertThat(top.validateArgs(args), is(equalTo(false)));
+        assertThat(top.validateArgs(args), is((false)));
     }
 
     @Test
     public void validateArgsZero() throws Exception {
         List<String> args = new ArrayList<>();
         args.add("0");
-        assertThat(top.validateArgs(args), is(equalTo(false)));
+        assertThat(top.validateArgs(args), is((false)));
     }
 }

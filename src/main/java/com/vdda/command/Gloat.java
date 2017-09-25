@@ -15,6 +15,7 @@ public class Gloat implements Command {
 
     private final String command = "gloat";
     private final String usage = "gloat";
+    private final String usageAdvanced = usage;
     private final String shortDescription = "Gloat about your reign at the top of the logs.";
 
     @Getter(AccessLevel.NONE)

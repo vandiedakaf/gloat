@@ -6,7 +6,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class ControllerAdviceHelperTest {
@@ -18,6 +18,6 @@ public class ControllerAdviceHelperTest {
         HttpServletResponse httpServletResponse = new MockHttpServletResponse();
         controllerAdviceHelper.handleBadRequests(httpServletResponse);
 
-        assertThat(httpServletResponse.getStatus(), equalTo(HttpStatus.BAD_REQUEST.value()));
+        assertThat(httpServletResponse.getStatus(), is(HttpStatus.BAD_REQUEST.value()));
     }
 }

@@ -53,7 +53,7 @@ public class DrawTest {
             Map<String, String> parameters;
             drawService.processRequest(parameters = withCapture(), withNotNull());
 
-            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(("channelId")));
         }};
         assertThat(response.getText(), containsString("We're processing your request..."));
     }

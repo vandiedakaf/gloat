@@ -3,7 +3,7 @@ package com.vdda.jpa;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class UserCategoryPKTest {
@@ -13,8 +13,8 @@ public class UserCategoryPKTest {
         user.setId(1L);
         UserCategoryPK userCategoryPK = new UserCategoryPK(user, 2L);
 
-        assertThat(userCategoryPK.getUser().getId(), equalTo(1L));
-        assertThat(userCategoryPK.getCategoryId(), equalTo(2L));
+        assertThat(userCategoryPK.getUser().getId(), is(1L));
+        assertThat(userCategoryPK.getCategoryId(), is(2L));
     }
 
     @Test

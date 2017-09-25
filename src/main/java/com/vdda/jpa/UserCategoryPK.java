@@ -23,7 +23,7 @@ public class UserCategoryPK implements Serializable {
     private Long categoryId;
 
     protected UserCategoryPK() {
-        // no-args constructor required by JPA spec
+        // no-contestArguments constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 

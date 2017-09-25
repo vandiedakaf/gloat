@@ -151,7 +151,7 @@ public class ContestServiceTest {
 
     @Test
     public void buildCallback() throws Exception {
-        assertThat(contestService.callbackBuilder(CALLBACK_ID, USER_ID), is(equalTo(CALLBACK_ID + "|" + USER_ID)));
+        assertThat(contestService.callbackBuilder(CALLBACK_ID, USER_ID), is((CALLBACK_ID + "|" + USER_ID)));
     }
 
     private Optional<User> mockUser() {

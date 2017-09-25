@@ -53,7 +53,7 @@ public class VictoryTest {
             Map<String, String> parameters;
             victoryService.processRequest(parameters = withCapture(), withNotNull());
 
-            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(("channelId")));
         }};
     }
 

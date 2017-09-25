@@ -41,7 +41,6 @@ public abstract class ConfirmContest implements Callback {
     }
 
     @Override
-
     public Response run(CallbackRequest callbackRequest) {
 
         String actionName = callbackRequest.getActions().get(0).getName();

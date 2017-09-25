@@ -40,7 +40,7 @@ public class GloatTest {
             Map<String, String> parameters;
             gloatService.processRequest(parameters = withCapture());
 
-            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(equalTo("channelId")));
+            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is(("channelId")));
         }};
     }
 

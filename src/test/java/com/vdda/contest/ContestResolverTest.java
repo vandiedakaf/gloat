@@ -10,14 +10,12 @@ import mockit.Mocked;
 import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -50,7 +48,7 @@ public class ContestResolverTest {
             ContestOutcome contestOutcome;
             contestProcessorFactory.getContestProcessor(contestOutcome = withCapture());
 
-            assertThat(contestOutcome, is(equalTo(ContestOutcome.WIN)));
+            assertThat(contestOutcome, is((ContestOutcome.WIN)));
         }};
     }
 

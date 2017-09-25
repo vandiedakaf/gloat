@@ -22,7 +22,7 @@ public class User implements Serializable {
     private String userId;
 
     protected User() {
-        // no-args constructor required by JPA spec
+        // no-contestArguments constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 

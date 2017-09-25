@@ -26,7 +26,7 @@ public class UserCategory {
     private Integer k;
 
     protected UserCategory() {
-        // no-args constructor required by JPA spec
+        // no-contestArguments constructor required by JPA spec
         // this one is protected since it shouldn't be used directly
     }
 

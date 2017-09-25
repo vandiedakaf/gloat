@@ -14,6 +14,8 @@ public interface Command {
 
     String getUsage();
 
+    String getUsageAdvanced();
+
     String getShortDescription();
 
     default List<String> getArguments(Map<String, String> parameters) {
@@ -23,7 +25,7 @@ public interface Command {
 
     default Response commandUsageResponse(){
         Response response = new Response();
-        response.setText(getShortDescription() + "\nUsage: `" + getUsage() + "`");
+        response.setText(getShortDescription() + "\nUsage: `" + getUsageAdvanced() + "`");
         return response;
     }
 }

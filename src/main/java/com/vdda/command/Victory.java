@@ -18,6 +18,7 @@ public class Victory implements Command {
 
     private final String command = "victory";
     private final String usage = "victory @user";
+    private final String usageAdvanced = usage;
     private final String shortDescription = "Gloat about your well-deserved victory.";
 
     @Getter(AccessLevel.NONE)

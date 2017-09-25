@@ -4,7 +4,6 @@ import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.tool.Parameters;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,7 +36,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
         String text = parametersMap.get(SlackParameters.TEXT.toString());
 
         if (text != null && !text.isEmpty()) {
-            String[] args = text.split(" ");
+            String[] args = text.split("\\s+"); // matches for one or more whitespaces (so that it trims as well)
             if (args.length != 0) {
                 Command tool = commands.get(args[0]);
                 if (tool != null) {
@@ -59,7 +57,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 

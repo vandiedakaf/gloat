@@ -20,12 +20,12 @@ public class ContestOutcomeConverterTest {
 
     @Test
     public void convertToDatabaseColumn() throws Exception {
-        Arrays.stream(ContestOutcome.values()).forEach(c -> assertThat(contestOutcomeConverter.convertToDatabaseColumn(c), is(equalTo(c.getKey()))));
+        Arrays.stream(ContestOutcome.values()).forEach(c -> assertThat(contestOutcomeConverter.convertToDatabaseColumn(c), is((c.getKey()))));
     }
 
     @Test
     public void convertToEntityAttribute() throws Exception {
-        Arrays.stream(ContestOutcome.values()).forEach(c -> assertThat(contestOutcomeConverter.convertToEntityAttribute(c.getKey()), is(equalTo(c))));
+        Arrays.stream(ContestOutcome.values()).forEach(c -> assertThat(contestOutcomeConverter.convertToEntityAttribute(c.getKey()), is((c))));
 
     }
 }

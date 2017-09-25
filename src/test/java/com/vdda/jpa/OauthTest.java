@@ -3,7 +3,7 @@ package com.vdda.jpa;
 import org.junit.Test;
 import org.meanbean.test.BeanTester;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class OauthTest {
@@ -11,8 +11,8 @@ public class OauthTest {
     public void construct() throws Exception {
         Oauth oauth = new Oauth("teamId", "accessToken");
 
-        assertThat(oauth.getTeamId(), equalTo("teamId"));
-        assertThat(oauth.getAccessToken(), equalTo("accessToken"));
+        assertThat(oauth.getTeamId(), is("teamId"));
+        assertThat(oauth.getAccessToken(), is("accessToken"));
     }
 
     @Test

@@ -68,7 +68,7 @@ public class CallbacksServiceTest {
             CallbackRequest callbackRequestCapture;
             confirmVictory.run(callbackRequestCapture = withCapture());
 
-            assertThat(callbackRequestCapture, is(equalTo(callbackRequest)));
+            assertThat(callbackRequestCapture, is((callbackRequest)));
         }};
     }
 

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -86,7 +85,7 @@ public class ConfirmContestTest {
 
     @Test
     public void getCallbackId() throws Exception {
-        assertThat(confirmContest.getCallbackId(), is(equalTo("callbackId")));
+        assertThat(confirmContest.getCallbackId(), is(("callbackId")));
     }
 
     @Test
@@ -140,7 +139,7 @@ public class ConfirmContestTest {
         new Verifications() {{
             Contest contest;
             contestRepository.save(contest = withCapture());
-            assertThat(contest.getCategory().getChannelId(), is(equalTo(CHANNEL_ID)));
+            assertThat(contest.getCategory().getChannelId(), is((CHANNEL_ID)));
         }};
     }
 
@@ -178,11 +177,11 @@ public class ConfirmContestTest {
         new Verifications() {{
             Contest contest;
             contestRepository.save(contest = withCapture());
-            assertThat(contest.getCategory().getChannelId(), is(equalTo(CHANNEL_ID)));
+            assertThat(contest.getCategory().getChannelId(), is((CHANNEL_ID)));
 
             com.vdda.jpa.User userSaved;
             userRepository.save(userSaved = withCapture());
-            assertThat(userSaved.getUserId(), is(equalTo(USER_ID)));
+            assertThat(userSaved.getUserId(), is((USER_ID)));
         }};
     }
 
@@ -220,7 +219,7 @@ public class ConfirmContestTest {
         new Verifications() {{
             Category category;
             categoryRepository.save(category = withCapture());
-            assertThat(category.getChannelId(), is(equalTo(CHANNEL_ID)));
+            assertThat(category.getChannelId(), is((CHANNEL_ID)));
         }};
     }
 
@@ -264,7 +263,7 @@ public class ConfirmContestTest {
         new Verifications() {{
             Contest contest;
             contestRepository.save(contest = withCapture());
-            assertThat(contest.getCategory().getChannelId(), is(equalTo(CHANNEL_ID)));
+            assertThat(contest.getCategory().getChannelId(), is((CHANNEL_ID)));
         }};
     }
 

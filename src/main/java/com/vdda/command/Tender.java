@@ -15,6 +15,7 @@ public class Tender implements Command {
 
     private final String command = "tender";
     private final String usage = "tender";
+    private final String usageAdvanced = usage;
     private final String shortDescription = "Request a challenger!";
 
     @Getter(AccessLevel.NONE)

@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import java.util.Date;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -62,7 +61,7 @@ public class ContestProcessorTest {
 
             Contest contestCapture;
             contestRepository.save(contestCapture = withCapture());
-            assertThat(contestCapture.getContestOutcome(), is(equalTo(ContestOutcome.WIN)));
+            assertThat(contestCapture.getContestOutcome(), is((ContestOutcome.WIN)));
         }};
     }
 
@@ -89,7 +88,7 @@ public class ContestProcessorTest {
 
             Contest contestCapture;
             contestRepository.save(contestCapture = withCapture());
-            assertThat(contestCapture.getContestOutcome(), is(equalTo(ContestOutcome.WIN)));
+            assertThat(contestCapture.getContestOutcome(), is((ContestOutcome.WIN)));
         }};
     }
 

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -111,7 +110,7 @@ public class ConfirmContestDrawTest {
         new Verifications() {{
             Contest contest;
             contestRepository.save(contest = withCapture());
-            assertThat(contest.getCategory().getChannelId(), is(equalTo(CHANNEL_ID)));
+            assertThat(contest.getCategory().getChannelId(), is((CHANNEL_ID)));
         }};
     }
 

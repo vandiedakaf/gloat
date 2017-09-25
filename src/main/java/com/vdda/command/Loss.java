@@ -16,6 +16,7 @@ public class Loss implements Command {
 
     private final String command = "loss";
     private final String usage = "loss @user";
+    private final String usageAdvanced = usage;
     private final String shortDescription = "Acknowledge your defeat.";
 
     @Getter(AccessLevel.NONE)
