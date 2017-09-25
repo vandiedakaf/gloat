@@ -1,6 +1,7 @@
 package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
+import com.vdda.jpa.ContestOutcome;
 import com.vdda.slack.Action;
 import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -48,7 +50,7 @@ public class SeriesService extends ContestService {
         attachment.setTitle("Series Confirmation");
         attachment.setText(constructConfirmationMessage(user));
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(CONFIRM_SERIES.toString(), user.getId(), contestArguments.get(OUTCOME_ARGUMENT)));
+        attachment.setCallback_id(callbackBuilder(CONFIRM_SERIES.toString(), user.getId(), contestArguments.get(OUTCOME_ARGUMENT).toLowerCase()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);
@@ -56,13 +58,15 @@ public class SeriesService extends ContestService {
     }
 
     private String constructConfirmationMessage(User user) {
-        String series = contestArguments.get(OUTCOME_ARGUMENT);
+        // https://stackoverflow.com/a/12969483/792287
+        String[] series = contestArguments.get(OUTCOME_ARGUMENT).toLowerCase().split("(?!^)");
+        Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.WIN)).count();
 
-        long winCount = series.toLowerCase().chars().filter(c -> (c == 'w')).count();
-        long lossCount = series.toLowerCase().chars().filter(c -> (c == 'w')).count();
-        long drawCount = series.toLowerCase().chars().filter(c -> (c == 'd')).count();
+        long winCount = Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.WIN)).count();
+        long lossCount = Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.LOSS)).count();
+        long drawCount = Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.DRAW)).count();
 
-        StringBuilder confirmationMessage = new StringBuilder("Confirm that you played " + series.length() + " game" + (series.length() > 1 ? "s" : "")
+        StringBuilder confirmationMessage = new StringBuilder("Confirm that you played " + series.length + " game" + (series.length > 1 ? "s" : "")
                 + " against <@" + user.getId() + "> (");
 
         StringJoiner joiner = new StringJoiner(", ");

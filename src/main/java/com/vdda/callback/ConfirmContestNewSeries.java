@@ -74,9 +74,9 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
     public void persistContests(Category category, User reporter, User opponent) {
 
         // https://stackoverflow.com/a/12969483/792287
-        String[] seriesOutcome = callbackRequest.getCallbackId().split("\\|")[2].toLowerCase().split("(?!^)");
+        String[] seriesOutcome = callbackRequest.getCallbackId().split("\\|")[2].split("(?!^)");
 
-        for (String outcome: seriesOutcome) {
+        for (String outcome : seriesOutcome) {
             contest = new Contest(category, reporter, opponent, ContestOutcome.getEnumByKey(outcome));
             contest = contestRepository.save(contest); // save the outcome of the last contest for use by notifyChannelBefore()
         }
