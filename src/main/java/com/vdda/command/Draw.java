@@ -2,8 +2,6 @@ package com.vdda.command;
 
 import com.vdda.command.service.DrawService;
 import com.vdda.slack.Response;
-import lombok.AccessLevel;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,20 +9,29 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Getter
 public class Draw implements Command {
 
-    private final String command = "draw";
-    private final String usage = "draw @user";
-    private final String usageAdvanced = usage;
-    private final String shortDescription = "Declare that there are no winners here.";
-
-    @Getter(AccessLevel.NONE)
     private final DrawService drawService;
 
     @Autowired
     public Draw(DrawService drawService) {
         this.drawService = drawService;
+    }
+
+    public String getCommand() {
+        return "draw";
+    }
+
+    public String getUsage() {
+        return "draw @user";
+    }
+
+    public String getUsageAdvanced() {
+        return getUsage();
+    }
+
+    public String getShortDescription() {
+        return "Declare that there are no winners here.";
     }
 
     @Override

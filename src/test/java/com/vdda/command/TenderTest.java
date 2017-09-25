@@ -55,6 +55,11 @@ public class TenderTest {
     }
 
     @Test
+    public void getUsageAdvanced() throws Exception {
+        assertThat(tender.getUsageAdvanced(), is(notNullValue()));
+    }
+
+    @Test
     public void getShortDescription() throws Exception {
         assertThat(tender.getShortDescription(), is(notNullValue()));
     }

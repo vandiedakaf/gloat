@@ -2,33 +2,38 @@ package com.vdda.command;
 
 import com.vdda.command.service.SeriesService;
 import com.vdda.slack.Response;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Service
-@Getter
 public class Series implements Command {
 
     public static final int OUTCOME_ARGUMENT = 1;
 
-    private final String command = "series";
-    private final String usage = "series @user (series outcome, e.g. 'wld')";
-    private final String usageAdvanced = "series @user (followed by a sequence of characters, either 'w','l' or 'd', denoting 'wins', 'losses' and 'draws'). E.g. 'series @slackbot wwldw' denotes two wins, a loss, a draw and another win against the user @slackbot.";
-    private final String shortDescription = "Log the outcome of a series of contests.";
-
-    @Getter(AccessLevel.NONE)
     private final SeriesService seriesService;
 
     @Autowired
     public Series(SeriesService seriesService) {
         this.seriesService = seriesService;
+    }
+
+    public String getCommand() {
+        return "series";
+    }
+
+    public String getUsage() {
+        return "series @user (series outcome, e.g. 'wld')";
+    }
+
+    public String getUsageAdvanced() {
+        return "series @user (followed by a sequence of characters, either 'w','l' or 'd', denoting 'wins', 'losses' and 'draws'). E.g. 'series @slackbot wwldw' denotes two wins, a loss, a draw and another win against the user @slackbot.";
+    }
+
+    public String getShortDescription() {
+        return "Log the outcome of a series of contests.";
     }
 
     @Override

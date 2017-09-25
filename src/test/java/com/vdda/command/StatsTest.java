@@ -51,4 +51,24 @@ public class StatsTest {
         }};
     }
 
+    @Test
+    public void getCommand() throws Exception {
+        assertThat(stats.getCommand(), is(notNullValue()));
+    }
+
+    @Test
+    public void getUsage() throws Exception {
+        assertThat(stats.getUsage(), is(notNullValue()));
+    }
+
+    @Test
+    public void getUsageAdvanced() throws Exception {
+        assertThat(stats.getUsageAdvanced(), is(notNullValue()));
+    }
+
+    @Test
+    public void getShortDescription() throws Exception {
+        assertThat(stats.getShortDescription(), is(notNullValue()));
+    }
+
 }

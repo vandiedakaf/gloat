@@ -2,31 +2,36 @@ package com.vdda.command;
 
 import com.vdda.command.service.VictoryService;
 import com.vdda.slack.Response;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 @Service
-@Getter
 public class Victory implements Command {
 
-    private final String command = "victory";
-    private final String usage = "victory @user";
-    private final String usageAdvanced = usage;
-    private final String shortDescription = "Gloat about your well-deserved victory.";
-
-    @Getter(AccessLevel.NONE)
     private final VictoryService victoryService;
 
     @Autowired
     public Victory(VictoryService victoryService) {
         this.victoryService = victoryService;
+    }
+
+    public String getCommand() {
+        return "victory";
+    }
+
+    public String getUsage() {
+        return "victory @user";
+    }
+
+    public String getUsageAdvanced() {
+        return getUsage();
+    }
+
+    public String getShortDescription() {
+        return "Gloat about your well-deserved victory.";
     }
 
     @Override

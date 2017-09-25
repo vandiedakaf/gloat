@@ -2,8 +2,6 @@ package com.vdda.command;
 
 import com.vdda.command.service.LossService;
 import com.vdda.slack.Response;
-import lombok.AccessLevel;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,20 +9,29 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Getter
 public class Loss implements Command {
 
-    private final String command = "loss";
-    private final String usage = "loss @user";
-    private final String usageAdvanced = usage;
-    private final String shortDescription = "Acknowledge your defeat.";
-
-    @Getter(AccessLevel.NONE)
     private final LossService lossService;
 
     @Autowired
     public Loss(LossService lossService) {
         this.lossService = lossService;
+    }
+
+    public String getCommand() {
+        return "loss";
+    }
+
+    public String getUsage() {
+        return "loss @user";
+    }
+
+    public String getUsageAdvanced() {
+        return getUsage();
+    }
+
+    public String getShortDescription() {
+        return "Acknowledge your defeat.";
     }
 
     @Override

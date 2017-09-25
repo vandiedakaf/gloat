@@ -68,6 +68,11 @@ public class VictoryTest {
     }
 
     @Test
+    public void getUsageAdvanced() throws Exception {
+        assertThat(victory.getUsageAdvanced(), is(notNullValue()));
+    }
+
+    @Test
     public void getShortDescription() throws Exception {
         assertThat(victory.getShortDescription(), is(notNullValue()));
     }

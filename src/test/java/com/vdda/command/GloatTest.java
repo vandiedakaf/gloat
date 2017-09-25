@@ -55,6 +55,11 @@ public class GloatTest {
     }
 
     @Test
+    public void getUsageAdvanced() throws Exception {
+        assertThat(gloat.getUsageAdvanced(), is(notNullValue()));
+    }
+
+    @Test
     public void getShortDescription() throws Exception {
         assertThat(gloat.getShortDescription(), is(notNullValue()));
     }

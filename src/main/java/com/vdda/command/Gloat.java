@@ -2,28 +2,35 @@ package com.vdda.command;
 
 import com.vdda.command.service.GloatService;
 import com.vdda.slack.Response;
-import lombok.AccessLevel;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
 @Service
-@Getter
 public class Gloat implements Command {
 
-    private final String command = "gloat";
-    private final String usage = "gloat";
-    private final String usageAdvanced = usage;
-    private final String shortDescription = "Gloat about your reign at the top of the logs.";
-
-    @Getter(AccessLevel.NONE)
     private final GloatService gloatService;
 
     @Autowired
     public Gloat(GloatService gloatService) {
         this.gloatService = gloatService;
+    }
+
+    public String getCommand() {
+        return "gloat";
+    }
+
+    public String getUsage() {
+        return "gloat";
+    }
+
+    public String getUsageAdvanced() {
+        return getUsage();
+    }
+
+    public String getShortDescription() {
+        return "Gloat about your reign at the top of the logs.";
     }
 
     @Override
