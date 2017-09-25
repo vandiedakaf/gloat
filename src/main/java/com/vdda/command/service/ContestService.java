@@ -58,8 +58,11 @@ public abstract class ContestService {
 
     protected abstract Response confirmationButton(User user);
 
-    // TODO callbackBuilder needs improvement, maybe some serialisation?
     String callbackBuilder(String callbackId, String userId) {
         return callbackId + "|" + userId;
+    }
+
+    String callbackBuilder(String callbackId, String userId, String outcome) {
+        return callbackId + "|" + userId + "|" + outcome;
     }
 }

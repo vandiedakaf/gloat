@@ -48,7 +48,7 @@ public class SeriesService extends ContestService {
         attachment.setTitle("Series Confirmation");
         attachment.setText(constructConfirmationMessage(user));
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(CONFIRM_SERIES.toString(), user.getId()));
+        attachment.setCallback_id(callbackBuilder(CONFIRM_SERIES.toString(), user.getId(), contestArguments.get(OUTCOME_ARGUMENT)));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);
