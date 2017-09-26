@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 public class ConfirmContestNewSeries extends ConfirmContestNew {
@@ -23,6 +26,7 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
     private final ContestRepository contestRepository;
 
     Contest contest;
+    private List<String> seriesOutcomeList = new ArrayList<>();
 
     @Autowired
     public ConfirmContestNewSeries(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
@@ -59,7 +63,7 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
         UserCategoryPK opponentCategoryPK = new UserCategoryPK(contest.getOpponent(), contest.getCategory().getId());
         UserCategory userCategoryOpponent = getOrCreateUserCategory(opponentCategoryPK);
 
-        String message = "<@" + contest.getReporter().getUserId() + "> (" + userCategoryReporter.getElo() + ") has competed against <@" + contest.getOpponent().getUserId() + "> (" + userCategoryOpponent.getElo() + ").";
+        String message = "<@" + contest.getReporter().getUserId() + "> (" + userCategoryReporter.getElo() + ") has competed against <@" + contest.getOpponent().getUserId() + "> (" + userCategoryOpponent.getElo() + ") with the outcome: "+ String.join(", ", seriesOutcomeList) +".";
 
         slackUtilities.sendChatMessage(contest.getCategory().getTeamId(), contest.getCategory().getChannelId(), message);
     }
@@ -77,6 +81,8 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
         String[] seriesOutcome = callbackRequest.getCallbackId().split("\\|")[2].split("(?!^)");
 
         for (String outcome : seriesOutcome) {
+            seriesOutcomeList.add(ContestOutcome.getEnumByKey(outcome).toString());
+
             contest = new Contest(category, reporter, opponent, ContestOutcome.getEnumByKey(outcome));
             contest = contestRepository.save(contest); // save the outcome of the last contest for use by notifyChannelBefore()
         }

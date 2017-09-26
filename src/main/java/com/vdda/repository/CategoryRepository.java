@@ -10,7 +10,7 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
 
     Optional<Category> findByTeamIdAndChannelId(String teamId, String channelId);
 
-    @Query(value = "SELECT sum(wins) + sum(losses) + sum(draws) FROM user_category WHERE category_id = ? GROUP BY category_id;", nativeQuery = true)
+    @Query(value = "SELECT (sum(wins) + sum(losses) + sum(draws)) / 2 FROM user_category WHERE category_id = ? GROUP BY category_id;", nativeQuery = true)
     int sumTotalPlayedByCategory(Long categoryId);
 
 }

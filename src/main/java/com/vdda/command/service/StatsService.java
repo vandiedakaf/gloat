@@ -35,8 +35,6 @@ public class StatsService {
     private final UserRepository userRepository;
 
     private static final String COLOUR_GREEN = "#86C53C";
-    private static final String COLOUR_GOLD = "#FFD700";
-    private static final String COLOUR_BRONZE = "#CD7F32";
 
     @Autowired
     public StatsService(RestTemplate restTemplate, SlackUtilities slackUtilities, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository, UserRepository userRepository) {
@@ -96,7 +94,7 @@ public class StatsService {
         Attachment channelStats = new Attachment();
         channelStats.setFallback("Channel Stats");
         channelStats.setTitle("Channel Stats");
-        channelStats.setText("There have been " + categoryRepository.sumTotalPlayedByCategory(category.get().getId()) + " games played in this channel");
+        channelStats.setText("There have been " + categoryRepository.sumTotalPlayedByCategory(category.get().getId()) + " contests in this channel");
         channelStats.setColor(COLOUR_GREEN);
         attachments.add(channelStats);
 
