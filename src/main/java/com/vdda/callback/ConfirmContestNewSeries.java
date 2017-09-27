@@ -26,7 +26,7 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
     private final ContestRepository contestRepository;
 
     Contest contest;
-    private List<String> seriesOutcomeList = new ArrayList<>();
+    private List<String> seriesOutcomeList;
 
     @Autowired
     public ConfirmContestNewSeries(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
@@ -79,6 +79,8 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
 
         // https://stackoverflow.com/a/12969483/792287
         String[] seriesOutcome = callbackRequest.getCallbackId().split("\\|")[2].split("(?!^)");
+        
+        seriesOutcomeList = new ArrayList<>();
 
         for (String outcome : seriesOutcome) {
             seriesOutcomeList.add(ContestOutcome.getEnumByKey(outcome).toString());
