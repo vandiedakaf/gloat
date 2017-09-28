@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,11 +80,12 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
 
         // https://stackoverflow.com/a/12969483/792287
         String[] seriesOutcome = callbackRequest.getCallbackId().split("\\|")[2].split("(?!^)");
-        
+
         seriesOutcomeList = new ArrayList<>();
 
         for (String outcome : seriesOutcome) {
-            seriesOutcomeList.add(ContestOutcome.getEnumByKey(outcome).toString());
+            // TODO move this out of this method
+            seriesOutcomeList.add(StringUtils.capitalize(ContestOutcome.getEnumByKey(outcome).toString().toLowerCase()));
 
             contest = new Contest(category, reporter, opponent, ContestOutcome.getEnumByKey(outcome));
             contest = contestRepository.save(contest); // save the outcome of the last contest for use by notifyChannelBefore()
