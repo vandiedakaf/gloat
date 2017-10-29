@@ -10,7 +10,7 @@ plugins {
     id 'jacoco'
     id 'org.flywaydb.flyway' version '4.0.3'
     id 'org.sonarqube' version '2.5'
-    id 'org.springframework.boot' version '1.5.7.RELEASE'
+    id 'org.springframework.boot' version '1.5.8.RELEASE'
 }
 
 jar {
@@ -31,7 +31,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-    compile("org.springframework.boot:spring-boot-devtools")
     compile('org.springframework.cloud:spring-cloud-starter-sleuth')
 
     // dependencies managed by spring boot parent

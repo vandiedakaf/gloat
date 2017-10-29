@@ -58,7 +58,7 @@ public class SeriesTest {
         parameters.put(SlackParameters.TEXT.toString(), "series @user");
 
         Response response = series.run(parameters);
-        assertThat(response.getText(), containsString("Log the outcome of a series of contests."));
+        assertThat(response.getText(), containsString("Log the outcome of contests."));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class SeriesTest {
         parameters.put(SlackParameters.TEXT.toString(), "series @user RONG");
 
         Response response = series.run(parameters);
-        assertThat(response.getText(), containsString("Log the outcome of a series of contests."));
+        assertThat(response.getText(), containsString("Log the outcome of contests."));
     }
 
     @Test

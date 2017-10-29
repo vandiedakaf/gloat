@@ -5,6 +5,7 @@ import com.vdda.slack.SlackParameters;
 import com.vdda.tool.Parameters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -23,6 +24,8 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
     private ApplicationContext applicationContext;
     @Value("${SLACK_TOKEN:SLACK_TOKEN}")
     private String slackToken;
+    @Autowired
+    private Series series;
 
     public Response run(String parametersString) {
 
@@ -38,9 +41,11 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
         if (text != null && !text.isEmpty()) {
             String[] args = text.split("\\s+"); // matches for one or more whitespaces (so that it trims as well)
             if (args.length != 0) {
-                Command tool = commands.get(args[0]);
-                if (tool != null) {
-                    return tool.run(parametersMap);
+                Command command = commands.get(args[0]);
+                if (command != null) {
+                    return command.run(parametersMap);
+                } else {
+                    return series.run(parametersMap);
                 }
             }
         }

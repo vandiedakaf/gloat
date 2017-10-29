@@ -2,9 +2,11 @@ package com.vdda.command;
 
 import com.vdda.command.service.SeriesService;
 import com.vdda.slack.Response;
+import com.vdda.slack.SlackParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,19 +23,19 @@ public class Series implements Command {
     }
 
     public String getCommand() {
-        return "series";
+        return ""; // this command can actually never be met because null and empty checks are utilised
     }
 
     public String getUsage() {
-        return "series @user (series outcome, e.g. 'wld')";
+        return "@user (outcome of contests, e.g. 'wld')";
     }
 
     public String getUsageAdvanced() {
-        return "series @user (followed by a sequence of characters, either 'w','l' or 'd', denoting 'wins', 'losses' and 'draws'). E.g. 'series @slackbot wwldw' denotes two wins, a loss, a draw and another win against the user @slackbot.";
+        return "@user (followed by a sequence of characters, either 'w','l' or 'd', denoting 'wins', 'losses' and 'draws'). E.g. '@slackbot wwldw' denotes two wins, a loss, a draw and another win against the user @slackbot.";
     }
 
     public String getShortDescription() {
-        return "Log the outcome of a series of contests.";
+        return "Log the outcome of contests.";
     }
 
     @Override
@@ -52,11 +54,15 @@ public class Series implements Command {
         return response;
     }
 
-    private boolean validateArgs(List<String> args) {
-        if (args.size() != 2) {
-            return false;
-        }
+    @Override
+    public List<String> getArguments(Map<String, String> parameters) {
+        String[] argsArray = parameters.get(SlackParameters.TEXT.toString()).split(" ");
+        return Arrays.asList(argsArray); // this command class does not have a preceding command string (e.g. "series" or "stats")
+    }
 
-        return args.get(OUTCOME_ARGUMENT).matches("[wldWLD]+");
+    private boolean validateArgs(List<String> args) {
+        args.forEach(System.out::println);
+        return args.size() == 2 && args.get(OUTCOME_ARGUMENT).matches("[wldWLD]+");
+
     }
 }
