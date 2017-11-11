@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.run.BootRunTask
+
 buildscript {
     repositories {
         mavenCentral()
@@ -54,18 +56,6 @@ jacocoTestReport {
     }
 }
 
-bootRun {
-    // Ensure that `gradle bootRun` honours -Dspring.profiles.active=***
-    // http://stackoverflow.com/a/31328621/792287
-    systemProperties System.properties
-}
-
-test {
-    // Ensure that `gradle test` honours -Dspring.profiles.active=***
-    // http://stackoverflow.com/a/31328621/792287
-    systemProperties System.properties
-}
-
 // https://vorba.ch/2015/java-gradle-travis-jacoco-codecov.html
 // "Also the check task, which is run by Travis, needs to depend on jacocoTestReport"
 check.dependsOn jacocoTestReport
@@ -77,5 +67,30 @@ ext {
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+task setupEnv(type: Exec, dependsOn: 'dockerComposeStop') {
+    group = 'setup'
+
+    executable = 'docker-compose'
+    args = ['-f', 'docker-compose.yml', 'up', '-d']
+}
+
+task dockerComposeStop(type: Exec) {
+    group = 'setup'
+
+    executable = 'docker-compose'
+    args = ['-f', 'docker-compose.yml', 'stop']
+}
+
+task bootRunDev(type: BootRunTask, dependsOn: 'clean') {
+    group = 'application'
+
+    environment "GLOAT_DB_URL", "mysql://root:password@localhost:3306/gloat"
+
+    doFirst() {
+        main = project.mainClassName
+        classpath = sourceSets.main.runtimeClasspath
     }
 }

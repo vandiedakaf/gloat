@@ -61,7 +61,6 @@ public class Series implements Command {
     }
 
     private boolean validateArgs(List<String> args) {
-        args.forEach(System.out::println);
         return args.size() == 2 && args.get(OUTCOME_ARGUMENT).matches("[wldWLD]+");
 
     }

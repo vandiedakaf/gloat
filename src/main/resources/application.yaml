@@ -10,10 +10,9 @@ spring:
     hibernate.ddl-auto: none # https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-creating-and-dropping-jpa-databases
   output:
     ansi:
-      enabled: always
+      enabled: detect
 
 management:
-#  port: 9000
   security:
    enabled: true
 
@@ -23,11 +22,3 @@ security:
 
 env:
   elo-init: 1500
-
----
-spring:
-  profiles: debug
-
-logging:
-  level:
-    com.vdda: DEBUG

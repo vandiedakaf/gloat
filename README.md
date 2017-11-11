@@ -5,14 +5,10 @@
 Time to gloat!
 
 # Local Setup
-Start a MySQL docker container with `docker run --name mysql -e MYSQL_ROOT_PASSWORD=password -d -p 3306:3306 mysql:5.7.20` or with `docker-compose up -d`.
-
-Access MySQL docker bash via `docker exec -i -t mysql /bin/bash`.
-
-Export the env variable: GLOAT_DB_URL=mysql://root:password@localhost:3306/gloat
+`./gradlew setupEnv`
 
 #Run
-`gradle bootRun -Dspring.profiles.active=debug`
+`./gradlew bootRunDev`
 
 # Travis
 Required Environment Variables:
