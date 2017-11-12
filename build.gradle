@@ -54,6 +54,26 @@ jacocoTestReport {
     }
 }
 
+sonarqube {
+    properties {
+        property "sonar.projectName", "Gloat"
+        // must be unique in a given SonarQube instance
+        property "sonar.projectKey", "gloat"
+        property "sonar.projectVersion", "${project.version}"
+        property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
+
+        property "sonar.sources", "${sourceSets.main.allSource.srcDirs}"
+
+        // Java
+        property "sonar.tests", "${sourceSets.test.allSource.srcDirs}"
+        property "sonar.java.binaries", "${sourceSets.main.output.getClassesDirs}"
+        property "sonar.java.test.binaries", "${sourceSets.test.output.classeDir}"
+
+        // Jacoco
+        property "sonar.jacoco.reportPaths", "${jacoco.destinationFile}"
+    }
+}
+
 // https://vorba.ch/2015/java-gradle-travis-jacoco-codecov.html
 // "Also the check task, which is run by Travis, needs to depend on jacocoTestReport"
 check.dependsOn jacocoTestReport
