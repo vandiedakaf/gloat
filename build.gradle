@@ -60,17 +60,6 @@ sonarqube {
         // must be unique in a given SonarQube instance
         property "sonar.projectKey", "gloat"
         property "sonar.projectVersion", "${project.version}"
-//        property "sonar.jacoco.reportPath", "${project.buildDir}/jacoco/test.exec"
-
-//        property "sonar.sources", "${sourceSets.main.allSource.srcDirs}"
-
-        // Java
-//        property "sonar.tests", "${sourceSets.test.allSource.srcDirs}"
-//        property "sonar.java.binaries", "${sourceSets.main.output.getClassesDirs()}"
-//        property "sonar.java.test.binaries", "${sourceSets.test.output.getClassesDirs()}"
-
-        // Jacoco
-//        property "sonar.jacoco.reportPaths", "${jacoco.reportsDir}"
     }
 }
 

@@ -28,7 +28,7 @@ public abstract class ContestProcessor {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    void processContest(Contest contest) {
+    public void processContest(Contest contest) {
 
         Category category = contest.getCategory();
 
