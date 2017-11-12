@@ -23,7 +23,7 @@ public class Series implements Command {
     }
 
     public String getCommand() {
-        return ""; // this command can actually never be met because null and empty checks are utilised
+        return "";
     }
 
     public String getUsage() {

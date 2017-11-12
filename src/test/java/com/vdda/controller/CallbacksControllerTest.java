@@ -69,13 +69,6 @@ public class CallbacksControllerTest {
     @Test
     public void postGolden() throws Exception {
 
-        new MockUp<System>() {
-            @Mock
-            public String getenv(final String string) {
-                return "SLACK_TOKEN";
-            }
-        };
-
         new Expectations() {{
             callbacksService.run(withNotNull());
             result = new Response();
@@ -87,18 +80,10 @@ public class CallbacksControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-
     }
 
     @Test
     public void postWrongToken() throws Exception {
-
-        new MockUp<System>() {
-            @Mock
-            public String getenv(final String string) {
-                return "SLACK_TOKEN";
-            }
-        };
 
         mvc.perform(MockMvcRequestBuilders
                 .post("/callbacks")

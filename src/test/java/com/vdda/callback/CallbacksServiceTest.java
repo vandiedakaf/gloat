@@ -16,12 +16,10 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CallbacksServiceTest {
-	private static final String CALLBACK_ID = Callbacks.CONFIRM_VICTORY.toString() + "|userId";
-
-	// TODO implement environment var reader https://stackoverflow.com/a/8169008/792287
+	private static final String CALLBACK_ID = Callbacks.CONFIRM_SERIES.toString() + "|userId";
 
 	@Mocked
-	private ConfirmContestVictory confirmVictory;
+	private ConfirmContestNewSeries confirmSeries;
 
 	@Autowired
 	private CallbacksService callbacksService;
@@ -64,7 +62,7 @@ public class CallbacksServiceTest {
 
 		new Verifications() {{
 			CallbackRequest callbackRequestCapture;
-			confirmVictory.run(callbackRequestCapture = withCapture());
+			confirmSeries.run(callbackRequestCapture = withCapture());
 
 			assertThat(callbackRequestCapture, is((callbackRequest)));
 		}};

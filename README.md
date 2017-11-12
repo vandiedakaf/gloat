@@ -7,7 +7,9 @@ Time to gloat!
 # Local Setup
 `./gradlew setupEnv`
 
-Set the env variable: `GLOAT_DB_URL=mysql://root:password@localhost:3306/gloat`
+Set the env variables:
+* `GLOAT_DB_URL=mysql://root:password@localhost:3306/gloat`
+* `SLACK_TOKEN=SLACK_TOKEN`
 
 #Run
 `./gradlew bootRunDev`

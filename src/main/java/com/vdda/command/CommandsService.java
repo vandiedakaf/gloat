@@ -19,63 +19,69 @@ import java.util.stream.Collectors;
 @Service
 public class CommandsService implements ApplicationContextAware, InitializingBean {
 
-    private Map<String, Command> commands;
-    private int maxLen = 0;
-    private ApplicationContext applicationContext;
-    @Value("${SLACK_TOKEN:SLACK_TOKEN}")
-    private String slackToken;
-    @Autowired
-    private Series series;
+	private Map<String, Command> commands;
+	private int maxLen = 0;
+	private ApplicationContext applicationContext;
+	@Value("${SLACK_TOKEN:SLACK_TOKEN}")
+	private String slackToken;
 
-    public Response run(String parametersString) {
+	private Series series;
 
-        Map<String, String> parametersMap = Parameters.parse(parametersString);
+	@Autowired
+	public CommandsService(Series series) {
+		this.series = series;
+	}
 
-        if (!slackToken.equals(parametersMap.get(SlackParameters.TOKEN.toString()))) {
-            log.warn("Incorrect Token");
-            throw new IllegalArgumentException("Incorrect Token");
-        }
+	public Response run(String parametersString) {
 
-        String text = parametersMap.get(SlackParameters.TEXT.toString());
+		Map<String, String> parametersMap = Parameters.parse(parametersString);
 
-        if (text != null && !text.isEmpty()) {
-            String[] args = text.split("\\s+"); // matches for one or more whitespaces (so that it trims as well)
-            if (args.length != 0) {
-                Command command = commands.get(args[0]);
-                if (command != null) {
-                    return command.run(parametersMap);
-                } else {
-                    return series.run(parametersMap);
-                }
-            }
-        }
+		if (!slackToken.equals(parametersMap.get(SlackParameters.TOKEN.toString()))) {
+			log.warn("Incorrect Token");
+			throw new IllegalArgumentException("Incorrect Token");
+		}
 
-        StringBuilder stringBuilder = new StringBuilder("The available gloat commands are:\n");
+		String text = parametersMap.get(SlackParameters.TEXT.toString());
 
-        for (Command command : commands.values()) {
-            stringBuilder.append(String.format("`%-" + maxLen + "s - %s Usage: %s`\n", command.getCommand(), command.getShortDescription(), command.getUsage()));
-        }
+		if (text != null && !text.isEmpty()) {
+			String[] args = text.split("\\s+"); // matches for one or more whitespaces (so that it trims as well)
+			if (args.length != 0) {
+				Command command = commands.get(args[0]);
+				if (command != null) {
+					return command.run(parametersMap);
+				} else {
+					return series.run(parametersMap);
+				}
+			}
+		}
 
-        Response response = new Response();
-        response.setText(stringBuilder.toString());
-        return response;
-    }
+		StringBuilder stringBuilder = new StringBuilder("The available gloat commands are:\n");
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+		for (Command command : commands.values()) {
+			stringBuilder.append(String.format("`%-" + maxLen + "s - %s Usage: %s`\n", command.getCommand(), command.getShortDescription(), command.getUsage()));
+		}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Map<String, Command> applicationCommands = applicationContext.getBeansOfType(Command.class);
+		Response response = new Response();
+		response.setText(stringBuilder.toString());
+		return response;
+	}
 
-        commands = toTreeMap(applicationCommands);
-        commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
-    }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		this.applicationContext = applicationContext;
+	}
 
-    Map<String, Command> toTreeMap(Map<String, Command> map) {
-        return map.entrySet().stream()
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Map<String, Command> applicationCommands = applicationContext.getBeansOfType(Command.class);
+
+		commands = toTreeMap(applicationCommands);
+		commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
+	}
+
+    Map<String, Command> toTreeMap(Map<String, Command> commandMap) {
+
+        return commandMap.entrySet().stream()
                 .collect(Collectors.toMap(
                         e -> e.getValue().getCommand(),
                         Map.Entry::getValue,
@@ -84,7 +90,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
                 ));
     }
 
-    static Command mergeCommandsCollision(Command c1, Command c2) {
-        return c2;
-    }
+	static Command mergeCommandsCollision(Command c1, Command c2) {
+		return c2;
+	}
 }

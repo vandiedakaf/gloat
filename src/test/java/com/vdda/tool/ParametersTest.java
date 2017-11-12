@@ -1,8 +1,6 @@
 package com.vdda.tool;
 
 import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Mocked;
 import org.junit.Before;
 import org.junit.Rule;

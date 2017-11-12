@@ -96,7 +96,7 @@ public class ConfirmContestNewTest {
 		action.setName("no");
 		actions.add(action);
 		callbackRequest.setActions(actions);
-		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_VICTORY.toString(), USER_ID));
+		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(), USER_ID));
 
 		Response response = confirmContestNew.run(callbackRequest);
 		assertThat(response.getAttachments().get(0).getText(), containsString("testDeny"));
@@ -119,7 +119,7 @@ public class ConfirmContestNewTest {
 		action.setName("yes");
 		actions.add(action);
 		callbackRequest.setActions(actions);
-		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_VICTORY.toString(), USER_ID));
+		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(), USER_ID));
 
 		User user = new User();
 		user.setId(USER_ID);
@@ -151,7 +151,7 @@ public class ConfirmContestNewTest {
 		action.setName("yes");
 		actions.add(action);
 		callbackRequest.setActions(actions);
-		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_VICTORY.toString(), USER_ID));
+		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(), USER_ID));
 
 		User user = new User();
 		user.setId(USER_ID);
@@ -189,7 +189,7 @@ public class ConfirmContestNewTest {
 		action.setName("yes");
 		actions.add(action);
 		callbackRequest.setActions(actions);
-		callbackRequest.setCallbackId(CallbackBuilder.callbackIdBuilder(Callbacks.CONFIRM_VICTORY.toString(),USER_ID));
+		callbackRequest.setCallbackId(CallbackBuilder.callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(),USER_ID));
 
 		User user = new User();
 		user.setId(USER_ID);
@@ -233,7 +233,7 @@ public class ConfirmContestNewTest {
 		action.setName("yes");
 		actions.add(action);
 		callbackRequest.setActions(actions);
-		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_VICTORY.toString(), USER_ID));
+		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(), USER_ID));
 
 		User user = new User();
 		user.setId(USER_ID);

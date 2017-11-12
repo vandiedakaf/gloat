@@ -1,18 +1,14 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
-import mockit.Mock;
-import mockit.MockUp;
 import mockit.Mocked;
 import mockit.Verifications;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
@@ -32,16 +28,6 @@ public class CommandsServiceTest {
 
     @Autowired
     private CommandsService commandsService;
-
-    @BeforeClass
-    public static void applySharedMockups() {
-        new MockUp<System>() {
-            @Mock
-            public String getenv(final String string) {
-                return "SLACK_TOKEN";
-            }
-        };
-    }
 
     @Test
     public void noToken() throws Exception {
@@ -117,36 +103,22 @@ public class CommandsServiceTest {
 
         Map<String, Command> unsortedMap = new HashMap<>();
 
-        unsortedMap.put("v", new Victory(null));
-        unsortedMap.put("d", new Draw(null));
-        unsortedMap.put("l", new Loss(null));
+        unsortedMap.put("stats", new Stats(null));
+        unsortedMap.put("tender", new Tender(null));
+        unsortedMap.put("series", new Series(null));
 
         Map<String, Command> sortedMap = commandsService.toTreeMap(unsortedMap);
 
         String prevCommand = "";
         for (Command command : sortedMap.values()) {
-            assertThat(command.getCommand(), is(greaterThan(prevCommand)));
+            assertThat(command.getCommand(), is(greaterThanOrEqualTo(prevCommand)));
             prevCommand = command.getCommand();
         }
     }
 
     @Test
-    public void treeMapCollision() throws Exception {
-
-        Map<String, Command> unsortedMap = new HashMap<>();
-
-        unsortedMap.put("v", new Victory(null));
-        unsortedMap.put("v", new Victory(null));
-        unsortedMap.put("v", new Victory(null));
-
-        Map<String, Command> sortedMap = commandsService.toTreeMap(unsortedMap);
-
-        assertThat(sortedMap.size(), equalTo(1));
-    }
-
-    @Test
     public void mergeTest() throws Exception {
-        Command command = CommandsService.mergeCommandsCollision(new Gloat(null), new Victory(null));
-        assertThat(command, instanceOf(Victory.class));
+        Command command = CommandsService.mergeCommandsCollision(new Gloat(null), new Series(null));
+        assertThat(command, instanceOf(Series.class));
     }
 }

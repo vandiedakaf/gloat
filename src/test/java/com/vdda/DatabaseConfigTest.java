@@ -20,33 +20,12 @@ public class DatabaseConfigTest {
 
     @Test
     public void dataSource(@Mocked MysqlDataSource basicDataSource) throws URISyntaxException {
-        new MockUp<System>()
-        {
-            @Mock
-            public String getenv(final String string) {
-                return "mysql://user:password@localhost/database?reconnect=true";
-            }
-        };
-
         databaseConfig.dataSource();
 
         new Verifications() {{
-            basicDataSource.setUrl("jdbc:mysql://localhost/database?createDatabaseIfNotExist=true");
-            basicDataSource.setUser("user");
+            basicDataSource.setUrl("jdbc:mysql://localhost/gloat?createDatabaseIfNotExist=true");
+            basicDataSource.setUser("root");
             basicDataSource.setPassword("password");
         }};
-    }
-
-    @Test(expected=NullPointerException.class)
-    public void dataSourceException() throws URISyntaxException {
-        new MockUp<System>()
-        {
-            @Mock
-            public String getenv(final String string) {
-                return null;
-            }
-        };
-
-        databaseConfig.dataSource();
     }
 }

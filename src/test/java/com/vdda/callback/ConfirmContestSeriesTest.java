@@ -70,7 +70,7 @@ public class ConfirmContestSeriesTest {
         action.setName("no");
         actions.add(action);
         callbackRequest.setActions(actions);
-        callbackRequest.setCallbackId(Callbacks.CONFIRM_VICTORY.toString() + "|" + USER_ID);
+        callbackRequest.setCallbackId(Callbacks.CONFIRM_SERIES.toString() + "|" + USER_ID);
 
         Response response = confirmContestNewSeries.run(callbackRequest);
         assertThat(response.getAttachments().get(0).getText(), containsString("You've opted not to confirm this series."));

@@ -1,10 +1,7 @@
 package com.vdda.callback;
 
 public enum Callbacks {
-    CONFIRM_DRAW("confirm_draw"),
-    CONFIRM_LOSS("confirm_loss"),
-    CONFIRM_SERIES("confirm_series"),
-    CONFIRM_VICTORY("confirm_victory");
+    CONFIRM_SERIES("confirm_series");
 
     private String name;
 
