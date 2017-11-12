@@ -65,12 +65,12 @@ sonarqube {
         property "sonar.sources", "${sourceSets.main.allSource.srcDirs}"
 
         // Java
-        property "sonar.tests", "${sourceSets.test.allSource.srcDirs}"
-        property "sonar.java.binaries", "${sourceSets.main.output.getClassesDirs()}"
-        property "sonar.java.test.binaries", "${sourceSets.test.output.getClassesDirs()}"
+//        property "sonar.tests", "${sourceSets.test.allSource.srcDirs}"
+//        property "sonar.java.binaries", "${sourceSets.main.output.getClassesDirs()}"
+//        property "sonar.java.test.binaries", "${sourceSets.test.output.getClassesDirs()}"
 
         // Jacoco
-        property "sonar.jacoco.reportPaths", "${jacoco.reportsDir}"
+//        property "sonar.jacoco.reportPaths", "${jacoco.reportsDir}"
     }
 }
 
