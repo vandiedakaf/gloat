@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.vdda.callback.Callbacks.CONFIRM_SERIES;
-import static com.vdda.command.Series.OUTCOME_ARGUMENT;
+import static com.vdda.command.service.CallbackBuilder.callbackIdBuilder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -70,7 +70,7 @@ public class ConfirmContestSeriesTest {
         action.setName("no");
         actions.add(action);
         callbackRequest.setActions(actions);
-        callbackRequest.setCallbackId(Callbacks.CONFIRM_SERIES.toString() + "|" + USER_ID);
+        callbackRequest.setCallbackId(callbackIdBuilder(CONFIRM_SERIES.toString(),USER_ID));
 
         Response response = confirmContestNewSeries.run(callbackRequest);
         assertThat(response.getAttachments().get(0).getText(), containsString("You've opted not to confirm this series."));
@@ -93,7 +93,7 @@ public class ConfirmContestSeriesTest {
         action.setName("yes");
         actions.add(action);
         callbackRequest.setActions(actions);
-        callbackRequest.setCallbackId(Callbacks.CONFIRM_SERIES.toString() + "|" + USER_ID + "|" + OUTCOME);
+        callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(), USER_ID, OUTCOME));
         User user = new User();
         user.setId(USER_ID);
         callbackRequest.setUser(user);

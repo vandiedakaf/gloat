@@ -9,6 +9,7 @@ import com.vdda.callback.CallbacksService;
 import com.vdda.slack.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +29,8 @@ public class CallbacksController {
     private static final Gson GSON = new GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
             .create();
+    @Value("${SLACK_TOKEN:SLACK_TOKEN}")
+    private String slackToken;
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Response processCallback(@RequestBody MultiValueMap multiValueMap) {
@@ -47,7 +50,7 @@ public class CallbacksController {
             throw new IllegalArgumentException("Could not parse Payload");
         }
 
-        if (!System.getenv("SLACK_TOKEN").equals(callbackRequests[0].getToken())) {
+        if (!slackToken.equals(callbackRequests[0].getToken())) {
             log.warn("Incorrect Token");
             throw new IllegalArgumentException("Incorrect Token");
         }
