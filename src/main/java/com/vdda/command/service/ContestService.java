@@ -19,7 +19,7 @@ public abstract class ContestService {
 
 	private final RestTemplate restTemplate;
 	private final SlackUtilities slackUtilities;
-	List<String> contestArguments;
+	List<String> contestArguments; // TODO this causes a bug. Services are singletons which means there's only one contestArgument at any time.
 
 	public ContestService(RestTemplate restTemplate, SlackUtilities slackUtilities) {
 		this.restTemplate = restTemplate;

@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public abstract class ConfirmContestNew implements Callback {
+public abstract class ConfirmContest implements Callback {
 
     private final EnvProperties envProperties;
     private final CategoryRepository categoryRepository;
@@ -31,7 +31,7 @@ public abstract class ConfirmContestNew implements Callback {
     final SlackUtilities slackUtilities;
     CallbackRequest callbackRequest;
 
-    public ConfirmContestNew(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+    public ConfirmContest(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
         this.envProperties = envProperties;
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;

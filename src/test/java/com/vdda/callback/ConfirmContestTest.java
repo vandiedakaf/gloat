@@ -27,14 +27,14 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class ConfirmContestNewTest {
+public class ConfirmContestTest {
 
 	private static final String CHANNEL_ID = "channelId";
 	private static final String TEAM_ID = "teamId";
 	private static final String USER_ID = "userId";
 
 	@Tested
-	private ConfirmContestNew confirmContestNew;
+	private ConfirmContest confirmContest;
 
 	@Mocked
 	private CategoryRepository categoryRepository;
@@ -51,7 +51,7 @@ public class ConfirmContestNewTest {
 
 	@Before
 	public void setUp() throws Exception {
-		confirmContestNew = new ConfirmContestNew(envProperties, categoryRepository, userRepository, contestResolver, userCategoryRepository, slackUtilities) {
+		confirmContest = new ConfirmContest(envProperties, categoryRepository, userRepository, contestResolver, userCategoryRepository, slackUtilities) {
 			@Override
 			protected Attachment confirmAttachment(String opponentId) {
 				Attachment attachment = new Attachment();
@@ -85,7 +85,7 @@ public class ConfirmContestNewTest {
 
 	@Test
 	public void getCallbackId() throws Exception {
-		assertThat(confirmContestNew.getCallbackId(), is(("callbackId")));
+		assertThat(confirmContest.getCallbackId(), is(("callbackId")));
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class ConfirmContestNewTest {
 		callbackRequest.setActions(actions);
 		callbackRequest.setCallbackId(callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(), USER_ID));
 
-		Response response = confirmContestNew.run(callbackRequest);
+		Response response = confirmContest.run(callbackRequest);
 		assertThat(response.getAttachments().get(0).getText(), containsString("testDeny"));
 	}
 
@@ -133,7 +133,7 @@ public class ConfirmContestNewTest {
 		team.setId(TEAM_ID);
 		callbackRequest.setTeam(team);
 
-		Response response = confirmContestNew.run(callbackRequest);
+		Response response = confirmContest.run(callbackRequest);
 		assertThat(response.getAttachments().get(0).getText(), containsString("testConfirm"));
 	}
 
@@ -165,7 +165,7 @@ public class ConfirmContestNewTest {
 		team.setId(TEAM_ID);
 		callbackRequest.setTeam(team);
 
-		Response response = confirmContestNew.run(callbackRequest);
+		Response response = confirmContest.run(callbackRequest);
 		assertThat(response.getAttachments().get(0).getText(), containsString("testConfirm"));
 
 		new Verifications() {{
@@ -203,7 +203,7 @@ public class ConfirmContestNewTest {
 		team.setId(TEAM_ID);
 		callbackRequest.setTeam(team);
 
-		Response response = confirmContestNew.run(callbackRequest);
+		Response response = confirmContest.run(callbackRequest);
 		assertThat(response.getAttachments().get(0).getText(), containsString("testConfirm"));
 
 		new Verifications() {{
@@ -247,7 +247,7 @@ public class ConfirmContestNewTest {
 		team.setId(TEAM_ID);
 		callbackRequest.setTeam(team);
 
-		Response response = confirmContestNew.run(callbackRequest);
+		Response response = confirmContest.run(callbackRequest);
 		assertThat(response.getAttachments().get(0).getText(), containsString("testConfirm"));
 	}
 

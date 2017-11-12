@@ -19,7 +19,7 @@ public class CallbacksServiceTest {
 	private static final String CALLBACK_ID = Callbacks.CONFIRM_SERIES.toString() + "|userId";
 
 	@Mocked
-	private ConfirmContestNewSeries confirmSeries;
+	private ConfirmContestSeries confirmSeries;
 
 	@Autowired
 	private CallbacksService callbacksService;

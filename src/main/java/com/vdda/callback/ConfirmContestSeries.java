@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-public class ConfirmContestNewSeries extends ConfirmContestNew {
+public class ConfirmContestSeries extends ConfirmContest {
 
     private final ContestRepository contestRepository;
 
@@ -30,7 +30,7 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
     private List<String> seriesOutcomeList;
 
     @Autowired
-    public ConfirmContestNewSeries(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+    public ConfirmContestSeries(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
 
         super(envProperties, categoryRepository, userRepository, contestResolver, userCategoryRepository, slackUtilities);
         this.contestRepository = contestRepository;

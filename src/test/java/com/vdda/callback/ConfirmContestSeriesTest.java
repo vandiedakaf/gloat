@@ -35,7 +35,7 @@ public class ConfirmContestSeriesTest {
     private static final String OUTCOME = "wld";
 
     @Tested
-    private ConfirmContestNewSeries confirmContestNewSeries;
+    private ConfirmContestSeries confirmContestNewSeries;
 
     @Mocked
     private CategoryRepository categoryRepository;
@@ -54,7 +54,7 @@ public class ConfirmContestSeriesTest {
 
     @Before
     public void setUp() throws Exception {
-        confirmContestNewSeries = new ConfirmContestNewSeries(envProperties, categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
+        confirmContestNewSeries = new ConfirmContestSeries(envProperties, categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
     }
 
     @Test
