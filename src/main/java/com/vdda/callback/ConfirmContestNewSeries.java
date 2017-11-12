@@ -78,7 +78,7 @@ public class ConfirmContestNewSeries extends ConfirmContestNew {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void persistContests(Category category, User reporter, User opponent) {
 
-        // https://stackoverflow.com/a/12969483/792287
+        // Split string into array of character strings: https://stackoverflow.com/a/12969483/792287
         String[] seriesOutcome = callbackRequest.getCallbackId().split("\\|")[2].split("(?!^)");
 
         seriesOutcomeList = new ArrayList<>();

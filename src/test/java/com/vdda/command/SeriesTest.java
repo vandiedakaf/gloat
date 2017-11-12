@@ -33,7 +33,7 @@ public class SeriesTest {
         Map<String, String> parameters = new HashMap<>();
         parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
         parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
-        parameters.put(SlackParameters.TEXT.toString(), "series @user wld");
+        parameters.put(SlackParameters.TEXT.toString(), "@user wld");
 
         Response response = series.run(parameters);
         assertThat(response.getText(), containsString("We're processing your request..."));
@@ -79,7 +79,7 @@ public class SeriesTest {
         Map<String, String> parameters = new HashMap<>();
         parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
         parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
-        parameters.put(SlackParameters.TEXT.toString(), "series @user WLD");
+        parameters.put(SlackParameters.TEXT.toString(), "user WLD");
 
         Response response = series.run(parameters);
         assertThat(response.getText(), containsString("We're processing your request..."));

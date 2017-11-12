@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.vdda.callback.Callbacks.CONFIRM_VICTORY;
+import static com.vdda.command.service.CallbackBuilder.callbackIdBuilder;
 
 @Service
 @Slf4j
@@ -46,7 +47,7 @@ public class VictoryService extends ContestService {
         attachment.setTitle("Victory Confirmation");
         attachment.setText("Confirm that you beat <@" + user.getId() + ">.");
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(CONFIRM_VICTORY.toString(), user.getId()));
+        attachment.setCallback_id(callbackIdBuilder(CONFIRM_VICTORY.toString(), user.getId()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);

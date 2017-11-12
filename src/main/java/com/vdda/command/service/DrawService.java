@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.vdda.callback.Callbacks.CONFIRM_DRAW;
+import static com.vdda.command.service.CallbackBuilder.callbackIdBuilder;
 
 @Service
 @Slf4j
@@ -46,7 +47,7 @@ public class DrawService extends ContestService {
         attachment.setTitle("Draw Confirmation");
         attachment.setText("Confirm that you drew with <@" + user.getId() + ">.");
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(CONFIRM_DRAW.toString(), user.getId()));
+        attachment.setCallback_id(callbackIdBuilder(CONFIRM_DRAW.toString(), user.getId()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);

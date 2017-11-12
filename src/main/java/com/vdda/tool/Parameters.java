@@ -13,7 +13,6 @@ public class Parameters {
         throw new UnsupportedOperationException();
     }
 
-
     public static Map<String, String> parse(String parameters) {
 
         Map<String, String> list = new HashMap<>();

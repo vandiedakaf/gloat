@@ -12,6 +12,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashMap;
@@ -87,13 +88,13 @@ public class CommandsServiceTest {
     }
 
     @Test
-    public void containsText() throws Exception {
+    public void noCommandSeries() throws Exception {
 
-        String parameters = "token=SLACK_TOKEN&text=test";
+        String parameters = "token=SLACK_TOKEN&text=@user";
 
         Response response = commandsService.run(parameters);
 
-        assertThat(response.getText(), containsString("The available gloat commands are"));
+        assertThat(response.getText(), containsString("Log the outcome of contests."));
     }
 
     @Test

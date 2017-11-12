@@ -83,14 +83,3 @@ task dockerComposeStop(type: Exec) {
     executable = 'docker-compose'
     args = ['-f', 'docker-compose.yml', 'stop']
 }
-
-task bootRunDev(type: BootRunTask, dependsOn: 'clean') {
-    group = 'application'
-
-    environment "GLOAT_DB_URL", "mysql://root:password@localhost:3306/gloat"
-
-    doFirst() {
-        main = project.mainClassName
-        classpath = sourceSets.main.runtimeClasspath
-    }
-}

@@ -18,6 +18,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class ParametersTest {
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -79,7 +80,7 @@ public class ParametersTest {
 
         Constructor<Parameters> c = Parameters.class.getDeclaredConstructor();
         c.setAccessible(true);
-        Parameters u = c.newInstance();
+        c.newInstance();
     }
 
     @Test

@@ -18,6 +18,7 @@ import java.util.StringJoiner;
 
 import static com.vdda.callback.Callbacks.CONFIRM_SERIES;
 import static com.vdda.command.Series.OUTCOME_ARGUMENT;
+import static com.vdda.command.service.CallbackBuilder.callbackIdBuilder;
 
 @Service
 @Slf4j
@@ -50,7 +51,7 @@ public class SeriesService extends ContestService {
         attachment.setTitle("Series Confirmation");
         attachment.setText(constructConfirmationMessage(user));
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackBuilder(CONFIRM_SERIES.toString(), user.getId(), contestArguments.get(OUTCOME_ARGUMENT).toLowerCase()));
+        attachment.setCallback_id(callbackIdBuilder(CONFIRM_SERIES.toString(), user.getId(), contestArguments.get(OUTCOME_ARGUMENT).toLowerCase()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);
@@ -58,9 +59,8 @@ public class SeriesService extends ContestService {
     }
 
     private String constructConfirmationMessage(User user) {
-        // https://stackoverflow.com/a/12969483/792287
+        // Split string into array of character strings: https://stackoverflow.com/a/12969483/792287
         String[] series = contestArguments.get(OUTCOME_ARGUMENT).toLowerCase().split("(?!^)");
-        Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.WIN)).count();
 
         long winCount = Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.WIN)).count();
         long lossCount = Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.LOSS)).count();
