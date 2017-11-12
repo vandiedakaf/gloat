@@ -70,7 +70,7 @@ sonarqube {
 //        property "sonar.java.test.binaries", "${sourceSets.test.output.getClassesDirs()}"
 
         // Jacoco
-//        property "sonar.jacoco.reportPaths", "${jacoco.reportsDir}"
+        property "sonar.jacoco.reportPaths", "${jacoco.reportsDir}"
     }
 }
 
