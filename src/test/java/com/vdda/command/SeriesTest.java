@@ -3,24 +3,23 @@ package com.vdda.command;
 import com.vdda.command.service.SeriesService;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
+import com.vdda.tool.Request;
 import mockit.Mocked;
+import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class SeriesTest {
 
-    Series series;
+    @Tested
+    private Series series;
 
-    @Mocked
-    SeriesService seriesService;
+	@Mocked
+	private SeriesService seriesService;
 
     @Before
     public void setUp() throws Exception {
@@ -30,58 +29,45 @@ public class SeriesTest {
     @Test
     public void runGolden() throws Exception {
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
-        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
-        parameters.put(SlackParameters.TEXT.toString(), "@user wld");
+		Request request = new Request(SlackParameters.CHANNEL_ID.toString() + "=channelId&" + SlackParameters.TEAM_ID.toString() + "=teamId&" + SlackParameters.TEXT.toString() + "=@user wld");
 
-        Response response = series.run(parameters);
+        Response response = series.run(request);
         assertThat(response.getText(), containsString("We're processing your request..."));
 
         new Verifications() {{
-            Map<String, String> parameters;
-            List<String> args;
-            seriesService.processRequest(parameters = withCapture(), args = withCapture());
+			Request requestVerify;
+            seriesService.processRequest(requestVerify = withCapture());
 
-            assertThat(parameters.get(SlackParameters.CHANNEL_ID.toString()), is("channelId"));
-            assertThat(args.get(0), is("@user"));
-            assertThat(args.get(1), is("wld"));
+            assertThat(requestVerify.getParameter(SlackParameters.CHANNEL_ID.toString()), is("channelId"));
+            assertThat(requestVerify.getArguments().get(0), is("@user"));
+            assertThat(requestVerify.getArguments().get(1), is("wld"));
         }};
     }
 
     @Test
     public void incorrectArgCount() throws Exception {
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
-        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
-        parameters.put(SlackParameters.TEXT.toString(), "series @user");
+		Request request = new Request(SlackParameters.CHANNEL_ID.toString() + "=channelId&" + SlackParameters.TEAM_ID.toString() + "=teamId&" + SlackParameters.TEXT.toString() + "=series @user");
 
-        Response response = series.run(parameters);
+        Response response = series.run(request);
         assertThat(response.getText(), containsString("Log the outcome of contests."));
     }
 
     @Test
     public void incorrectOutcomeWrongChars() throws Exception {
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
-        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
-        parameters.put(SlackParameters.TEXT.toString(), "series @user RONG");
+		Request request = new Request(SlackParameters.CHANNEL_ID.toString() + "=channelId&" + SlackParameters.TEAM_ID.toString() + "=teamId&" + SlackParameters.TEXT.toString() + "=series @user RONG");
 
-        Response response = series.run(parameters);
+        Response response = series.run(request);
         assertThat(response.getText(), containsString("Log the outcome of contests."));
     }
 
     @Test
     public void runGoldenAlternative() throws Exception {
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(SlackParameters.CHANNEL_ID.toString(), "channelId");
-        parameters.put(SlackParameters.TEAM_ID.toString(), "teamId");
-        parameters.put(SlackParameters.TEXT.toString(), "user WLD");
+		Request request = new Request(SlackParameters.CHANNEL_ID.toString() + "=channelId&" + SlackParameters.TEAM_ID.toString() + "=teamId&" + SlackParameters.TEXT.toString() + "=user wld");
 
-        Response response = series.run(parameters);
+        Response response = series.run(request);
         assertThat(response.getText(), containsString("We're processing your request..."));
     }
 

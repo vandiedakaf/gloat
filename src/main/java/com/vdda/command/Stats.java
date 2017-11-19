@@ -2,11 +2,9 @@ package com.vdda.command;
 
 import com.vdda.command.service.StatsService;
 import com.vdda.slack.Response;
+import com.vdda.tool.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class Stats implements Command {
@@ -35,11 +33,9 @@ public class Stats implements Command {
     }
 
     @Override
-    public Response run(Map<String, String> parameters) {
+    public Response run(Request request) {
 
-        List<String> args = getArguments(parameters);
-
-        statsService.processRequest(parameters, args);
+        statsService.processRequest(request);
 
         Response response = new Response();
         response.setText("We're processing your request...");

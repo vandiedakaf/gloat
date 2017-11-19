@@ -2,10 +2,9 @@ package com.vdda.command;
 
 import com.vdda.command.service.GloatService;
 import com.vdda.slack.Response;
+import com.vdda.tool.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 public class Gloat implements Command {
@@ -34,9 +33,9 @@ public class Gloat implements Command {
     }
 
     @Override
-    public Response run(Map<String, String> parameters) {
+    public Response run(Request request) {
 
-        gloatService.processRequest(parameters);
+        gloatService.processRequest(request);
 
         Response response = new Response();
         response.setText("We're processing your request...");

@@ -7,6 +7,7 @@ import com.vdda.repository.UserCategoryRepository;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
+import com.vdda.tool.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,20 +35,20 @@ public class GloatService {
     }
 
     @Async
-    public void processRequest(Map<String, String> parameters) {
+    public void processRequest(Request request) {
 
-        gloat(parameters);
+        gloat(request);
     }
 
-    private void gloat(Map<String, String> parameters) {
+    private void gloat(Request request) {
 
         Response response = new Response();
 
-        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
+        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(request.getParameter(SlackParameters.TEAM_ID.toString()), request.getParameter(SlackParameters.CHANNEL_ID.toString()));
 
         if (!category.isPresent()) {
             response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");
-            restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+            restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
             return;
         }
 
@@ -58,21 +58,21 @@ public class GloatService {
 
         if (userCategories.isEmpty()) {
             response.setText("You can only gloat if you are ranked #1 in this category. No contests have been registered in this category.");
-            restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+            restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
             return;
         }
 
         String topUserId = userCategories.get(0).getUserCategoryPK().getUser().getUserId();
 
-        if (!(topUserId.equals(parameters.get(SlackParameters.USER_ID.toString())))) {
+        if (!(topUserId.equals(request.getParameter(SlackParameters.USER_ID.toString())))) {
             response.setText("You can only gloat if you are ranked #1 in this category. Currently this rank belongs to <@" + topUserId + ">.");
-            restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
+            restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
             return;
         }
 
         String champDetails = ":trophy: <@" +
                 topUserId +
                 "> would like you all to bow before their greatness :trophy:";
-        slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), champDetails);
+        slackUtilities.sendChatMessage(request.getParameter(SlackParameters.TEAM_ID.toString()), request.getParameter(SlackParameters.CHANNEL_ID.toString()), champDetails);
     }
 }

@@ -2,7 +2,7 @@ package com.vdda.command;
 
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
-import com.vdda.tool.Parameters;
+import com.vdda.tool.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,23 +34,24 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
 
 	public Response run(String parametersString) {
 
-		Map<String, String> parametersMap = Parameters.parse(parametersString);
+		Request request = new Request(parametersString);
 
-		if (!slackToken.equals(parametersMap.get(SlackParameters.TOKEN.toString()))) {
+		if (!slackToken.equals(request.getParameter(SlackParameters.TOKEN.toString()))) {
 			log.warn("Incorrect Token");
 			throw new IllegalArgumentException("Incorrect Token");
 		}
 
-		String text = parametersMap.get(SlackParameters.TEXT.toString());
+		String text = request.getParameter(SlackParameters.TEXT.toString());
 
 		if (text != null && !text.isEmpty()) {
 			String[] args = text.split("\\s+"); // matches for one or more whitespaces (so that it trims as well)
 			if (args.length != 0) {
 				Command command = commands.get(args[0]);
 				if (command != null) {
-					return command.run(parametersMap);
+					return command.run(request);
 				} else {
-					return series.run(parametersMap);
+					// the series command is the default command
+					return series.run(request);
 				}
 			}
 		}

@@ -2,10 +2,9 @@ package com.vdda.command;
 
 import com.vdda.command.service.TenderService;
 import com.vdda.slack.Response;
+import com.vdda.tool.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 @Service
 public class Tender implements Command {
@@ -34,9 +33,9 @@ public class Tender implements Command {
     }
 
     @Override
-    public Response run(Map<String, String> parameters) {
+    public Response run(Request request) {
 
-        tenderService.processRequest(parameters);
+        tenderService.processRequest(request);
 
         Response response = new Response();
         response.setText("We're processing your request...");

@@ -8,14 +8,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URLDecoder;
 import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class ParametersTest {
+public class RequestTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -29,7 +27,8 @@ public class ParametersTest {
 
     @Test
     public void exist() throws Exception {
-        Map<String, String> parameterMap = Parameters.parse(parameters);
+		Request request = new Request(this.parameters);
+		Map<String, String> parameterMap = request.getParametersMap();
 
         assertEquals("value1", parameterMap.get("param1"));
         assertEquals("value2", parameterMap.get("param2"));
@@ -38,47 +37,42 @@ public class ParametersTest {
 
     @Test
     public void nonExist() throws Exception {
-        Map<String, String> parameterMap = Parameters.parse(parameters);
+		Request request = new Request(this.parameters);
+		Map<String, String> parameterMap = request.getParametersMap();
 
         assertNull(parameterMap.get("param0"));
     }
 
     @Test
     public void nullParameters() throws Exception {
-        Map<String, String> parameterMap = Parameters.parse(null);
+		Request request = new Request(null);
+		Map<String, String> parameterMap = request.getParametersMap();
 
         assertTrue(parameterMap.size() == 0);
     }
 
     @Test
     public void emptyString() throws Exception {
-        Map<String, String> parameterMap = Parameters.parse("");
+		Request request = new Request("");
+		Map<String, String> parameterMap = request.getParametersMap();
 
         assertTrue(parameterMap.size() == 0);
     }
 
     @Test
     public void noPairs() throws Exception {
-        Map<String, String> parameterMap = Parameters.parse("nada");
+		Request request = new Request("nada");
+		Map<String, String> parameterMap = request.getParametersMap();
 
         assertTrue(parameterMap.size() == 0);
     }
 
     @Test
     public void brokenPairs() throws Exception {
-        Map<String, String> parameterMap = Parameters.parse("nada1&nada2");
+		Request request = new Request("nada1&nada2");
+		Map<String, String> parameterMap = request.getParametersMap();
 
         assertTrue(parameterMap.size() == 0);
-    }
-
-    @Test
-    public void contstructorException() throws Exception {
-
-        thrown.expect(InvocationTargetException.class);
-
-        Constructor<Parameters> c = Parameters.class.getDeclaredConstructor();
-        c.setAccessible(true);
-        c.newInstance();
     }
 
     @Test
@@ -91,6 +85,6 @@ public class ParametersTest {
             result = new UnsupportedEncodingException("Testing an exception condition.");
         }};
 
-        Map<String, String> parameterMap = Parameters.parse(parameters);
+		new Request(this.parameters);
     }
 }

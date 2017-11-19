@@ -2,20 +2,18 @@ package com.vdda.command;
 
 import com.vdda.command.service.SeriesService;
 import com.vdda.slack.Response;
-import com.vdda.slack.SlackParameters;
+import com.vdda.tool.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class Series implements Command {
 
     public static final int OUTCOME_ARGUMENT = 1;
 
-    private final SeriesService seriesService;
+	private final SeriesService seriesService;
 
     @Autowired
     public Series(SeriesService seriesService) {
@@ -39,25 +37,19 @@ public class Series implements Command {
     }
 
     @Override
-    public Response run(Map<String, String> parameters) {
+    public Response run(Request request) {
 
-        List<String> args = getArguments(parameters);
+		List<String> args = request.getArguments();
 
-        if (!(validateArgs(args))) {
-            return commandUsageResponse();
-        }
+		if (!(validateArgs(args))) {
+			return commandUsageResponse();
+		}
 
-        seriesService.processRequest(parameters, args);
+        seriesService.processRequest(request);
 
         Response response = new Response();
         response.setText("We're processing your request...");
         return response;
-    }
-
-    @Override
-    public List<String> getArguments(Map<String, String> parameters) {
-        String[] argsArray = parameters.get(SlackParameters.TEXT.toString()).split(" ");
-        return Arrays.asList(argsArray); // this command class does not have a preceding command string (e.g. "series" or "stats")
     }
 
     private boolean validateArgs(List<String> args) {

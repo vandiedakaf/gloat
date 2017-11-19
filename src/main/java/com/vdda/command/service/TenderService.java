@@ -9,12 +9,12 @@ import com.vdda.repository.UserCategoryRepository;
 import com.vdda.repository.UserRepository;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
+import com.vdda.tool.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -35,29 +35,29 @@ public class TenderService {
     }
 
     @Async
-    public void processRequest(Map<String, String> parameters) {
+    public void processRequest(Request request) {
 
-        tender(parameters);
+        tender(request);
     }
 
-    private void tender(Map<String, String> parameters) {
+    private void tender(Request request) {
 
-        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
+        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(request.getParameter(SlackParameters.TEAM_ID.toString()), request.getParameter(SlackParameters.CHANNEL_ID.toString()));
 
         StringBuilder tenderMessage = new StringBuilder();
         tenderMessage.append("<@");
-        tenderMessage.append(parameters.get(SlackParameters.USER_ID.toString()));
+        tenderMessage.append(request.getParameter(SlackParameters.USER_ID.toString()));
         tenderMessage.append(">");
 
         if (!category.isPresent()) {
-            noRank(parameters, tenderMessage);
+            noRank(request, tenderMessage);
             return;
         }
 
-        Optional<User> user = userRepository.findByTeamIdAndUserId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.USER_ID.toString()));
+        Optional<User> user = userRepository.findByTeamIdAndUserId(request.getParameter(SlackParameters.TEAM_ID.toString()), request.getParameter(SlackParameters.USER_ID.toString()));
 
         if (!user.isPresent()) {
-            noRank(parameters, tenderMessage);
+            noRank(request, tenderMessage);
             return;
         }
 
@@ -65,18 +65,18 @@ public class TenderService {
         Optional<UserCategory> userCategory = userCategoryRepository.findUserCategoryByUserCategoryPK(userCategoryPK);
 
         if (!userCategory.isPresent()) {
-            noRank(parameters, tenderMessage);
+            noRank(request, tenderMessage);
             return;
         }
 
         tenderMessage.append(" (");
         tenderMessage.append(userCategory.get().getElo());
         tenderMessage.append(") is looking for a challenger :mega:");
-        slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), tenderMessage.toString());
+        slackUtilities.sendChatMessage(request.getParameter(SlackParameters.TEAM_ID.toString()), request.getParameter(SlackParameters.CHANNEL_ID.toString()), tenderMessage.toString());
     }
 
-    private void noRank(Map<String, String> parameters, StringBuilder tenderDetails) {
+    private void noRank(Request request, StringBuilder tenderDetails) {
         tenderDetails.append(" (no rank) is looking for a challenger :mega:");
-        slackUtilities.sendChatMessage(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()), tenderDetails.toString());
+        slackUtilities.sendChatMessage(request.getParameter(SlackParameters.TEAM_ID.toString()), request.getParameter(SlackParameters.CHANNEL_ID.toString()), tenderDetails.toString());
     }
 }

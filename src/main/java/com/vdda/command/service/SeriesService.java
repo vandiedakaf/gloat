@@ -30,7 +30,7 @@ public class SeriesService extends ContestService {
     }
 
     @Override
-    protected Response confirmationButton(User user) {
+    protected Response confirmationButton(User user, List<String> arguments) {
         Response response = new Response();
         List<Attachment> attachments = new ArrayList<>();
         Attachment attachment = new Attachment();
@@ -49,18 +49,18 @@ public class SeriesService extends ContestService {
         actions.add(actionNo);
         attachment.setFallback("Series Confirmation");
         attachment.setTitle("Series Confirmation");
-        attachment.setText(constructConfirmationMessage(user));
+        attachment.setText(constructConfirmationMessage(user, arguments));
         attachment.setColor("#86C53C");
-        attachment.setCallback_id(callbackIdBuilder(CONFIRM_SERIES.toString(), user.getId(), contestArguments.get(OUTCOME_ARGUMENT).toLowerCase()));
+        attachment.setCallback_id(callbackIdBuilder(CONFIRM_SERIES.toString(), user.getId(), arguments.get(OUTCOME_ARGUMENT).toLowerCase()));
         attachment.setActions(actions);
         attachments.add(attachment);
         response.setAttachments(attachments);
         return response;
     }
 
-    private String constructConfirmationMessage(User user) {
+    private String constructConfirmationMessage(User user, List<String> arguments) {
         // Split string into array of character strings: https://stackoverflow.com/a/12969483/792287
-        String[] series = contestArguments.get(OUTCOME_ARGUMENT).toLowerCase().split("(?!^)");
+        String[] series = arguments.get(OUTCOME_ARGUMENT).toLowerCase().split("(?!^)");
 
         long winCount = Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.WIN)).count();
         long lossCount = Arrays.stream(series).filter(o -> (ContestOutcome.getEnumByKey(o) == ContestOutcome.LOSS)).count();

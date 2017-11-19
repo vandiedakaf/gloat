@@ -7,6 +7,7 @@ import com.vdda.repository.UserCategoryRepository;
 import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
+import com.vdda.tool.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
@@ -16,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -27,156 +27,155 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class TopService {
 
-    private static final int NUM_TOP_USERS = 3;
+	private static final String COLOUR_GREEN = "#86C53C";
+	private static final String COLOUR_GOLD = "#FFD700";
+	private static final String COLOUR_BRONZE = "#CD7F32";
+	private static final int NUM_TOP_USERS = 3;
 
-    private final RestTemplate restTemplate;
-    private final UserCategoryRepository userCategoryRepository;
-    private final CategoryRepository categoryRepository;
+	private final RestTemplate restTemplate;
+	private final UserCategoryRepository userCategoryRepository;
+	private final CategoryRepository categoryRepository;
 
-    private static final String COLOUR_GREEN = "#86C53C";
-    private static final String COLOUR_GOLD = "#FFD700";
-    private static final String COLOUR_BRONZE = "#CD7F32";
+	@Autowired
+	public TopService(RestTemplate restTemplate, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository) {
+		this.restTemplate = restTemplate;
+		this.userCategoryRepository = userCategoryRepository;
+		this.categoryRepository = categoryRepository;
+	}
 
-    @Autowired
-    public TopService(RestTemplate restTemplate, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository) {
-        this.restTemplate = restTemplate;
-        this.userCategoryRepository = userCategoryRepository;
-        this.categoryRepository = categoryRepository;
-    }
+	@Async
+	public void processRequest(Request request) {
 
-    @Async
-    public void processRequest(Map<String, String> parameters) {
+		processRequest(request, NUM_TOP_USERS);
+	}
 
-        processRequest(parameters, NUM_TOP_USERS);
-    }
+	@Async
+	public void processRequest(Request request, int numTopUsers) {
 
-    @Async
-    public void processRequest(Map<String, String> parameters, int numTopUsers) {
+		Response response = getTopUsers(request, numTopUsers);
 
-        Response response = getTopUsers(parameters, numTopUsers);
+		restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
+	}
 
-        restTemplate.postForLocation(parameters.get(SlackParameters.RESPONSE_URL.toString()), response);
-    }
+	private Response getTopUsers(Request request, int numTopUsers) {
 
-    private Response getTopUsers(Map<String, String> parameters, int numTopUsers) {
+		Response response = new Response();
 
-        Response response = new Response();
+		Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(request.getParameter(SlackParameters.TEAM_ID.toString()), request.getParameter(SlackParameters.CHANNEL_ID.toString()));
 
-        Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(parameters.get(SlackParameters.TEAM_ID.toString()), parameters.get(SlackParameters.CHANNEL_ID.toString()));
+		if (!category.isPresent()) {
+			response.setText("No contests have been registered in this category.");
+			return response;
+		}
 
-        if (!category.isPresent()) {
-            response.setText("No contests have been registered in this category.");
-            return response;
-        }
+		List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.get().getId(), 10); // TODO replace with global constant
 
-        List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.get().getId(), 10); // TODO replace with global constant
+		if (userCategories.isEmpty()) {
+			response.setText("No ranked players have been found in this category. Players might still be in calibration phase."); // TODO add calibration phase requirement
+			return response;
+		}
 
-        if (userCategories.isEmpty()) {
-            response.setText("No ranked players have been found in this category. Players might still be in calibration phase."); // TODO add calibration phase requirement
-            return response;
-        }
+		List<Pair<Integer, UserCategory>> rankedUserCategories = determineRankedPairs(userCategories);
 
-        List<Pair<Integer, UserCategory>> rankedUserCategories = determineRankedPairs(userCategories);
+		List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(request.getParameter(SlackParameters.USER_ID.toString()), rankedUserCategories, numTopUsers);
 
-        List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(parameters.get(SlackParameters.USER_ID.toString()), rankedUserCategories, numTopUsers);
+		response.setText("Top Contestants");
 
-        response.setText("Top Contestants");
+		int drawSum = rankedUserCategoriesFiltered.stream()
+				.mapToInt(u -> u.getSecond().getDraws())
+				.sum();
+		boolean containsDraws = drawSum > 0;
 
-        int drawSum = rankedUserCategoriesFiltered.stream()
-                .mapToInt(u -> u.getSecond().getDraws())
-                .sum();
-        boolean containsDraws = drawSum > 0;
+		List<Attachment> attachments = new ArrayList<>();
 
-        List<Attachment> attachments = new ArrayList<>();
+		Attachment attachmentTitle = new Attachment();
+		attachmentTitle.setFallback("Top Contestants");
+		if (containsDraws) {
+			attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses-Draws]");
+		} else {
+			attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses]");
+		}
+		attachmentTitle.setColor(COLOUR_GREEN);
+		attachments.add(attachmentTitle);
 
-        Attachment attachmentTitle = new Attachment();
-        attachmentTitle.setFallback("Top Contestants");
-        if (containsDraws) {
-            attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses-Draws]");
-        } else {
-            attachmentTitle.setTitle("Rank. (Rating) Name [Wins-Losses]");
-        }
-        attachmentTitle.setColor(COLOUR_GREEN);
-        attachments.add(attachmentTitle);
+		StringBuilder textTopContestants = new StringBuilder();
+		rankedUserCategoriesFiltered.stream()
+				.filter(p -> p.getFirst() <= numTopUsers)
+				.collect(toList())
+				.forEach(u -> addContestant(u, textTopContestants, containsDraws));
 
-        StringBuilder textTopContestants = new StringBuilder();
-        rankedUserCategoriesFiltered.stream()
-                .filter(p -> p.getFirst() <= numTopUsers)
-                .collect(toList())
-                .forEach(u -> addContestant(u, textTopContestants, containsDraws));
+		Attachment attachmentTopContestants = new Attachment();
+		attachmentTopContestants.setText(textTopContestants.toString());
+		attachmentTopContestants.setColor(COLOUR_GOLD);
+		attachments.add(attachmentTopContestants);
 
-        Attachment attachmentTopContestants = new Attachment();
-        attachmentTopContestants.setText(textTopContestants.toString());
-        attachmentTopContestants.setColor(COLOUR_GOLD);
-        attachments.add(attachmentTopContestants);
+		if (rankedUserCategoriesFiltered.size() > numTopUsers) {
+			StringBuilder textNeighbouringContestants = new StringBuilder();
+			rankedUserCategoriesFiltered.stream()
+					.filter(p -> p.getFirst() > numTopUsers)
+					.collect(toList())
+					.forEach(u -> addContestant(u, textNeighbouringContestants, containsDraws));
 
-        if (rankedUserCategoriesFiltered.size() > numTopUsers) {
-            StringBuilder textNeighbouringContestants = new StringBuilder();
-            rankedUserCategoriesFiltered.stream()
-                    .filter(p -> p.getFirst() > numTopUsers)
-                    .collect(toList())
-                    .forEach(u -> addContestant(u, textNeighbouringContestants, containsDraws));
+			Attachment attachmentNeighbouringContestants = new Attachment();
+			attachmentNeighbouringContestants.setText(textNeighbouringContestants.toString());
+			attachmentNeighbouringContestants.setColor(COLOUR_BRONZE);
+			attachments.add(attachmentNeighbouringContestants);
+		}
 
-            Attachment attachmentNeighbouringContestants = new Attachment();
-            attachmentNeighbouringContestants.setText(textNeighbouringContestants.toString());
-            attachmentNeighbouringContestants.setColor(COLOUR_BRONZE);
-            attachments.add(attachmentNeighbouringContestants);
-        }
+		response.setAttachments(attachments);
+		return response;
+	}
 
-        response.setAttachments(attachments);
-        return response;
-    }
+	private List<Pair<Integer, UserCategory>> getFilteredList(String userId, List<Pair<Integer, UserCategory>> rankedUserCategories, int numTopUsers) {
 
-    private List<Pair<Integer, UserCategory>> getFilteredList(String userId, List<Pair<Integer, UserCategory>> rankedUserCategories, int numTopUsers) {
+		List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered;
 
-        List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered;
+		Pair<Integer, UserCategory> userCategoryPair = rankedUserCategories
+				.stream()
+				.filter(p -> p.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
+				.findFirst()
+				.orElse(null);
 
-        Pair<Integer, UserCategory> userCategoryPair = rankedUserCategories
-                .stream()
-                .filter(p -> p.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
-                .findFirst()
-                .orElse(null);
+		Predicate<Pair<Integer, UserCategory>> topFilterPredicate = topPlayersOnly(numTopUsers);
+		if (userCategoryPair != null) {
+			topFilterPredicate = topPlayersAndNeighbours(numTopUsers, userCategoryPair.getFirst());
+		}
 
-        Predicate<Pair<Integer, UserCategory>> topFilterPredicate = topPlayersOnly(numTopUsers);
-        if (userCategoryPair != null) {
-            topFilterPredicate = topPlayersAndNeighbours(numTopUsers, userCategoryPair.getFirst());
-        }
+		rankedUserCategoriesFiltered = rankedUserCategories.stream()
+				.filter(topFilterPredicate)
+				.collect(toList());
 
-        rankedUserCategoriesFiltered = rankedUserCategories.stream()
-                .filter(topFilterPredicate)
-                .collect(toList());
+		return rankedUserCategoriesFiltered;
+	}
 
-        return rankedUserCategoriesFiltered;
-    }
+	private Predicate<Pair<Integer, UserCategory>> topPlayersOnly(Integer topCount) {
+		return p -> p.getFirst() <= topCount;
+	}
 
-    private Predicate<Pair<Integer, UserCategory>> topPlayersOnly(Integer topCount) {
-        return p -> p.getFirst() <= topCount;
-    }
+	private Predicate<Pair<Integer, UserCategory>> topPlayersAndNeighbours(Integer topCount, Integer userRank) {
+		return p -> (p.getFirst() <= topCount) || Math.abs(p.getFirst() - userRank) <= 1;
+	}
 
-    private Predicate<Pair<Integer, UserCategory>> topPlayersAndNeighbours(Integer topCount, Integer userRank) {
-        return p -> (p.getFirst() <= topCount) || Math.abs(p.getFirst() - userRank) <= 1;
-    }
+	private List<Pair<Integer, UserCategory>> determineRankedPairs(List<UserCategory> userCategories) {
+		return IntStream.range(0, userCategories.size())
+				.mapToObj(i -> Pair.of(i + 1, userCategories.get(i)))
+				.collect(toList());
+	}
 
-    private List<Pair<Integer, UserCategory>> determineRankedPairs(List<UserCategory> userCategories) {
-        return IntStream.range(0, userCategories.size())
-                .mapToObj(i -> Pair.of(i + 1, userCategories.get(i)))
-                .collect(toList());
-    }
-
-    private void addContestant(Pair<Integer, UserCategory> userCategoryPair, StringBuilder stringBuilder, boolean containsDraws) {
-        stringBuilder.append(userCategoryPair.getFirst());
-        stringBuilder.append(". (");
-        stringBuilder.append(userCategoryPair.getSecond().getElo());
-        stringBuilder.append(") <@");
-        stringBuilder.append(userCategoryPair.getSecond().getUserCategoryPK().getUser().getUserId());
-        stringBuilder.append("> [");
-        stringBuilder.append(userCategoryPair.getSecond().getWins());
-        stringBuilder.append("-");
-        stringBuilder.append(userCategoryPair.getSecond().getLosses());
-        if (containsDraws) {
-            stringBuilder.append("-");
-            stringBuilder.append(userCategoryPair.getSecond().getDraws());
-        }
-        stringBuilder.append("]\n");
-    }
+	private void addContestant(Pair<Integer, UserCategory> userCategoryPair, StringBuilder stringBuilder, boolean containsDraws) {
+		stringBuilder.append(userCategoryPair.getFirst());
+		stringBuilder.append(". (");
+		stringBuilder.append(userCategoryPair.getSecond().getElo());
+		stringBuilder.append(") <@");
+		stringBuilder.append(userCategoryPair.getSecond().getUserCategoryPK().getUser().getUserId());
+		stringBuilder.append("> [");
+		stringBuilder.append(userCategoryPair.getSecond().getWins());
+		stringBuilder.append("-");
+		stringBuilder.append(userCategoryPair.getSecond().getLosses());
+		if (containsDraws) {
+			stringBuilder.append("-");
+			stringBuilder.append(userCategoryPair.getSecond().getDraws());
+		}
+		stringBuilder.append("]\n");
+	}
 }

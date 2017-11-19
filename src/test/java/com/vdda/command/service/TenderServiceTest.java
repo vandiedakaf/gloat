@@ -9,6 +9,7 @@ import com.vdda.repository.UserCategoryRepository;
 import com.vdda.repository.UserRepository;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
+import com.vdda.tool.Request;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Tested;
@@ -17,7 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.*;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -43,17 +44,13 @@ public class TenderServiceTest {
     @Mocked
     private SlackUtilities slackUtilities;
 
-    private Map<String, String> parameters;
+    private Request request;
 
     @Before
     public void setUp() throws Exception {
         tenderService = new TenderService(userCategoryRepository, userRepository, categoryRepository, slackUtilities);
 
-        parameters = new HashMap<>();
-        parameters.put(SlackParameters.TEAM_ID.toString(), TEAM_ID);
-        parameters.put(SlackParameters.RESPONSE_URL.toString(), RESPONSE_URL);
-        parameters.put(SlackParameters.USER_ID.toString(), USER_ID);
-        parameters.put(SlackParameters.CHANNEL_ID.toString(), CHANNEL_ID);
+        request = new Request(SlackParameters.USER_ID.toString() + "=" + USER_ID + "&" + SlackParameters.TEAM_ID.toString() + "=" + TEAM_ID + "&" + SlackParameters.RESPONSE_URL.toString() + "=" + RESPONSE_URL + "&" + SlackParameters.TEXT.toString() + "=tender&" + SlackParameters.CHANNEL_ID.toString() + "=" + CHANNEL_ID);
     }
 
     @Test
@@ -70,7 +67,7 @@ public class TenderServiceTest {
             result = mockUserCategoriesGolden();
         }};
 
-        tenderService.processRequest(parameters);
+        tenderService.processRequest(request);
 
         new Verifications() {{
             String message;
@@ -82,7 +79,7 @@ public class TenderServiceTest {
     @Test
     public void noCategory() throws Exception {
 
-        tenderService.processRequest(parameters);
+        tenderService.processRequest(request);
 
         new Verifications() {{
             String message;
@@ -98,7 +95,7 @@ public class TenderServiceTest {
             result = mockCategoryGolden();
         }};
 
-        tenderService.processRequest(parameters);
+        tenderService.processRequest(request);
 
         new Verifications() {{
             String message;
@@ -117,7 +114,7 @@ public class TenderServiceTest {
             result = mockUserGolden();
         }};
 
-        tenderService.processRequest(parameters);
+        tenderService.processRequest(request);
 
         new Verifications() {{
             String message;

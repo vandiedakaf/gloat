@@ -1,6 +1,7 @@
 package com.vdda.command;
 
 import com.vdda.slack.Response;
+import com.vdda.tool.Request;
 import mockit.Mocked;
 import mockit.Verifications;
 import org.junit.Rule;
@@ -91,10 +92,10 @@ public class CommandsServiceTest {
         commandsService.run(parameters);
 
         new Verifications() {{
-            Map<String, String> parametersMap;
-            gloat.run(parametersMap = withCapture());
+            Request requestVerify;
+            gloat.run(requestVerify = withCapture());
 
-            assertThat(parametersMap.get("text"), is(("gloat")));
+            assertThat(requestVerify.getParameter("text"), is(("gloat")));
         }};
     }
 
