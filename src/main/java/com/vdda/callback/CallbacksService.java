@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CallbacksService implements ApplicationContextAware, InitializingBean {
 
-	static private Map<String, Callback> callbacks;
-	static private ApplicationContext applicationContext;
+	private Map<String, Callback> callbacks;
+	private ApplicationContext applicationContext;
 
 	public Response run(CallbackRequest callbackRequest) {
 
@@ -51,6 +51,6 @@ public class CallbacksService implements ApplicationContextAware, InitializingBe
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) {
-		CallbacksService.applicationContext = applicationContext;
+		this.applicationContext = applicationContext;
 	}
 }
