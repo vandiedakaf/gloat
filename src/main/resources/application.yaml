@@ -1,24 +1,17 @@
+env.elo-init: 1500
+
 logging:
   level:
     org.springframework.web: INFO
     com.vdda: DEBUG
 
+management.security.enabled: true
+
+security.basic.authorize-mode: none
+
 spring:
-  datasource: # these credentials are typically replaced with environment variables
-    driver-class-name: com.mysql.jdbc.Driver
-  jpa:
-    hibernate.ddl-auto: none # https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-creating-and-dropping-jpa-databases
-  output:
-    ansi:
-      enabled: detect
-
-management:
-  security:
-   enabled: true
-
-security:
-  basic:
-    authorize-mode: none
-
-env:
-  elo-init: 1500
+  application.name: gloat
+  datasource.driver-class-name: com.mysql.jdbc.Driver
+  jpa.hibernate.ddl-auto: none # https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-sql.html#boot-features-creating-and-dropping-jpa-databases
+  output.ansi.enabled: detect
+  sleuth.sampler.percentage: 0.1
