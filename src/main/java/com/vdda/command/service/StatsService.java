@@ -55,7 +55,7 @@ public class StatsService {
 
 		List<String> args = request.getArguments();
 
-		if (args.isEmpty()) {
+		if (args.size() == 1) {
 			userId = request.getParameter(SlackParameters.USER_ID.toString());
 		} else {
 			Optional<User> slackUser = slackUtilities.getUser(teamId, args.get(1));

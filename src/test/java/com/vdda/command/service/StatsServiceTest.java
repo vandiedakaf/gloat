@@ -52,7 +52,7 @@ public class StatsServiceTest {
 	public void setUp() throws Exception {
 		statsService = new StatsService(restTemplate, slackUtilities, userCategoryRepository, categoryRepository, userRepository);
 
-		baseRequestString = SlackParameters.USER_ID.toString() + "=" + USER_ID + "&" + SlackParameters.TEAM_ID.toString() + "=" + TEAM_ID + "&" + SlackParameters.RESPONSE_URL.toString() + "=" + RESPONSE_URL + "&" + SlackParameters.CHANNEL_ID.toString() + "=" + CHANNEL_ID;
+		baseRequestString = SlackParameters.USER_ID.toString() + "=" + USER_ID + "&" + SlackParameters.TEAM_ID.toString() + "=" + TEAM_ID + "&" + SlackParameters.RESPONSE_URL.toString() + "=" + RESPONSE_URL + "&" + SlackParameters.CHANNEL_ID.toString() + "=" + CHANNEL_ID + "&" + SlackParameters.TEXT.toString() + "=stats";
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class StatsServiceTest {
 	@Test
 	public void processGoldenOtherUser() throws Exception {
 
-		String requestString = baseRequestString + "&" + SlackParameters.TEXT.toString() + "=stats " + OTHER_USER_ID;
+		String requestString = baseRequestString + " " + OTHER_USER_ID;
 		request = new Request(requestString);
 
 		new Expectations() {{
@@ -112,7 +112,7 @@ public class StatsServiceTest {
 	@Test
 	public void noOtherUser() throws Exception {
 
-		String requestString = baseRequestString + "&" + SlackParameters.TEXT.toString() + "=stats " + OTHER_USER_ID;
+		String requestString = baseRequestString + " " + OTHER_USER_ID;
 		request = new Request(requestString);
 
 		statsService.processRequest(request);
