@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class Top implements Command {
 
-	private static final int ARGUMENT_OFFSET = 1;
 	private final TopService topService;
 
 	@Autowired
@@ -38,16 +37,16 @@ public class Top implements Command {
 	@Override
 	public Response run(Request request) {
 
-		List<String> args = request.getArguments(ARGUMENT_OFFSET);
+		List<String> args = request.getArguments();
 
 		if (!(validArgs(args))) {
 			return commandUsageResponse();
 		}
 
-		if (args.isEmpty()) {
+		if (args.size() == 1) {
 			topService.processRequest(request);
 		} else {
-			topService.processRequest(request, Integer.parseInt(args.get(0)));
+			topService.processRequest(request, Integer.parseInt(args.get(1)));
 		}
 
 		Response response = new Response();
@@ -57,6 +56,6 @@ public class Top implements Command {
 
 	boolean validArgs(List<String> args) {
 		// positive integer
-		return args.isEmpty() || args.get(0) != null && args.get(0).matches("^[1-9]\\d*");
+		return (args.size() == 1) || args.get(1) != null && args.get(1).matches("^[1-9]\\d*");
 	}
 }

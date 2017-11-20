@@ -10,7 +10,7 @@ import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.*;
@@ -87,31 +87,31 @@ public class TopTest {
 
 	@Test
 	public void validateArgsGolden() throws Exception {
-		List<String> args = Collections.singletonList("123");
+		List<String> args = Arrays.asList("top", "123");
 		assertThat(top.validArgs(args), is((true)));
 	}
 
 	@Test
 	public void validateArgsNotAnInt() throws Exception {
-		List<String> args = Collections.singletonList("notAnInt");
+		List<String> args = Arrays.asList("top", "notAnInt");
 		assertThat(top.validArgs(args), is((false)));
 	}
 
 	@Test
 	public void validateArgsNegative() throws Exception {
-		List<String> args = Collections.singletonList("-123");
+		List<String> args = Arrays.asList("top", "-123");
 		assertThat(top.validArgs(args), is((false)));
 	}
 
 	@Test
 	public void validateArgsDecimal() throws Exception {
-		List<String> args = Collections.singletonList("-123.321");
+		List<String> args = Arrays.asList("top", "-123.321");
 		assertThat(top.validArgs(args), is((false)));
 	}
 
 	@Test
 	public void validateArgsZero() throws Exception {
-		List<String> args = Collections.singletonList("0");
+		List<String> args = Arrays.asList("top", "0");
 		assertThat(top.validArgs(args), is((false)));
 	}
 }

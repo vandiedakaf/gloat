@@ -43,20 +43,11 @@ public class Request {
 		}
 	}
 
-	/**
-	 * @param argumentOffset set the number of arguments to skip
-	 * @return an Optional list of arguments
-	 */
-	public List<String> getArguments(int argumentOffset) {
+	public List<String> getArguments() {
 		Optional<List<String>> optionalArguments = Optional.ofNullable(parametersMap.get(SlackParameters.TEXT.toString()))
 				.map(s -> s.split(" "))
-				.map(Arrays::asList)
-				.map(a -> a.subList(argumentOffset, a.size()));
+				.map(Arrays::asList);
 
 		return optionalArguments.orElse(new ArrayList<>());
-	}
-
-	public List<String> getArguments() {
-		return getArguments(0);
 	}
 }

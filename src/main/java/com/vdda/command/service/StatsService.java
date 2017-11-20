@@ -27,7 +27,6 @@ import java.util.Optional;
 public class StatsService {
 
 	private static final String COLOUR_GREEN = "#86C53C";
-	private static final int ARGUMENT_OFFSET = 1;
 
 	private final RestTemplate restTemplate;
 	private final SlackUtilities slackUtilities;
@@ -54,14 +53,14 @@ public class StatsService {
 
 		String userId;
 
-		List<String> args = request.getArguments(ARGUMENT_OFFSET);
+		List<String> args = request.getArguments();
 
 		if (args.isEmpty()) {
 			userId = request.getParameter(SlackParameters.USER_ID.toString());
 		} else {
-			Optional<User> slackUser = slackUtilities.getUser(teamId, args.get(0));
+			Optional<User> slackUser = slackUtilities.getUser(teamId, args.get(1));
 			if (!slackUser.isPresent()) {
-				response.setText("Sorry, seems like " + args.get(0) + " is some imaginary person.");
+				response.setText("Sorry, seems like " + args.get(1) + " is some imaginary person.");
 				restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
 				return;
 			}
