@@ -26,7 +26,7 @@ public class ConfirmContestSeries extends ConfirmContest {
 
     private final ContestRepository contestRepository;
 
-    Contest contest;
+    private Contest contest;
     private List<String> seriesOutcomeList;
 
     @Autowired
@@ -76,7 +76,7 @@ public class ConfirmContestSeries extends ConfirmContest {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public void persistContests(Category category, User reporter, User opponent) {
+    public void persistContests(CallbackRequest callbackRequest, Category category, User reporter, User opponent) {
 
         // Split string into array of character strings: https://stackoverflow.com/a/12969483/792287
         String[] seriesOutcome = callbackRequest.getCallbackId().split("\\|")[2].split("(?!^)");

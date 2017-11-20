@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 public class SlackUtilities {
     private final Slack slack = Slack.getInstance();
-    private OauthRepository oauthRepository;
+    private final OauthRepository oauthRepository;
 
     @Autowired
     public SlackUtilities(OauthRepository oauthRepository) {

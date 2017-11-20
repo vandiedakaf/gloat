@@ -25,7 +25,7 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
 	@Value("${SLACK_TOKEN:SLACK_TOKEN}")
 	private String slackToken;
 
-	private Series series;
+	private final Series series;
 
 	@Autowired
 	public CommandsService(Series series) {
@@ -80,16 +80,16 @@ public class CommandsService implements ApplicationContextAware, InitializingBea
 		commands.values().forEach(c -> maxLen = Math.max(c.getCommand().length(), maxLen));
 	}
 
-    Map<String, Command> toTreeMap(Map<String, Command> commandMap) {
+	Map<String, Command> toTreeMap(Map<String, Command> commandMap) {
 
-        return commandMap.entrySet().stream()
-                .collect(Collectors.toMap(
-                        e -> e.getValue().getCommand(),
-                        Map.Entry::getValue,
-                        CommandsService::mergeCommandsCollision,
-                        TreeMap::new
-                ));
-    }
+		return commandMap.entrySet().stream()
+				.collect(Collectors.toMap(
+						e -> e.getValue().getCommand(),
+						Map.Entry::getValue,
+						CommandsService::mergeCommandsCollision,
+						TreeMap::new
+				));
+	}
 
 	static Command mergeCommandsCollision(Command c1, Command c2) {
 		return c2;

@@ -26,7 +26,7 @@ public class OauthController {
     private final String clientId = System.getenv("SLACK_CLIENT_ID");
     private final String clientSecret = System.getenv("SLACK_CLIENT_SECRET");
 
-    private OauthRepository oauthRepository;
+    private final OauthRepository oauthRepository;
 
     @Autowired
     public OauthController(OauthRepository oauthRepository) {

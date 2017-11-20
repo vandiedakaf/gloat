@@ -29,7 +29,6 @@ public abstract class ConfirmContest implements Callback {
     private final ContestResolver contestResolver;
     private final UserCategoryRepository userCategoryRepository;
     final SlackUtilities slackUtilities;
-    CallbackRequest callbackRequest;
 
     public ConfirmContest(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
         this.envProperties = envProperties;
@@ -42,8 +41,6 @@ public abstract class ConfirmContest implements Callback {
 
     @Override
     public Response run(CallbackRequest callbackRequest) {
-
-        this.callbackRequest = callbackRequest;
 
         String actionName = callbackRequest.getActions().get(0).getName();
         String opponentId = callbackRequest.getCallbackId().split("\\|")[1];
@@ -65,7 +62,7 @@ public abstract class ConfirmContest implements Callback {
         User opponent = getOrCreateUser(teamId, opponentId);
 
 
-        persistContests(category, reporter, opponent);
+        persistContests(callbackRequest, category, reporter, opponent);
 
         notifyChannelBefore();
 
@@ -110,7 +107,7 @@ public abstract class ConfirmContest implements Callback {
 
     protected abstract Attachment denyAttachment(String opponentId);
 
-    protected abstract void persistContests(Category category, User reporter, User opponent);
+    protected abstract void persistContests(CallbackRequest callbackRequest, Category category, User reporter, User opponent);
 
     protected abstract void notifyChannelBefore();
 

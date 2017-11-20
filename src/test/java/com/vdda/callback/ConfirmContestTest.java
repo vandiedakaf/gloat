@@ -67,7 +67,7 @@ public class ConfirmContestTest {
 			}
 
 			@Override
-			protected void persistContests(Category category, com.vdda.jpa.User reporter, com.vdda.jpa.User opponent) {
+			protected void persistContests(CallbackRequest callbackRequest, Category category, com.vdda.jpa.User reporter, com.vdda.jpa.User opponent) {
 
 			}
 

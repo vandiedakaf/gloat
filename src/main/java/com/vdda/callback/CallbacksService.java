@@ -15,39 +15,42 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CallbacksService implements ApplicationContextAware, InitializingBean {
 
-    private Map<String, Callback> callbacks;
-    private ApplicationContext applicationContext;
+	static private Map<String, Callback> callbacks;
+	static private ApplicationContext applicationContext;
 
-    public Response run(CallbackRequest callbackRequest) {
+	public Response run(CallbackRequest callbackRequest) {
 
-        if (callbackRequest != null && callbackRequest.getCallbackId() != null) {
-            String callbackId = callbackRequest.getCallbackId().split("\\|")[0];
+		if (callbackRequest != null && callbackRequest.getCallbackId() != null) {
+			String callbackId = callbackRequest.getCallbackId().split("\\|")[0];
 
-            if (callbackId != null && !callbackId.isEmpty()) {
-                Callback callback = callbacks.get(callbackId);
-                if (callback != null) {
-                    return callback.run(callbackRequest);
-                }
-            }
-        }
+			if (callbackId != null && !callbackId.isEmpty()) {
+				Callback callback = callbacks.get(callbackId);
+				if (callback != null) {
+					return callback.run(callbackRequest);
+				}
+			}
+		}
 
-        log.debug("Unknown callback id.");
-        Response response = new Response();
-        response.setText("Unknown callback id.");
-        return response;
-    }
+		log.debug("Unknown callback id.");
+		Response response = new Response();
+		response.setText("Unknown callback id.");
+		return response;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Map<String, Callback> callbacksByName = applicationContext.getBeansOfType(Callback.class);
-        callbacks = callbacksByName
-                .entrySet()
-                .stream()
-                .collect(Collectors.toMap(s -> s.getValue().getCallbackId(), Map.Entry::getValue, (a, b) -> a, HashMap::new));
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		Map<String, Callback> callbacksByName = applicationContext.getBeansOfType(Callback.class);
+		callbacks = callbacksByName
+				.entrySet()
+				.stream()
+				.collect(Collectors.toMap(s -> s.getValue().getCallbackId(),
+						Map.Entry::getValue,
+						(a, b) -> a,
+						HashMap::new));
+	}
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) {
+		CallbacksService.applicationContext = applicationContext;
+	}
 }

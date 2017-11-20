@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class GloatController {
 
+    private final CommandsService commandsService;
+
     @Autowired
-    private CommandsService commandsService;
+    public GloatController(CommandsService commandsService) {
+        this.commandsService = commandsService;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Response gloat(@RequestBody String parameters) {

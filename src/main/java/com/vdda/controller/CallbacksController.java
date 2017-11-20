@@ -22,39 +22,44 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class CallbacksController {
 
-    @Autowired
-    private CallbacksService callbacksService;
+	private static final String PAYLOAD = "payload";
+	private static final Gson GSON = new GsonBuilder()
+			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+			.create();
 
-    private static final String PAYLOAD = "payload";
-    private static final Gson GSON = new GsonBuilder()
-            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-            .create();
-    @Value("${SLACK_TOKEN:SLACK_TOKEN}")
-    private String slackToken;
+	private final CallbacksService callbacksService;
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public Response processCallback(@RequestBody MultiValueMap multiValueMap) {
+	@Value("${SLACK_TOKEN:SLACK_TOKEN}")
+	private String slackToken;
 
-        log.debug("processCallback: {}", multiValueMap);
+	@Autowired
+	public CallbacksController(CallbacksService callbacksService) {
+		this.callbacksService = callbacksService;
+	}
 
-        if (multiValueMap.get(PAYLOAD) == null) {
-            log.warn("Empty Payload");
-            throw new IllegalArgumentException("Empty Payload");
-        }
+	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+	public Response processCallback(@RequestBody MultiValueMap multiValueMap) {
 
-        CallbackRequest[] callbackRequests;
-        try {
-            callbackRequests = GSON.fromJson(multiValueMap.get(PAYLOAD).toString(), CallbackRequest[].class);
-        } catch (JsonSyntaxException e) {
-            log.warn("Could not parse Payload", e);
-            throw new IllegalArgumentException("Could not parse Payload");
-        }
+		log.debug("processCallback: {}", multiValueMap);
 
-        if (!slackToken.equals(callbackRequests[0].getToken())) {
-            log.warn("Incorrect Token");
-            throw new IllegalArgumentException("Incorrect Token");
-        }
+		if (multiValueMap.get(PAYLOAD) == null) {
+			log.warn("Empty Payload");
+			throw new IllegalArgumentException("Empty Payload");
+		}
 
-        return callbacksService.run(callbackRequests[0]);
-    }
+		CallbackRequest[] callbackRequests;
+		try {
+			callbackRequests = GSON.fromJson(multiValueMap.get(PAYLOAD).toString(), CallbackRequest[].class);
+		} catch (JsonSyntaxException e) {
+			log.warn("Could not parse Payload", e);
+			throw new IllegalArgumentException("Could not parse Payload");
+		}
+
+		if (!slackToken.equals(callbackRequests[0].getToken())) {
+			log.warn("Incorrect Token");
+			throw new IllegalArgumentException("Incorrect Token");
+		}
+
+		return callbacksService.run(callbackRequests[0]);
+	}
 }

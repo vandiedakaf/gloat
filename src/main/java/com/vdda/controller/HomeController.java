@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Slf4j
 public class HomeController {
 
+	@RequestMapping(method = RequestMethod.GET)
+	public String home() {
 
-    @RequestMapping(method = RequestMethod.GET)
-    public String home() {
-
-        return "home";
-    }
-
+		return "home";
+	}
 }
