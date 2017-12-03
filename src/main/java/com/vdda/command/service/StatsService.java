@@ -120,7 +120,7 @@ public class StatsService {
 				.findFirst();
 		if (maxStreakCount.isPresent()) {
 			Field maxStreak = new Field();
-			maxStreak.setTitle("Largest Streak");
+			maxStreak.setTitle("Longest Streak");
 			maxStreak.setValue("<@" + slackUtilities.getUserById(teamId, maxStreakCount.get().getUserCategoryPK().getUser().getUserId()).orElse(new User()).getName() + "> with " + maxStreakCount.get().getStreakCount() + " " + (maxStreakCount.get().getStreakCount() > 1 ? maxStreakCount.get().getStreakType().getPlural() : maxStreakCount.get().getStreakType().name().toLowerCase()));
 			maxStreak.setShortMessage(true);
 
@@ -144,7 +144,7 @@ public class StatsService {
 		playerFields.add(playerWLD);
 
 		Field playerStreak = new Field();
-		playerStreak.setTitle("Streak");
+		playerStreak.setTitle("Longest Streak");
 		playerStreak.setValue(userCategory.getStreakCount() + " " + (userCategory.getStreakCount() > 1 ? userCategory.getStreakType().getPlural() : userCategory.getStreakType().name().toLowerCase()));
 		playerStreak.setShortMessage(true);
 		playerFields.add(playerStreak);

@@ -9,7 +9,7 @@ CREATE TABLE `user_user_category` (
   `wins`        INT(11) DEFAULT 0,
   `losses`      INT(11) DEFAULT 0,
   `draws`       INT(11) DEFAULT 0,
-  `wilson`      DOUBLE   DEFAULT 0,
+  `wilson`      DOUBLE  DEFAULT 0,
   PRIMARY KEY (`user_id`, `category_id`, `opponent_id`),
   KEY `FK_user_user_category_user_id_idx` (`user_id`),
   CONSTRAINT `FK_user_user_category_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
@@ -24,3 +24,10 @@ CREATE TABLE `user_user_category` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 );
+
+# Reprocess results
+UPDATE contest
+SET processed = 0
+WHERE TRUE;
+
+TRUNCATE user_category
