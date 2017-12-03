@@ -16,4 +16,5 @@ public class Attachment {
     private String text;
     private String thumb_url;
     private String title;
+    private List<Field> fields;
 }

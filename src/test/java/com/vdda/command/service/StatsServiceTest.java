@@ -7,6 +7,7 @@ import com.vdda.jpa.UserCategoryPK;
 import com.vdda.repository.CategoryRepository;
 import com.vdda.repository.UserCategoryRepository;
 import com.vdda.repository.UserRepository;
+import com.vdda.repository.UserUserCategoryRepository;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
@@ -41,6 +42,8 @@ public class StatsServiceTest {
 	@Mocked
 	private CategoryRepository categoryRepository;
 	@Mocked
+	private UserUserCategoryRepository userUserCategoryRepository;
+	@Mocked
 	private RestTemplate restTemplate;
 	@Mocked
 	private SlackUtilities slackUtilities;
@@ -50,7 +53,7 @@ public class StatsServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		statsService = new StatsService(restTemplate, slackUtilities, userCategoryRepository, categoryRepository, userRepository);
+		statsService = new StatsService(restTemplate, slackUtilities, userCategoryRepository, userUserCategoryRepository, categoryRepository, userRepository);
 
 		baseRequestString = SlackParameters.USER_ID.toString() + "=" + USER_ID + "&" + SlackParameters.TEAM_ID.toString() + "=" + TEAM_ID + "&" + SlackParameters.RESPONSE_URL.toString() + "=" + RESPONSE_URL + "&" + SlackParameters.CHANNEL_ID.toString() + "=" + CHANNEL_ID + "&" + SlackParameters.TEXT.toString() + "=stats";
 	}
@@ -69,6 +72,9 @@ public class StatsServiceTest {
 
 			userCategoryRepository.findOne((UserCategoryPK) any);
 			result = mockUserCategoryGolden();
+
+			slackUtilities.getUserById(TEAM_ID, USER_ID);
+			result = mockSlackUserGolden();
 		}};
 
 		statsService.processRequest(request);
@@ -87,7 +93,7 @@ public class StatsServiceTest {
 		request = new Request(requestString);
 
 		new Expectations() {{
-			slackUtilities.getUser(TEAM_ID, OTHER_USER_ID);
+			slackUtilities.getUserByUsername(TEAM_ID, OTHER_USER_ID);
 			result = mockSlackUserGolden();
 
 			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
@@ -128,6 +134,11 @@ public class StatsServiceTest {
 	public void noCategory() throws Exception {
 		request = new Request(baseRequestString);
 
+		new Expectations() {{
+			slackUtilities.getUserById(TEAM_ID, USER_ID);
+			result = mockSlackUserGolden();
+		}};
+
 		statsService.processRequest(request);
 
 		new Verifications() {{
@@ -144,6 +155,9 @@ public class StatsServiceTest {
 		new Expectations() {{
 			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
 			result = mockCategoryGolden();
+
+			slackUtilities.getUserById(TEAM_ID, USER_ID);
+			result = mockSlackUserGolden();
 		}};
 
 		statsService.processRequest(request);
@@ -168,6 +182,9 @@ public class StatsServiceTest {
 
 			userCategoryRepository.findOne((UserCategoryPK) any);
 			result = null;
+
+			slackUtilities.getUserById(TEAM_ID, USER_ID);
+			result = mockSlackUserGolden();
 		}};
 
 		statsService.processRequest(request);

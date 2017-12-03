@@ -4,6 +4,7 @@ import com.vdda.slack.Response;
 import com.vdda.tool.Request;
 import mockit.Mocked;
 import mockit.Verifications;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -21,105 +22,112 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CommandsServiceTest {
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
-    @Mocked
-    private Gloat gloat;
+	@Mocked
+	private Gloat gloat;
 
-    @Autowired
-    private CommandsService commandsService;
+	@Autowired
+	private CommandsService commandsService;
 
-    @Test
-    public void noToken() throws Exception {
+	private static String token;
 
-        thrown.expect(IllegalArgumentException.class);
+	@BeforeClass
+	public static void setUp() throws Exception {
+		token = System.getenv("SLACK_TOKEN") != null ? System.getenv("SLACK_TOKEN") : "SLACK_TOKEN";
+	}
 
-        String parameters = "";
+	@Test
+	public void noToken() throws Exception {
 
-        Response response = commandsService.run(parameters);
+		thrown.expect(IllegalArgumentException.class);
 
-        assertThat(response.getText(), containsString("The available gloat commands are"));
-    }
+		String parameters = "";
 
-    @Test
-    public void incorrectToken() throws Exception {
+		Response response = commandsService.run(parameters);
 
-        thrown.expect(IllegalArgumentException.class);
+		assertThat(response.getText(), containsString("The available gloat commands are"));
+	}
 
-        String parameters = "token=NOT_A_TOKEN";
+	@Test
+	public void incorrectToken() throws Exception {
 
-        Response response = commandsService.run(parameters);
+		thrown.expect(IllegalArgumentException.class);
 
-        assertThat(response.getText(), containsString("The available gloat commands are"));
-    }
+		String parameters = "token=NOT_A_TOKEN";
 
-    @Test
-    public void noCommand() throws Exception {
+		Response response = commandsService.run(parameters);
 
-        String parameters = "token=SLACK_TOKEN";
+		assertThat(response.getText(), containsString("The available gloat commands are"));
+	}
 
-        Response response = commandsService.run(parameters);
+	@Test
+	public void noCommand() throws Exception {
 
-        assertThat(response.getText(), containsString("The available gloat commands are"));
-    }
+		String parameters = String.format("token=%s", token);
 
-    @Test
-    public void textEmpty() throws Exception {
+		Response response = commandsService.run(parameters);
 
-        String parameters = "token=SLACK_TOKEN&text=";
+		assertThat(response.getText(), containsString("The available gloat commands are"));
+	}
 
-        Response response = commandsService.run(parameters);
+	@Test
+	public void textEmpty() throws Exception {
 
-        assertThat(response.getText(), containsString("The available gloat commands are"));
-    }
+		String parameters = String.format("token=%s&text=", token);
 
-    @Test
-    public void noCommandSeries() throws Exception {
+		Response response = commandsService.run(parameters);
 
-        String parameters = "token=SLACK_TOKEN&text=@user";
+		assertThat(response.getText(), containsString("The available gloat commands are"));
+	}
 
-        Response response = commandsService.run(parameters);
+	@Test
+	public void noCommandSeries() throws Exception {
 
-        assertThat(response.getText(), containsString("Log the outcome of contests."));
-    }
+		String parameters = String.format("token=%s&text=@user", token);
 
-    @Test
-    public void gloat() throws Exception {
+		Response response = commandsService.run(parameters);
 
-        String parameters = "token=SLACK_TOKEN&text=gloat";
+		assertThat(response.getText(), containsString("Log the outcome of contests."));
+	}
 
-        commandsService.run(parameters);
+	@Test
+	public void gloat() throws Exception {
 
-        new Verifications() {{
-            Request requestVerify;
-            gloat.run(requestVerify = withCapture());
+		String parameters = String.format("token=%s&text=gloat", token);
 
-            assertThat(requestVerify.getParameter("text"), is(("gloat")));
-        }};
-    }
+		commandsService.run(parameters);
 
-    @Test
-    public void confirmCommandsSort() throws Exception {
+		new Verifications() {{
+			Request requestVerify;
+			gloat.run(requestVerify = withCapture());
 
-        Map<String, Command> unsortedMap = new HashMap<>();
+			assertThat(requestVerify.getParameter("text"), is(("gloat")));
+		}};
+	}
 
-        unsortedMap.put("stats", new Stats(null));
-        unsortedMap.put("tender", new Tender(null));
-        unsortedMap.put("series", new Series(null));
+	@Test
+	public void confirmCommandsSort() throws Exception {
 
-        Map<String, Command> sortedMap = commandsService.toTreeMap(unsortedMap);
+		Map<String, Command> unsortedMap = new HashMap<>();
 
-        String prevCommand = "";
-        for (Command command : sortedMap.values()) {
-            assertThat(command.getCommand(), is(greaterThanOrEqualTo(prevCommand)));
-            prevCommand = command.getCommand();
-        }
-    }
+		unsortedMap.put("stats", new Stats(null));
+		unsortedMap.put("tender", new Tender(null));
+		unsortedMap.put("series", new Series(null));
 
-    @Test
-    public void mergeTest() throws Exception {
-        Command command = CommandsService.mergeCommandsCollision(new Gloat(null), new Series(null));
-        assertThat(command, instanceOf(Series.class));
-    }
+		Map<String, Command> sortedMap = commandsService.toTreeMap(unsortedMap);
+
+		String prevCommand = "";
+		for (Command command : sortedMap.values()) {
+			assertThat(command.getCommand(), is(greaterThanOrEqualTo(prevCommand)));
+			prevCommand = command.getCommand();
+		}
+	}
+
+	@Test
+	public void mergeTest() throws Exception {
+		Command command = CommandsService.mergeCommandsCollision(new Gloat(null), new Series(null));
+		assertThat(command, instanceOf(Series.class));
+	}
 }

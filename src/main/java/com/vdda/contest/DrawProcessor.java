@@ -3,8 +3,10 @@ package com.vdda.contest;
 import com.vdda.EnvProperties;
 import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
+import com.vdda.jpa.UserUserCategory;
 import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
+import com.vdda.repository.UserUserCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Service;
 public class DrawProcessor extends ContestProcessor {
 
     @Autowired
-    public DrawProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository) {
-        super(envProperties, contestRepository, userCategoryRepository);
+    public DrawProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, UserUserCategoryRepository userUserCategoryRepository) {
+        super(envProperties, contestRepository, userCategoryRepository, userUserCategoryRepository);
     }
 
     @Override
@@ -27,4 +29,9 @@ public class DrawProcessor extends ContestProcessor {
         opponentCategory.setDraws(opponentCategory.getDraws() + 1);
     }
 
+    @Override
+    void adjustUserUserCategoryStats(UserUserCategory userUserCategoryReporter, UserUserCategory userUserCategoryOpponent) {
+        userUserCategoryReporter.setDraws(userUserCategoryReporter.getDraws() + 1);
+        userUserCategoryOpponent.setDraws(userUserCategoryOpponent.getDraws() + 1);
+    }
 }

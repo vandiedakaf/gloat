@@ -61,7 +61,7 @@ public class GloatServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
 			result = mockCategoryGolden();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = mockUserCategoriesGolden();
 		}};
 
@@ -80,7 +80,7 @@ public class GloatServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
 			result = mockCategoryGolden();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = new ArrayList<>();
 		}};
 
@@ -113,7 +113,7 @@ public class GloatServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
 			result = mockCategoryGolden();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = mockUserCategoriesNotNumberOne();
 		}};
 
@@ -137,6 +137,10 @@ public class GloatServiceTest {
 		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
 		UserCategory userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(1);
+		// TODO these three values should add up to > 10 (the magic number representing calibration)
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		return userCategories;
@@ -149,12 +153,18 @@ public class GloatServiceTest {
 		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
 		UserCategory userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(1);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, USER_ID);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(3);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		return userCategories;

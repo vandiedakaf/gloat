@@ -53,7 +53,7 @@ public class SeriesServiceTest {
 		request = new Request(requestString);
 
 		new Expectations() {{
-			slackUtilities.getUser(TEAM_ID, USER_NAME);
+			slackUtilities.getUserByUsername(TEAM_ID, USER_NAME);
 			result = mockUser();
 		}};
 
@@ -74,7 +74,7 @@ public class SeriesServiceTest {
 		request = new Request(requestString);
 
 		new Expectations() {{
-			slackUtilities.getUser(TEAM_ID, USER_NAME);
+			slackUtilities.getUserByUsername(TEAM_ID, USER_NAME);
 			result = mockUser();
 		}};
 

@@ -5,6 +5,7 @@ import com.vdda.elo.EloCalculator;
 import com.vdda.jpa.UserCategory;
 import com.vdda.repository.ContestRepository;
 import com.vdda.repository.UserCategoryRepository;
+import com.vdda.repository.UserUserCategoryRepository;
 import mockit.Mocked;
 import mockit.Tested;
 import mockit.Verifications;
@@ -22,11 +23,13 @@ public class LossProcessorTest {
     @Mocked
     private UserCategoryRepository userCategoryRepository;
     @Mocked
+    private UserUserCategoryRepository userUserCategoryRepository;
+    @Mocked
     private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        lossProcessor = new LossProcessor(envProperties, contestRepository, userCategoryRepository);
+        lossProcessor = new LossProcessor(envProperties, contestRepository, userCategoryRepository, userUserCategoryRepository);
     }
 
     @Test

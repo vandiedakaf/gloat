@@ -10,7 +10,7 @@ plugins {
     id 'jacoco'
     id 'org.flywaydb.flyway' version '4.0.3'
     id 'org.sonarqube' version '2.6'
-    id 'org.springframework.boot' version '1.5.8.RELEASE'
+    id 'org.springframework.boot' version '1.5.9.RELEASE'
 }
 
 jar {
@@ -73,8 +73,6 @@ task setupEnv(type: Exec, dependsOn: 'dockerComposeStop') {
 }
 
 task dockerComposeStop(type: Exec) {
-    group = 'setup'
-
     executable = 'docker-compose'
     args = ['-f', 'docker-compose.yml', 'stop']
 }

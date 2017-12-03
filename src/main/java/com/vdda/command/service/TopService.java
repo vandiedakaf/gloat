@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -68,7 +69,11 @@ public class TopService {
 			return response;
 		}
 
-		List<UserCategory> userCategories = userCategoryRepository.findAllByCategoryIdOrderByEloDesc(category.get().getId(), 10); // TODO replace with global constant
+		// TODO replace literal "10" with global config
+		List<UserCategory> userCategories = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(category.get().getId())
+				.stream()
+				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
+				.collect(Collectors.toList());
 
 		if (userCategories.isEmpty()) {
 			response.setText("No ranked players have been found in this category. Players might still be in calibration phase."); // TODO add calibration phase requirement

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
@@ -24,6 +25,10 @@ public class UserCategory {
     private Integer draws;
     @Column(nullable = false)
     private Integer k;
+	@Column(nullable = false)
+	private Integer streakCount;
+    @Convert(converter = ContestOutcomeConverter.class)
+    private ContestOutcome streakType;
 
     protected UserCategory() {
         // no-contestArguments constructor required by JPA spec
@@ -37,5 +42,7 @@ public class UserCategory {
         this.losses = 0;
         this.draws = 0;
         this.k = 32;
+        this.streakCount = 0;
+        this.streakType = ContestOutcome.DRAW;
     }
 }

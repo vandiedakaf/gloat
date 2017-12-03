@@ -61,7 +61,6 @@ public abstract class ConfirmContest implements Callback {
         User reporter = getOrCreateUser(teamId, reporterId);
         User opponent = getOrCreateUser(teamId, opponentId);
 
-
         persistContests(callbackRequest, category, reporter, opponent);
 
         notifyChannelBefore();

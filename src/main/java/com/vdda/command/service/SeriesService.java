@@ -71,24 +71,15 @@ public class SeriesService extends ContestService {
 
         StringJoiner joiner = new StringJoiner(", ");
         if (winCount > 0) {
-            String wins = winCount + " win";
-            if (winCount > 1) {
-                wins += "s";
-            }
+            String wins = winCount + " " + (winCount > 1 ? ContestOutcome.WIN.getPlural() : ContestOutcome.WIN.name().toLowerCase());
             joiner.add(wins);
         }
         if (lossCount > 0) {
-            String losses = lossCount + " loss";
-            if (lossCount > 1) {
-                losses += "es";
-            }
+            String losses = lossCount + " " + (lossCount > 1 ? ContestOutcome.LOSS.getPlural() : ContestOutcome.LOSS.name().toLowerCase());
             joiner.add(losses);
         }
         if (drawCount > 0) {
-            String draws = drawCount + " draw";
-            if (drawCount > 1) {
-                draws += "s";
-            }
+            String draws = drawCount + " " + (drawCount > 1 ? ContestOutcome.DRAW.getPlural() : ContestOutcome.DRAW.name().toLowerCase());
             joiner.add(draws);
         }
 

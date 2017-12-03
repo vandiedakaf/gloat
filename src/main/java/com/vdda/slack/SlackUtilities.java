@@ -49,7 +49,7 @@ public class SlackUtilities {
         return usersListResponse;
     }
 
-    public Optional<User> getUser(String teamId, String userName) {
+    public Optional<User> getUserByUsername(String teamId, String userName) {
 
         Optional<String> token = getAccessToken(teamId);
         if (!token.isPresent()) {
@@ -68,6 +68,24 @@ public class SlackUtilities {
         }
 
         return users.stream().filter(u -> u.getName().equals(userNameSanitised)).findFirst();
+    }
+
+    public Optional<User> getUserById(String teamId, String userId) {
+
+        Optional<String> token = getAccessToken(teamId);
+        if (!token.isPresent()) {
+            return Optional.empty();
+        }
+
+        UsersListResponse usersListResponse = usersList(token.get());
+
+        List<User> users = usersListResponse.getMembers();
+
+        if (users == null) {
+            return Optional.empty();
+        }
+
+        return users.stream().filter(u -> u.getId().equals(userId)).findFirst();
     }
 
     private Optional<String> getAccessToken(String teamId){

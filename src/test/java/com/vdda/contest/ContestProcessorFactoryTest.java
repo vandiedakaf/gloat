@@ -14,7 +14,7 @@ public class ContestProcessorFactoryTest {
 
     @Before
     public void setUp() throws Exception {
-        contestProcessorFactory = new ContestProcessorFactory(new WinProcessor(null, null, null), new LossProcessor(null, null, null), new DrawProcessor(null, null, null));
+        contestProcessorFactory = new ContestProcessorFactory(new WinProcessor(null, null, null, null), new LossProcessor(null, null, null, null), new DrawProcessor(null, null, null, null));
 
     }
 

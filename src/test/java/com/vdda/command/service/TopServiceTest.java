@@ -65,7 +65,7 @@ public class TopServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
 			result = mockCategory();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = mockUserCategoriesGolden();
 		}};
 
@@ -80,7 +80,6 @@ public class TopServiceTest {
 			assertThat(response.getAttachments().get(2).getText(), containsString(TEST_USER_ID_5));
 			assertThat(response.getAttachments().get(2).getText(), containsString(USER_ID));
 			assertThat(response.getAttachments().get(2).getText(), containsString(TEST_USER_ID_6));
-
 		}};
 	}
 
@@ -90,7 +89,7 @@ public class TopServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
 			result = mockCategory();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = mockUserCategoriesUserInTop();
 		}};
 
@@ -114,7 +113,7 @@ public class TopServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
 			result = mockCategory();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = mockUserCategoriesDrawsIncluded();
 		}};
 
@@ -134,7 +133,7 @@ public class TopServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
 			result = mockCategory();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = mockUserCategoriesUserNotFound();
 		}};
 
@@ -158,7 +157,7 @@ public class TopServiceTest {
 			categoryRepository.findByTeamIdAndChannelId(anyString, anyString);
 			result = mockCategory();
 
-			userCategoryRepository.findAllByCategoryIdOrderByEloDesc(anyLong, anyInt);
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = new ArrayList<>();
 		}};
 
@@ -198,48 +197,72 @@ public class TopServiceTest {
 		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
 		UserCategory userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(8);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_2);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(7);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_3);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(6);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_4);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(5);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_5);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(4);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, USER_ID);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(3);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_6);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(2);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_7);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(1);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		return userCategories;
@@ -252,24 +275,32 @@ public class TopServiceTest {
 		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
 		UserCategory userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(5);
+		userCategory.setWins(4);
+		userCategory.setLosses(6);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, USER_ID);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(1);
+		userCategory.setWins(4);
+		userCategory.setLosses(6);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_3);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(3);
+		userCategory.setWins(4);
+		userCategory.setLosses(6);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_4);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(2);
+		userCategory.setWins(4);
+		userCategory.setLosses(6);
 		userCategories.add(userCategory);
 
 		return userCategories;
@@ -282,24 +313,36 @@ public class TopServiceTest {
 		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
 		UserCategory userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(5);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_2);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(4);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_3);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(3);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_4);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(2);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		return userCategories;
@@ -312,25 +355,28 @@ public class TopServiceTest {
 		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
 		UserCategory userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(5);
+		userCategory.setWins(10);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, USER_ID);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(1);
-		userCategory.setDraws(1);
+		userCategory.setDraws(10);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_3);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(3);
+		userCategory.setLosses(10);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_4);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(2);
+		userCategory.setDraws(10);
 		userCategories.add(userCategory);
 
 		return userCategories;

@@ -62,7 +62,7 @@ public class ContestServiceTest {
 		request = new Request(requestString);
 
 		new Expectations() {{
-			slackUtilities.getUser(TEAM_ID, USER_NAME);
+			slackUtilities.getUserByUsername(TEAM_ID, USER_NAME);
 			result = mockUser();
 		}};
 
@@ -98,7 +98,7 @@ public class ContestServiceTest {
 		request = new Request(requestString);
 
 		new Expectations() {{
-			slackUtilities.getUser(TEAM_ID, USER_NAME);
+			slackUtilities.getUserByUsername(TEAM_ID, USER_NAME);
 			result = mockUserSelf();
 		}};
 
@@ -119,7 +119,7 @@ public class ContestServiceTest {
 		request = new Request(requestString);
 
 		new Expectations() {{
-			slackUtilities.getUser(TEAM_ID, USER_NAME_SLACKBOT_1);
+			slackUtilities.getUserByUsername(TEAM_ID, USER_NAME_SLACKBOT_1);
 			result = mockUser();
 		}};
 
@@ -140,7 +140,7 @@ public class ContestServiceTest {
 		request = new Request(requestString);
 
 		new Expectations() {{
-			slackUtilities.getUser(TEAM_ID, USER_NAME_SLACKBOT_2);
+			slackUtilities.getUserByUsername(TEAM_ID, USER_NAME_SLACKBOT_2);
 			result = mockUser();
 		}};
 		contestService.processRequest(request);

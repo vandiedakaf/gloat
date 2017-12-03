@@ -43,7 +43,7 @@ public class SlackUtilitiesTest {
 
         expectationGolden();
 
-        Optional<User> user = slackUtilities.getUser(TEAM_ID, USER_NAME_AT);
+        Optional<User> user = slackUtilities.getUserByUsername(TEAM_ID, USER_NAME_AT);
         assertThat(user.isPresent(), is(true));
         assertThat(user.get().getId(), is(USER_ID));
     }
@@ -53,7 +53,7 @@ public class SlackUtilitiesTest {
 
         expectationGolden();
 
-        Optional<User> user = slackUtilities.getUser(TEAM_ID, USER_NAME);
+        Optional<User> user = slackUtilities.getUserByUsername(TEAM_ID, USER_NAME);
         assertThat(user.isPresent(), is(true));
         assertThat(user.get().getId(), is(USER_ID));
     }
@@ -63,7 +63,7 @@ public class SlackUtilitiesTest {
 
         expectationGolden();
 
-        Optional<User> user = slackUtilities.getUser(TEAM_ID, "I don't exist");
+        Optional<User> user = slackUtilities.getUserByUsername(TEAM_ID, "I don't exist");
         assertThat(user.isPresent(), is(false));
     }
 
@@ -75,7 +75,7 @@ public class SlackUtilitiesTest {
             result = null;
         }};
 
-        Optional<User> user = slackUtilities.getUser(TEAM_ID, USER_NAME_AT);
+        Optional<User> user = slackUtilities.getUserByUsername(TEAM_ID, USER_NAME_AT);
         assertThat(user.isPresent(), is(false));
     }
 
@@ -90,7 +90,7 @@ public class SlackUtilitiesTest {
             result = new IOException("test exception");
         }};
 
-        Optional<User> user = slackUtilities.getUser(TEAM_ID, USER_NAME);
+        Optional<User> user = slackUtilities.getUserByUsername(TEAM_ID, USER_NAME);
         assertThat(user.isPresent(), is(false));
     }
 
@@ -105,7 +105,7 @@ public class SlackUtilitiesTest {
             result = mockUsersListResponseFail();
         }};
 
-        Optional<User> user = slackUtilities.getUser(TEAM_ID, USER_NAME_AT);
+        Optional<User> user = slackUtilities.getUserByUsername(TEAM_ID, USER_NAME_AT);
         assertThat(user.isPresent(), is(false));
     }
 

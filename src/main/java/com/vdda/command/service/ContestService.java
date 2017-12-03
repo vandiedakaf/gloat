@@ -32,7 +32,7 @@ public abstract class ContestService {
 
 		final String teamId = request.getParameter(SlackParameters.TEAM_ID.toString());
 
-		Optional<User> user = slackUtilities.getUser(teamId, args.get(0));
+		Optional<User> user = slackUtilities.getUserByUsername(teamId, args.get(0));
 
 		if (!user.isPresent()) {
 			Response response = new Response();

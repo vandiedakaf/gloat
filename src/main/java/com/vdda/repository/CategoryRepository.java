@@ -13,4 +13,10 @@ public interface CategoryRepository extends CrudRepository<Category, Long> {
     @Query(value = "SELECT (sum(wins) + sum(losses) + sum(draws)) / 2 FROM user_category WHERE category_id = ? GROUP BY category_id;", nativeQuery = true)
     int sumTotalPlayedByCategory(Long categoryId);
 
+    @Query(value = "SELECT count(*) FROM user_category WHERE category_id = ? GROUP BY category_id;", nativeQuery = true)
+    int longestCurrentSpreeWin(Long categoryId);
+
+	@Query(value = "SELECT count(*) FROM user_category WHERE category_id = ? GROUP BY category_id;", nativeQuery = true)
+	int longestCurrentSpreeLoss(Long categoryId);
+
 }
