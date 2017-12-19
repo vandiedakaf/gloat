@@ -13,5 +13,5 @@ public interface UserCategoryRepository extends CrudRepository<UserCategory, Use
 
 	Optional<UserCategory> findUserCategoryByUserCategoryPK(UserCategoryPK userCategoryPK);
 
-	List<UserCategory> findAllByUserCategoryPK_CategoryIdOrderByStreakCountDescStreakTypeDesc(Long categoryId);
+	List<UserCategory> findAllByUserCategoryPK_CategoryIdOrderByStreakCountDescStreakTypeDescCreatedDesc(Long categoryId);
 }

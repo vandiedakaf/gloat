@@ -3,10 +3,8 @@ package com.vdda.jpa;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -29,6 +27,10 @@ public class UserCategory {
 	private Integer streakCount;
     @Convert(converter = ContestOutcomeConverter.class)
     private ContestOutcome streakType;
+    @Basic(optional = false)
+    @Column(insertable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date created;
 
     protected UserCategory() {
         // no-contestArguments constructor required by JPA spec

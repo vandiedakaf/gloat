@@ -20,6 +20,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,6 +33,13 @@ public class StatsServiceTest {
 	private static final String USER_ID = "userId";
 	private static final String OTHER_USER_ID = "otherUserId";
 	private static final String CHANNEL_ID = "channelId";
+	private static final String TEST_USER_ID_1 = "testUserId1";
+	private static final String TEST_USER_ID_2 = "testUserId2";
+	private static final String TEST_USER_ID_3 = "testUserId3";
+	private static final String TEST_USER_ID_4 = "testUserId4";
+	private static final String TEST_USER_ID_5 = "testUserId5";
+	private static final String TEST_USER_ID_6 = "testUserId6";
+	private static final String TEST_USER_ID_7 = "testUserId7";
 
 	@Tested
 	private StatsService statsService;
@@ -75,6 +84,9 @@ public class StatsServiceTest {
 
 			slackUtilities.getUserById(TEAM_ID, USER_ID);
 			result = mockSlackUserGolden();
+
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
+			result = mockUserCategoriesDrawsIncluded();
 		}};
 
 		statsService.processRequest(request);
@@ -104,6 +116,9 @@ public class StatsServiceTest {
 
 			userCategoryRepository.findOne((UserCategoryPK) any);
 			result = mockUserCategoryGolden();
+
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
+			result = mockUserCategoriesDrawsIncluded();
 		}};
 
 		statsService.processRequest(request);
@@ -217,5 +232,39 @@ public class StatsServiceTest {
 		userCategory.setElo(1);
 
 		return userCategory;
+	}
+
+	private List<UserCategory> mockUserCategoriesDrawsIncluded() {
+		List<UserCategory> userCategories = new ArrayList<>();
+
+		User user = new User(TEAM_ID, TEST_USER_ID_1);
+		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
+		UserCategory userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(5);
+		userCategory.setWins(10);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, USER_ID);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(1);
+		userCategory.setDraws(10);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_3);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(3);
+		userCategory.setLosses(10);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_4);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(2);
+		userCategory.setDraws(10);
+		userCategories.add(userCategory);
+
+		return userCategories;
 	}
 }

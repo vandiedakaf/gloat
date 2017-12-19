@@ -13,6 +13,7 @@ import com.vdda.slack.*;
 import com.vdda.tool.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,13 +21,19 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
 public class StatsService {
 
-	private static final String COLOUR_GOLD = "#FFD700";
 	private static final String COLOUR_GREEN = "#86C53C";
+	private static final String COLOUR_GOLD = "#FFD700";
+	private static final int NUM_TOP_USERS = 3;
 
 	private final RestTemplate restTemplate;
 	private final SlackUtilities slackUtilities;
@@ -48,6 +55,13 @@ public class StatsService {
 	@Async
 	public void processRequest(Request request) {
 
+		Response response = getStats(request);
+
+		restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
+	}
+
+	private Response getStats(Request request) {
+
 		final String teamId = request.getParameter(SlackParameters.TEAM_ID.toString());
 		final String channelId = request.getParameter(SlackParameters.CHANNEL_ID.toString());
 
@@ -64,15 +78,13 @@ public class StatsService {
 			slackUser = slackUtilities.getUserById(teamId, userId);
 			if (!slackUser.isPresent()) {
 				response.setText("Strange, it seems like you don't exist on slack.");
-				restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
-				return;
+				return response;
 			}
 		} else {
 			slackUser = slackUtilities.getUserByUsername(teamId, args.get(1));
 			if (!slackUser.isPresent()) {
 				response.setText("Sorry, seems like " + args.get(1) + " is some imaginary person.");
-				restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
-				return;
+				return response;
 			}
 			userId = slackUser.get().getId();
 		}
@@ -80,41 +92,45 @@ public class StatsService {
 		Optional<Category> category = categoryRepository.findByTeamIdAndChannelId(teamId, channelId);
 		if (!category.isPresent()) {
 			response.setText("No contests have been registered in this category.");
-			restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
-			return;
+			return response;
 		}
 
 		Optional<com.vdda.jpa.User> user = userRepository.findByTeamIdAndUserId(teamId, userId);
 		if (!user.isPresent()) {
 			response.setText("No contests have been registered for this user.");
-			restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
-			return;
+			return response;
 		}
 
 		UserCategoryPK userCategoryPK = new UserCategoryPK(user.get(), category.get().getId());
 		UserCategory userCategory = userCategoryRepository.findOne(userCategoryPK);
 		if (userCategory == null) {
 			response.setText("No contests have been registered for this user.");
-			restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
-			return;
+			return response;
 		}
 
 		List<Attachment> attachments = new ArrayList<>();
+		attachments.add(getChannelStats(teamId, category.get(), request.getParameter(SlackParameters.USER_ID.toString())));
+		attachments.add(getPlayerStats(teamId, slackUser.get(), category.get(), user.get(), userCategory));
+		response.setAttachments(attachments);
 
+		return response;
+	}
+
+	private Attachment getChannelStats(String teamId, Category category, String userId) {
 		Attachment channelStats = new Attachment();
 		channelStats.setFallback("Channel Stats");
 		channelStats.setTitle("Channel Stats");
+		channelStats.setColor(COLOUR_GREEN);
 
 		List<Field> channelFields = new ArrayList<>();
 
-
 		Field numberOfContests = new Field();
 		numberOfContests.setTitle("Number of Contests");
-		numberOfContests.setValue(Integer.toString(categoryRepository.sumTotalPlayedByCategory(category.get().getId())));
+		numberOfContests.setValue(Integer.toString(categoryRepository.sumTotalPlayedByCategory(category.getId())));
 		numberOfContests.setShortMessage(true);
 		channelFields.add(numberOfContests);
 
-		Optional<UserCategory> maxStreakCount = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByStreakCountDescStreakTypeDesc(category.get().getId())
+		Optional<UserCategory> maxStreakCount = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByStreakCountDescStreakTypeDescCreatedDesc(category.getId())
 				.stream()
 				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
 				.findFirst();
@@ -127,13 +143,62 @@ public class StatsService {
 			channelFields.add(maxStreak);
 		}
 
-		channelStats.setFields(channelFields);
-		channelStats.setColor(COLOUR_GREEN);
-		attachments.add(channelStats);
+		// TODO replace literal "10" with global config
+		List<UserCategory> userCategories = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(category.getId())
+				.stream()
+				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
+				.collect(Collectors.toList());
 
+		if (userCategories.isEmpty()) {
+			channelStats.setFields(channelFields);
+			return channelStats;
+		}
+
+		List<Pair<Integer, UserCategory>> rankedUserCategories = determineRankedPairs(userCategories);
+
+		List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(userId, rankedUserCategories, NUM_TOP_USERS);
+
+		boolean containsDraws = rankedUserCategoriesFiltered.stream()
+				.mapToInt(u -> u.getSecond().getDraws())
+				.sum() > 0;
+
+		Field topField = new Field();
+		if (containsDraws) {
+			topField.setTitle("Rankings. (Rating) Name [Wins-Losses-Draws]");
+		} else {
+			topField.setTitle("Rankings. (Rating) Name [Wins-Losses]");
+		}
+
+		StringBuilder textTopContestants = new StringBuilder();
+		rankedUserCategoriesFiltered.stream()
+				.filter(p -> p.getFirst() <= NUM_TOP_USERS)
+				.collect(toList())
+				.forEach(u -> addContestant(u, textTopContestants, containsDraws));
+
+		topField.setValue(textTopContestants.toString());
+
+		channelFields.add(topField);
+
+		if (rankedUserCategoriesFiltered.size() > NUM_TOP_USERS) {
+			Field neighbourField = new Field();
+			StringBuilder textNeighbouringContestants = new StringBuilder();
+			rankedUserCategoriesFiltered.stream()
+					.filter(p -> p.getFirst() > NUM_TOP_USERS)
+					.collect(toList())
+					.forEach(u -> addContestant(u, textNeighbouringContestants, containsDraws));
+
+			neighbourField.setValue(textNeighbouringContestants.toString());
+			channelFields.add(neighbourField);
+		}
+
+		channelStats.setFields(channelFields);
+		return channelStats;
+	}
+
+	private Attachment getPlayerStats(String teamId, User slackUser, Category category, com.vdda.jpa.User user, UserCategory userCategory) {
 		Attachment playerStats = new Attachment();
 		playerStats.setFallback("Player Stats");
-		playerStats.setTitle("Player Stats: <@" + slackUser.get().getName() + ">");
+		playerStats.setTitle("Player Stats: <@" + slackUser.getName() + ">");
 
 		List<Field> playerFields = new ArrayList<>();
 
@@ -150,7 +215,7 @@ public class StatsService {
 		playerFields.add(playerStreak);
 
 		// TODO replace literal "10" with global config
-		Optional<UserUserCategory> frenemy = userUserCategoryRepository.findWilsonMax(user.get().getId(), category.get().getId())
+		Optional<UserUserCategory> frenemy = userUserCategoryRepository.findWilsonMax(user.getId(), category.getId())
 				.stream()
 				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
 				.findFirst();
@@ -163,7 +228,7 @@ public class StatsService {
 		}
 
 		// TODO replace literal "10" with global config
-		Optional<UserUserCategory> nemesis = userUserCategoryRepository.findWilsonMin(user.get().getId(), category.get().getId())
+		Optional<UserUserCategory> nemesis = userUserCategoryRepository.findWilsonMin(user.getId(), category.getId())
 				.stream()
 				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
 				.findFirst();
@@ -178,11 +243,60 @@ public class StatsService {
 		playerStats.setFields(playerFields);
 
 		playerStats.setColor(COLOUR_GOLD);
-		attachments.add(playerStats);
+		return playerStats;
+	}
 
-		response.setAttachments(attachments);
+	private List<Pair<Integer, UserCategory>> getFilteredList(String userId, List<Pair<Integer, UserCategory>> rankedUserCategories, int numTopUsers) {
 
-		restTemplate.postForLocation(request.getParameter(SlackParameters.RESPONSE_URL.toString()), response);
+		List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered;
+
+		Pair<Integer, UserCategory> userCategoryPair = rankedUserCategories
+				.stream()
+				.filter(p -> p.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
+				.findFirst()
+				.orElse(null);
+
+		Predicate<Pair<Integer, UserCategory>> topFilterPredicate = topPlayersOnly(numTopUsers);
+		if (userCategoryPair != null) {
+			topFilterPredicate = topPlayersAndNeighbours(numTopUsers, userCategoryPair.getFirst());
+		}
+
+		rankedUserCategoriesFiltered = rankedUserCategories.stream()
+				.filter(topFilterPredicate)
+				.collect(toList());
+
+		return rankedUserCategoriesFiltered;
+	}
+
+	private Predicate<Pair<Integer, UserCategory>> topPlayersOnly(Integer topCount) {
+		return p -> p.getFirst() <= topCount;
+	}
+
+	private Predicate<Pair<Integer, UserCategory>> topPlayersAndNeighbours(Integer topCount, Integer userRank) {
+		return p -> (p.getFirst() <= topCount) || Math.abs(p.getFirst() - userRank) <= 1;
+	}
+
+	private List<Pair<Integer, UserCategory>> determineRankedPairs(List<UserCategory> userCategories) {
+		return IntStream.range(0, userCategories.size())
+				.mapToObj(i -> Pair.of(i + 1, userCategories.get(i)))
+				.collect(toList());
+	}
+
+	private void addContestant(Pair<Integer, UserCategory> userCategoryPair, StringBuilder stringBuilder, boolean containsDraws) {
+		stringBuilder.append(userCategoryPair.getFirst());
+		stringBuilder.append(". (");
+		stringBuilder.append(userCategoryPair.getSecond().getElo());
+		stringBuilder.append(") <@");
+		stringBuilder.append(userCategoryPair.getSecond().getUserCategoryPK().getUser().getUserId());
+		stringBuilder.append("> [");
+		stringBuilder.append(userCategoryPair.getSecond().getWins());
+		stringBuilder.append("-");
+		stringBuilder.append(userCategoryPair.getSecond().getLosses());
+		if (containsDraws) {
+			stringBuilder.append("-");
+			stringBuilder.append(userCategoryPair.getSecond().getDraws());
+		}
+		stringBuilder.append("]\n");
 	}
 
 }
