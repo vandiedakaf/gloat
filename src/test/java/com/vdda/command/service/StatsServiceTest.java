@@ -271,7 +271,7 @@ public class StatsServiceTest {
 		new Verifications() {{
 			Response response;
 			restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
-			assertThat(response.getAttachments().get(0).getFields().get(1).getTitle(), containsString("Longest Streak"));
+			assertThat(response.getAttachments().get(0).getFields().get(1).getTitle(), containsString("Longest Current Streak"));
 			assertThat(response.getAttachments().get(0).getFields().get(2).getTitle(), containsString("Rank. (Rating) Name [Wins-Losses]"));
 		}};
 	}
