@@ -279,20 +279,21 @@ public class StatsServiceTest {
 	@Test
 	public void processGoldenUserNotInTop() throws Exception {
 
-		request = new Request(baseRequestString);
+		String requestString = baseRequestString + " " + OTHER_USER_ID;
+		request = new Request(requestString);
 
 		new Expectations() {{
+			slackUtilities.getUserByUsername(TEAM_ID, OTHER_USER_ID);
+			result = mockSlackUserGolden();
+
 			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
 			result = mockCategoryGolden();
 
-			userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
+			userRepository.findByTeamIdAndUserId(TEAM_ID, OTHER_USER_ID);
 			result = mockUserGolden();
 
 			userCategoryRepository.findOne((UserCategoryPK) any);
 			result = mockUserCategoryGolden();
-
-			slackUtilities.getUserById(TEAM_ID, USER_ID);
-			result = mockSlackUserGolden();
 
 			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
 			result = mockUserCategoriesGolden();
@@ -308,7 +309,7 @@ public class StatsServiceTest {
 			assertThat(response.getAttachments().get(0).getFields().get(1).getValue(), containsString(TEST_USER_ID_2));
 			assertThat(response.getAttachments().get(0).getFields().get(1).getValue(), containsString(TEST_USER_ID_3));
 			assertThat(response.getAttachments().get(0).getFields().get(2).getValue(), containsString(TEST_USER_ID_5));
-			assertThat(response.getAttachments().get(0).getFields().get(2).getValue(), containsString(USER_ID));
+			assertThat(response.getAttachments().get(0).getFields().get(2).getValue(), containsString(OTHER_USER_ID));
 			assertThat(response.getAttachments().get(0).getFields().get(2).getValue(), containsString(TEST_USER_ID_6));
 		}};
 	}
@@ -435,7 +436,7 @@ public class StatsServiceTest {
 		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
-		user = new User(TEAM_ID, USER_ID);
+		user = new User(TEAM_ID, OTHER_USER_ID);
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(3);

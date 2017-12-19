@@ -113,7 +113,7 @@ public class StatsService {
 		}
 
 		List<Attachment> attachments = new ArrayList<>();
-		attachments.add(getChannelStats(teamId, category.get(), request.getParameter(SlackParameters.USER_ID.toString())));
+		attachments.add(getChannelStats(teamId, category.get(), userId));
 		attachments.add(getPlayerStats(teamId, slackUser.get(), category.get(), user.get(), userCategory));
 		response.setAttachments(attachments);
 
@@ -247,32 +247,20 @@ public class StatsService {
 
 	private List<Pair<Integer, UserCategory>> getFilteredList(String userId, List<Pair<Integer, UserCategory>> rankedUserCategories, int numTopUsers) {
 
-		List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered;
-
 		Pair<Integer, UserCategory> userCategoryPair = rankedUserCategories
 				.stream()
 				.filter(p -> p.getSecond().getUserCategoryPK().getUser().getUserId().equals(userId))
 				.findFirst()
 				.orElse(null);
 
-		Predicate<Pair<Integer, UserCategory>> topFilterPredicate = topPlayersOnly(numTopUsers);
+		Predicate<Pair<Integer, UserCategory>> topFilterPredicate = p -> p.getFirst() <= numTopUsers;
 		if (userCategoryPair != null) {
-			topFilterPredicate = topPlayersAndNeighbours(numTopUsers, userCategoryPair.getFirst());
+			topFilterPredicate = p -> (p.getFirst() <= numTopUsers) || Math.abs(p.getFirst() - userCategoryPair.getFirst()) <= 1;
 		}
 
-		rankedUserCategoriesFiltered = rankedUserCategories.stream()
+		return rankedUserCategories.stream()
 				.filter(topFilterPredicate)
 				.collect(toList());
-
-		return rankedUserCategoriesFiltered;
-	}
-
-	private Predicate<Pair<Integer, UserCategory>> topPlayersOnly(Integer topCount) {
-		return p -> p.getFirst() <= topCount;
-	}
-
-	private Predicate<Pair<Integer, UserCategory>> topPlayersAndNeighbours(Integer topCount, Integer userRank) {
-		return p -> (p.getFirst() <= topCount) || Math.abs(p.getFirst() - userRank) <= 1;
 	}
 
 	private List<Pair<Integer, UserCategory>> determineRankedPairs(List<UserCategory> userCategories) {
