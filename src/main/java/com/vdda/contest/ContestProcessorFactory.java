@@ -1,6 +1,6 @@
 package com.vdda.contest;
 
-import com.vdda.jpa.ContestOutcome;
+import com.vdda.domain.jpa.ContestOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

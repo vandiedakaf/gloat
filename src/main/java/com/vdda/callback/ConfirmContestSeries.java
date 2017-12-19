@@ -1,13 +1,12 @@
 package com.vdda.callback;
 
-import com.vdda.EnvProperties;
 import com.vdda.contest.ContestResolver;
-import com.vdda.jpa.*;
-import com.vdda.jpa.User;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.ContestRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserRepository;
+import com.vdda.domain.jpa.*;
+import com.vdda.domain.jpa.User;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.ContestRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserRepository;
 import com.vdda.slack.Attachment;
 import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +29,9 @@ public class ConfirmContestSeries extends ConfirmContest {
     private List<String> seriesOutcomeList;
 
     @Autowired
-    public ConfirmContestSeries(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
+    public ConfirmContestSeries(CategoryRepository categoryRepository, UserRepository userRepository, ContestRepository contestRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
 
-        super(envProperties, categoryRepository, userRepository, contestResolver, userCategoryRepository, slackUtilities);
+        super(categoryRepository, userRepository, contestResolver, userCategoryRepository, slackUtilities);
         this.contestRepository = contestRepository;
     }
 

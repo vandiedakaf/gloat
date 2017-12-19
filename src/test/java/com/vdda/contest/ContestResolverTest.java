@@ -1,10 +1,10 @@
 package com.vdda.contest;
 
-import com.vdda.jpa.Category;
-import com.vdda.jpa.Contest;
-import com.vdda.jpa.ContestOutcome;
-import com.vdda.jpa.User;
-import com.vdda.repository.ContestRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.Contest;
+import com.vdda.domain.jpa.ContestOutcome;
+import com.vdda.domain.jpa.User;
+import com.vdda.domain.repository.ContestRepository;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Tested;

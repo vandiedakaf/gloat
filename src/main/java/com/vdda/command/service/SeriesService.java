@@ -1,7 +1,7 @@
 package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
-import com.vdda.jpa.ContestOutcome;
+import com.vdda.domain.jpa.ContestOutcome;
 import com.vdda.slack.Action;
 import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;

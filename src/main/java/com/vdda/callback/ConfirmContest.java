@@ -1,18 +1,18 @@
 package com.vdda.callback;
 
-import com.vdda.EnvProperties;
 import com.vdda.contest.ContestResolver;
-import com.vdda.jpa.Category;
-import com.vdda.jpa.User;
-import com.vdda.jpa.UserCategory;
-import com.vdda.jpa.UserCategoryPK;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.User;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.jpa.UserCategoryPK;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserRepository;
 import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackUtilities;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,15 +23,16 @@ import java.util.Optional;
 @Slf4j
 public abstract class ConfirmContest implements Callback {
 
-    private final EnvProperties envProperties;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final ContestResolver contestResolver;
     private final UserCategoryRepository userCategoryRepository;
     final SlackUtilities slackUtilities;
 
-    public ConfirmContest(EnvProperties envProperties, CategoryRepository categoryRepository, UserRepository userRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
-        this.envProperties = envProperties;
+    @Value("${gloat.elo-init}")
+    private int elo;
+
+    public ConfirmContest(CategoryRepository categoryRepository, UserRepository userRepository, ContestResolver contestResolver, UserCategoryRepository userCategoryRepository, SlackUtilities slackUtilities) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
         this.contestResolver = contestResolver;
@@ -96,7 +97,7 @@ public abstract class ConfirmContest implements Callback {
         UserCategory userCategory = userCategoryRepository.findOne(userCategoryPK);
         if (userCategory == null) {
             userCategory = new UserCategory(userCategoryPK);
-            userCategory.setElo(envProperties.getEloInit());
+            userCategory.setElo(elo);
             userCategory = userCategoryRepository.save(userCategory);
         }
         return userCategory;

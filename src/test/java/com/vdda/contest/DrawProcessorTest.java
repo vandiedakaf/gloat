@@ -1,21 +1,27 @@
 package com.vdda.contest;
 
-import com.vdda.EnvProperties;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.jpa.UserUserCategory;
+import com.vdda.domain.repository.ContestRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserUserCategoryRepository;
 import com.vdda.elo.EloCalculator;
-import com.vdda.jpa.UserCategory;
-import com.vdda.repository.ContestRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserUserCategoryRepository;
 import mockit.Mocked;
-import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class DrawProcessorTest {
-    @Tested
+
+    @Autowired
     DrawProcessor drawProcessor;
 
     @Mocked
@@ -24,12 +30,10 @@ public class DrawProcessorTest {
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private UserUserCategoryRepository userUserCategoryRepository;
-    @Mocked
-    private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        drawProcessor = new DrawProcessor(envProperties, contestRepository, userCategoryRepository, userUserCategoryRepository);
+        drawProcessor = new DrawProcessor(contestRepository, userCategoryRepository, userUserCategoryRepository);
     }
 
     @Test
@@ -55,4 +59,18 @@ public class DrawProcessorTest {
         assertEquals((Integer) 4, reporterCategory.getDraws());
         assertEquals((Integer) 6, opponentCategory.getDraws());
     }
+
+	@Test
+	public void adjustUserUserCategoryStats() throws Exception {
+		UserUserCategory userUserCategoryReporter = new UserUserCategory(null);
+		userUserCategoryReporter.setDraws(3);
+
+		UserUserCategory userUserCategoryOpponent = new UserUserCategory(null);
+		userUserCategoryOpponent.setDraws(5);
+
+		drawProcessor.adjustUserUserCategoryStats(userUserCategoryReporter, userUserCategoryOpponent);
+
+		assertEquals((Integer) 4, userUserCategoryReporter.getDraws());
+		assertEquals((Integer) 6, userUserCategoryOpponent.getDraws());
+	}
 }

@@ -7,8 +7,8 @@ import com.github.seratch.jslack.api.methods.request.users.UsersListRequest;
 import com.github.seratch.jslack.api.methods.response.chat.ChatPostMessageResponse;
 import com.github.seratch.jslack.api.methods.response.users.UsersListResponse;
 import com.github.seratch.jslack.api.model.User;
-import com.vdda.jpa.Oauth;
-import com.vdda.repository.OauthRepository;
+import com.vdda.domain.jpa.Oauth;
+import com.vdda.domain.repository.OauthRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,109 +20,104 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class SlackUtilities {
-    private final Slack slack = Slack.getInstance();
-    private final OauthRepository oauthRepository;
+	private final Slack slack = Slack.getInstance();
+	private final OauthRepository oauthRepository;
 
-    @Autowired
-    public SlackUtilities(OauthRepository oauthRepository) {
-        this.oauthRepository = oauthRepository;
-    }
+	@Autowired
+	public SlackUtilities(OauthRepository oauthRepository) {
+		this.oauthRepository = oauthRepository;
+	}
 
-    private UsersListResponse usersList(String token) {
+	private Optional<UsersListResponse> usersList(String token) {
 
-        UsersListResponse usersListResponse = new UsersListResponse();
+		UsersListResponse usersListResponse = new UsersListResponse();
 
-        try {
-            usersListResponse = slack.methods().usersList(
-                    UsersListRequest.builder()
-                            .token(token)
-                            .presence(1)
-                            .build());
-        } catch (IOException | SlackApiException e) {
-            log.debug("UsersListRequest", e);
-        }
+		try {
+			usersListResponse = slack.methods().usersList(
+					UsersListRequest.builder()
+							.token(token)
+							.presence(1)
+							.build());
+		} catch (IOException | SlackApiException e) {
+			log.debug("UsersListRequest", e);
+			return Optional.empty();
+		}
 
-        if (!usersListResponse.isOk()) {
-            log.error("Could not retrieve usersListResponse: {}", usersListResponse.toString());
-        }
+		if (!usersListResponse.isOk()) {
+			log.error("Could not retrieve usersListResponse: {}", usersListResponse.toString());
+			return Optional.empty();
+		}
 
-        return usersListResponse;
-    }
+		return Optional.of(usersListResponse);
+	}
 
-    public Optional<User> getUserByUsername(String teamId, String userName) {
+	public Optional<User> getUserByUsername(String teamId, String userName) {
 
-        Optional<String> token = getAccessToken(teamId);
-        if (!token.isPresent()) {
-            return Optional.empty();
-        }
+		Optional<List<User>> users = getUsers(teamId);
+		if (!users.isPresent()) {
+			return Optional.empty();
+		}
 
-        // remove potential '@' from userName
-        String userNameSanitised = userName.replaceAll("@", "");
+		// remove potential '@' from userName
+		String userNameSanitised = userName.replaceAll("@", "");
 
-        UsersListResponse usersListResponse = usersList(token.get());
+		return users.get().stream().filter(u -> u.getName().equals(userNameSanitised)).findFirst();
+	}
 
-        List<User> users = usersListResponse.getMembers();
+	public Optional<User> getUserById(String teamId, String userId) {
 
-        if (users == null) {
-            return Optional.empty();
-        }
+		Optional<List<User>> users = getUsers(teamId);
 
-        return users.stream().filter(u -> u.getName().equals(userNameSanitised)).findFirst();
-    }
+		return users.flatMap(l -> l.stream().filter(u -> u.getId().equals(userId)).findFirst());
+	}
 
-    public Optional<User> getUserById(String teamId, String userId) {
+	private Optional<List<User>> getUsers(String teamId) {
 
-        Optional<String> token = getAccessToken(teamId);
-        if (!token.isPresent()) {
-            return Optional.empty();
-        }
+		Optional<String> token = getAccessToken(teamId);
+		if (!token.isPresent()) {
+			return Optional.empty();
+		}
 
-        UsersListResponse usersListResponse = usersList(token.get());
+		Optional<UsersListResponse> usersListResponse = usersList(token.get());
 
-        List<User> users = usersListResponse.getMembers();
+		return usersListResponse.map(UsersListResponse::getMembers);
+	}
 
-        if (users == null) {
-            return Optional.empty();
-        }
+	private Optional<String> getAccessToken(String teamId) {
+		Oauth oauth = oauthRepository.findOne(teamId);
+		if (oauth == null) {
+			log.warn("Oauth token not found");
+			return Optional.empty();
+		}
+		return Optional.of(oauth.getAccessToken());
+	}
 
-        return users.stream().filter(u -> u.getId().equals(userId)).findFirst();
-    }
+	public boolean sendChatMessage(String teamId, String channelId, String message) {
 
-    private Optional<String> getAccessToken(String teamId){
-        Oauth oauth = oauthRepository.findOne(teamId);
-        if (oauth == null) {
-            log.warn("Oauth token not found");
-            return Optional.empty();
-        }
-        return Optional.of(oauth.getAccessToken());
-    }
+		Optional<String> token = getAccessToken(teamId);
+		if (!token.isPresent()) {
+			return false;
+		}
 
-    public boolean sendChatMessage(String teamId, String channelId, String message) {
+		ChatPostMessageResponse chatPostMessageResponse;
+		try {
+			chatPostMessageResponse = slack.methods().chatPostMessage(
+					ChatPostMessageRequest.builder()
+							.token(token.get())
+							.channel(channelId)
+							.text(message)
+							.build());
+		} catch (IOException | SlackApiException e) {
+			log.debug("ChatPostMessageRequest", e);
+			return false;
+		}
 
-        Optional<String> token = getAccessToken(teamId);
-        if (!token.isPresent()) {
-            return false;
-        }
+		if (!chatPostMessageResponse.isOk()) {
+			log.error("Could not send ChatPostMessageRequest: {}", chatPostMessageResponse.toString());
+			return false;
+		}
 
-        ChatPostMessageResponse chatPostMessageResponse;
-        try {
-            chatPostMessageResponse = slack.methods().chatPostMessage(
-                    ChatPostMessageRequest.builder()
-                            .token(token.get())
-                            .channel(channelId)
-                            .text(message)
-                            .build());
-        } catch (IOException | SlackApiException e) {
-            log.debug("ChatPostMessageRequest", e);
-            return false;
-        }
-
-        if (!chatPostMessageResponse.isOk()) {
-            log.error("Could not send ChatPostMessageRequest: {}", chatPostMessageResponse.toString());
-            return false;
-        }
-
-        return true;
-    }
+		return true;
+	}
 
 }
