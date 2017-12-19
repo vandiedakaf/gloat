@@ -1,7 +1,7 @@
 package com.vdda.contest;
 
-import com.vdda.jpa.Contest;
-import com.vdda.repository.ContestRepository;
+import com.vdda.domain.jpa.Contest;
+import com.vdda.domain.repository.ContestRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;

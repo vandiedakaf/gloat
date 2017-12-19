@@ -1,15 +1,16 @@
 package com.vdda.command.service;
 
-import com.vdda.jpa.Category;
-import com.vdda.jpa.UserCategory;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.UserCategoryRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
 import com.vdda.tool.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +27,9 @@ public class GloatService {
 	private final UserCategoryRepository userCategoryRepository;
 	private final CategoryRepository categoryRepository;
 	private final SlackUtilities slackUtilities;
+
+	@Value("${gloat.calibration}")
+	private int calibration;
 
 	@Autowired
 	public GloatService(RestTemplate restTemplate, UserCategoryRepository userCategoryRepository, CategoryRepository categoryRepository, SlackUtilities slackUtilities) {
@@ -53,10 +57,9 @@ public class GloatService {
 			return;
 		}
 
-		// TODO replace literal "10" with global config
 		List<UserCategory> userCategories = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(category.get().getId())
 				.stream()
-				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
+				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= calibration)
 				.collect(Collectors.toList());
 
 		if (userCategories.isEmpty()) {

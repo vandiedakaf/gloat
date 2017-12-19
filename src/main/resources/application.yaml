@@ -1,4 +1,6 @@
-env.elo-init: 1500
+gloat:
+  elo-init: 1500
+  calibration: 10
 
 logging:
   level:

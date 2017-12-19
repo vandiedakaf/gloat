@@ -1,12 +1,12 @@
 package com.vdda.command.service;
 
-import com.vdda.jpa.Category;
-import com.vdda.jpa.User;
-import com.vdda.jpa.UserCategory;
-import com.vdda.jpa.UserCategoryPK;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.User;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.jpa.UserCategoryPK;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserRepository;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
 import com.vdda.tool.Request;

@@ -6,8 +6,8 @@ import com.github.seratch.jslack.api.methods.request.users.UsersListRequest;
 import com.github.seratch.jslack.api.methods.response.chat.ChatPostMessageResponse;
 import com.github.seratch.jslack.api.methods.response.users.UsersListResponse;
 import com.github.seratch.jslack.api.model.User;
-import com.vdda.jpa.Oauth;
-import com.vdda.repository.OauthRepository;
+import com.vdda.domain.jpa.Oauth;
+import com.vdda.domain.repository.OauthRepository;
 import mockit.Expectations;
 import mockit.Injectable;
 import mockit.Mocked;
@@ -39,7 +39,7 @@ public class SlackUtilitiesTest {
     OauthRepository oauthRepository;
 
     @Test
-    public void userExisting() throws Exception {
+    public void userByUsernameExisting() throws Exception {
 
         expectationGolden();
 
@@ -49,7 +49,7 @@ public class SlackUtilitiesTest {
     }
 
     @Test
-    public void userExistingNoAtSymbol() throws Exception {
+    public void userByUsernameExistingNoAtSymbol() throws Exception {
 
         expectationGolden();
 
@@ -59,13 +59,47 @@ public class SlackUtilitiesTest {
     }
 
     @Test
-    public void userNotExist() throws Exception {
+    public void userByUsernameNotExist() throws Exception {
 
         expectationGolden();
 
         Optional<User> user = slackUtilities.getUserByUsername(TEAM_ID, "I don't exist");
         assertThat(user.isPresent(), is(false));
     }
+
+    @Test
+    public void userByIdExisting() throws Exception {
+
+        expectationGolden();
+
+        Optional<User> user = slackUtilities.getUserById(TEAM_ID, USER_ID);
+        assertThat(user.isPresent(), is(true));
+        assertThat(user.get().getId(), is(USER_ID));
+    }
+
+    @Test
+    public void userByIdNotExist() throws Exception {
+
+        expectationGolden();
+
+        Optional<User> user = slackUtilities.getUserById(TEAM_ID, "I don't exist");
+        assertThat(user.isPresent(), is(false));
+    }
+
+    @Test
+	public void usersListByIdResponseFail() throws Exception {
+
+		new Expectations() {{
+			oauthRepository.findOne(TEAM_ID);
+			result = new Oauth(TEAM_ID, "accessToken");
+
+			slack.methods().usersList(withNotNull());
+			result = mockUsersListResponseFail();
+		}};
+
+		Optional<User> user = slackUtilities.getUserById(TEAM_ID, USER_ID);
+		assertThat(user.isPresent(), is(false));
+	}
 
     @Test
     public void oauthNotExist() throws Exception {
@@ -81,7 +115,7 @@ public class SlackUtilitiesTest {
 
     @Test
     public void tokenInvalid(@Mocked Slack slack) throws Exception {
-
+        // mock throwing exception from slack
         new Expectations() {{
             oauthRepository.findOne(TEAM_ID);
             result = new Oauth(TEAM_ID, "accessToken");
@@ -95,7 +129,7 @@ public class SlackUtilitiesTest {
     }
 
     @Test
-    public void usersListResponseFail() throws Exception {
+    public void usersListByUsernameResponseFail() throws Exception {
 
         new Expectations() {{
             oauthRepository.findOne(TEAM_ID);

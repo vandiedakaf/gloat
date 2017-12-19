@@ -1,13 +1,13 @@
 package com.vdda.contest;
 
-import com.vdda.EnvProperties;
+import com.vdda.domain.jpa.*;
+import com.vdda.domain.repository.ContestRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserUserCategoryRepository;
 import com.vdda.elo.EloCalculator;
-import com.vdda.jpa.*;
-import com.vdda.repository.ContestRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserUserCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public abstract class ContestProcessor {
 
-	private EnvProperties envProperties;
 	private ContestRepository contestRepository;
 	private UserCategoryRepository userCategoryRepository;
 	private UserUserCategoryRepository userUserCategoryRepository;
 
+	@Value("${gloat.elo-init}")
+	private int elo;
+
 	@Autowired
-	public ContestProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, UserUserCategoryRepository userUserCategoryRepository) {
-		this.envProperties = envProperties;
+	public ContestProcessor(ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, UserUserCategoryRepository userUserCategoryRepository) {
 		this.contestRepository = contestRepository;
 		this.userCategoryRepository = userCategoryRepository;
 		this.userUserCategoryRepository = userUserCategoryRepository;
@@ -93,7 +94,7 @@ public abstract class ContestProcessor {
 		UserCategory userCategory = userCategoryRepository.findOne(userCategoryPK);
 		if (userCategory == null) {
 			userCategory = new UserCategory(userCategoryPK);
-			userCategory.setElo(envProperties.getEloInit());
+			userCategory.setElo(elo);
 			userCategory = userCategoryRepository.save(userCategory);
 		}
 		return userCategory;

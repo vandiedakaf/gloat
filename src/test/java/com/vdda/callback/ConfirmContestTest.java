@@ -1,22 +1,24 @@
 package com.vdda.callback;
 
-import com.vdda.EnvProperties;
 import com.vdda.command.service.CallbackBuilder;
 import com.vdda.contest.ContestResolver;
-import com.vdda.jpa.Category;
-import com.vdda.jpa.UserCategoryPK;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.UserCategoryPK;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserRepository;
 import com.vdda.slack.Attachment;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackUtilities;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +29,15 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ConfirmContestTest {
 
 	private static final String CHANNEL_ID = "channelId";
 	private static final String TEAM_ID = "teamId";
 	private static final String USER_ID = "userId";
 
-	@Tested
+	@Autowired
 	private ConfirmContest confirmContest;
 
 	@Mocked
@@ -46,12 +50,10 @@ public class ConfirmContestTest {
 	private UserCategoryRepository userCategoryRepository;
 	@Mocked
 	private SlackUtilities slackUtilities;
-	@Mocked
-	private EnvProperties envProperties;
 
 	@Before
 	public void setUp() throws Exception {
-		confirmContest = new ConfirmContest(envProperties, categoryRepository, userRepository, contestResolver, userCategoryRepository, slackUtilities) {
+		confirmContest = new ConfirmContest(categoryRepository, userRepository, contestResolver, userCategoryRepository, slackUtilities) {
 			@Override
 			protected Attachment confirmAttachment(String opponentId) {
 				Attachment attachment = new Attachment();
@@ -67,7 +69,7 @@ public class ConfirmContestTest {
 			}
 
 			@Override
-			protected void persistContests(CallbackRequest callbackRequest, Category category, com.vdda.jpa.User reporter, com.vdda.jpa.User opponent) {
+			protected void persistContests(CallbackRequest callbackRequest, Category category, com.vdda.domain.jpa.User reporter, com.vdda.domain.jpa.User opponent) {
 
 			}
 
@@ -169,7 +171,7 @@ public class ConfirmContestTest {
 		assertThat(response.getAttachments().get(0).getText(), containsString("testConfirm"));
 
 		new Verifications() {{
-			com.vdda.jpa.User userSaved;
+			com.vdda.domain.jpa.User userSaved;
 			userRepository.save(userSaved = withCapture());
 			assertThat(userSaved.getUserId(), is((USER_ID)));
 		}};
@@ -189,7 +191,7 @@ public class ConfirmContestTest {
 		action.setName("yes");
 		actions.add(action);
 		callbackRequest.setActions(actions);
-		callbackRequest.setCallbackId(CallbackBuilder.callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(),USER_ID));
+		callbackRequest.setCallbackId(CallbackBuilder.callbackIdBuilder(Callbacks.CONFIRM_SERIES.toString(), USER_ID));
 
 		User user = new User();
 		user.setId(USER_ID);
@@ -257,8 +259,8 @@ public class ConfirmContestTest {
 		return Optional.of(category);
 	}
 
-	private Optional<com.vdda.jpa.User> mockUser() {
-		com.vdda.jpa.User user = new com.vdda.jpa.User(TEAM_ID, USER_ID);
+	private Optional<com.vdda.domain.jpa.User> mockUser() {
+		com.vdda.domain.jpa.User user = new com.vdda.domain.jpa.User(TEAM_ID, USER_ID);
 		user.setId(1L);
 		return Optional.of(user);
 	}

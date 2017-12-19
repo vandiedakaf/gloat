@@ -1,21 +1,23 @@
 package com.vdda.callback;
 
-import com.vdda.EnvProperties;
 import com.vdda.contest.ContestResolver;
-import com.vdda.jpa.Category;
-import com.vdda.jpa.Contest;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.ContestRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.Contest;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.ContestRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserRepository;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackUtilities;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class ConfirmContestSeriesTest {
 
     private static final String CHANNEL_ID = "channelId";
@@ -34,7 +38,7 @@ public class ConfirmContestSeriesTest {
     private static final String USER_ID = "userId";
     private static final String OUTCOME = "wld";
 
-    @Tested
+	@Autowired
     private ConfirmContestSeries confirmContestNewSeries;
 
     @Mocked
@@ -49,12 +53,10 @@ public class ConfirmContestSeriesTest {
     private UserCategoryRepository userCategoryRepository;
     @Mocked
     private SlackUtilities slackUtilities;
-    @Mocked
-    private EnvProperties envProperties;
 
     @Before
     public void setUp() throws Exception {
-        confirmContestNewSeries = new ConfirmContestSeries(envProperties, categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
+        confirmContestNewSeries = new ConfirmContestSeries(categoryRepository, userRepository, contestRepository, contestResolver, userCategoryRepository, slackUtilities);
     }
 
     @Test
@@ -122,8 +124,8 @@ public class ConfirmContestSeriesTest {
         return Optional.of(category);
     }
 
-    private Optional<com.vdda.jpa.User> mockUser() {
-        com.vdda.jpa.User user = new com.vdda.jpa.User(TEAM_ID, USER_ID);
+    private Optional<com.vdda.domain.jpa.User> mockUser() {
+        com.vdda.domain.jpa.User user = new com.vdda.domain.jpa.User(TEAM_ID, USER_ID);
         user.setId(1L);
         return Optional.of(user);
     }

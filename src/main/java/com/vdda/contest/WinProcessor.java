@@ -1,12 +1,11 @@
 package com.vdda.contest;
 
-import com.vdda.EnvProperties;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.jpa.UserUserCategory;
+import com.vdda.domain.repository.ContestRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserUserCategoryRepository;
 import com.vdda.elo.EloCalculator;
-import com.vdda.jpa.UserCategory;
-import com.vdda.jpa.UserUserCategory;
-import com.vdda.repository.ContestRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserUserCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +13,8 @@ import org.springframework.stereotype.Service;
 public class WinProcessor extends ContestProcessor {
 
     @Autowired
-    public WinProcessor(EnvProperties envProperties, ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, UserUserCategoryRepository userUserCategoryRepository) {
-        super(envProperties, contestRepository, userCategoryRepository, userUserCategoryRepository);
+    public WinProcessor(ContestRepository contestRepository, UserCategoryRepository userCategoryRepository, UserUserCategoryRepository userUserCategoryRepository) {
+        super(contestRepository, userCategoryRepository, userUserCategoryRepository);
     }
 
     @Override

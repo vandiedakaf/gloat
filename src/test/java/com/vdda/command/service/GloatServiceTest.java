@@ -1,21 +1,24 @@
 package com.vdda.command.service;
 
-import com.vdda.jpa.Category;
-import com.vdda.jpa.User;
-import com.vdda.jpa.UserCategory;
-import com.vdda.jpa.UserCategoryPK;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.UserCategoryRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.User;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.jpa.UserCategoryPK;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
 import com.vdda.tool.Request;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -25,6 +28,8 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class GloatServiceTest {
 
 	private static final String RESPONSE_URL = "responseUrl";
@@ -33,7 +38,7 @@ public class GloatServiceTest {
 	private static final String CHANNEL_ID = "channelId";
 	private static final String TEST_USER_ID_1 = "testUserId1";
 
-	@Tested
+	@Autowired
 	private GloatService gloatService;
 
 	@Mocked

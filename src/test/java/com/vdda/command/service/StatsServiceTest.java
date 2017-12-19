@@ -1,32 +1,35 @@
 package com.vdda.command.service;
 
-import com.vdda.jpa.Category;
-import com.vdda.jpa.User;
-import com.vdda.jpa.UserCategory;
-import com.vdda.jpa.UserCategoryPK;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserRepository;
-import com.vdda.repository.UserUserCategoryRepository;
+import com.vdda.domain.jpa.*;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserRepository;
+import com.vdda.domain.repository.UserUserCategoryRepository;
 import com.vdda.slack.Response;
 import com.vdda.slack.SlackParameters;
 import com.vdda.slack.SlackUtilities;
 import com.vdda.tool.Request;
 import mockit.Expectations;
 import mockit.Mocked;
-import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class StatsServiceTest {
 	private static final String RESPONSE_URL = "responseUrl";
 	private static final String TEAM_ID = "teamId";
@@ -41,7 +44,7 @@ public class StatsServiceTest {
 	private static final String TEST_USER_ID_6 = "testUserId6";
 	private static final String TEST_USER_ID_7 = "testUserId7";
 
-	@Tested
+	@Autowired
 	private StatsService statsService;
 
 	@Mocked
@@ -86,7 +89,13 @@ public class StatsServiceTest {
 			result = mockSlackUserGolden();
 
 			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
-			result = mockUserCategoriesDrawsIncluded();
+			result = mockUserCategoriesDrawsExcluded();
+
+			userUserCategoryRepository.findWilsonMax(anyLong, anyLong);
+			result = mockFrenemyNemesis();
+
+			userUserCategoryRepository.findWilsonMin(anyLong, anyLong);
+			result = mockFrenemyNemesis();
 		}};
 
 		statsService.processRequest(request);
@@ -95,6 +104,9 @@ public class StatsServiceTest {
 			Response response;
 			restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
 			assertThat(response.getAttachments().get(0).getTitle(), containsString("Channel Stats"));
+
+			assertThat(response.getAttachments().get(1).getFields().get(2).getTitle(), containsString("Frenemy"));
+			assertThat(response.getAttachments().get(1).getFields().get(3).getTitle(), containsString("Nemesis"));
 		}};
 	}
 
@@ -118,7 +130,7 @@ public class StatsServiceTest {
 			result = mockUserCategoryGolden();
 
 			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
-			result = mockUserCategoriesDrawsIncluded();
+			result = mockUserCategoriesDrawsExcluded();
 		}};
 
 		statsService.processRequest(request);
@@ -160,6 +172,24 @@ public class StatsServiceTest {
 			Response response;
 			restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
 			assertThat(response.getText(), containsString("No contests have been registered in this category."));
+		}};
+	}
+
+	@Test
+	public void noSlackUser() throws Exception {
+		request = new Request(baseRequestString);
+
+		new Expectations() {{
+			slackUtilities.getUserById(TEAM_ID, USER_ID);
+			result = Optional.empty();
+		}};
+
+		statsService.processRequest(request);
+
+		new Verifications() {{
+			Response response;
+			restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+			assertThat(response.getText(), containsString("Strange, it seems like you don't exist on slack."));
 		}};
 	}
 
@@ -211,12 +241,101 @@ public class StatsServiceTest {
 		}};
 	}
 
+	@Test
+	public void processGoldenNoMaxStreak() throws Exception {
+
+		request = new Request(baseRequestString);
+
+		new Expectations() {{
+			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
+			result = mockCategoryGolden();
+
+			userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
+			result = mockUserGolden();
+
+			userCategoryRepository.findOne((UserCategoryPK) any);
+			result = mockUserCategoryGolden();
+
+			slackUtilities.getUserById(TEAM_ID, USER_ID);
+			result = mockSlackUserGolden();
+
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
+			result = mockUserCategoriesDrawsExcluded();
+
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByStreakCountDescStreakTypeDescModifiedDesc(anyLong);
+			result = mockMaxStreak();
+		}};
+
+		statsService.processRequest(request);
+
+		new Verifications() {{
+			Response response;
+			restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+			assertThat(response.getAttachments().get(0).getFields().get(1).getTitle(), containsString("Longest Streak"));
+			assertThat(response.getAttachments().get(0).getFields().get(2).getTitle(), containsString("Rank. (Rating) Name [Wins-Losses]"));
+		}};
+	}
+
+	@Test
+	public void processGoldenUserNotInTop() throws Exception {
+
+		request = new Request(baseRequestString);
+
+		new Expectations() {{
+			categoryRepository.findByTeamIdAndChannelId(TEAM_ID, CHANNEL_ID);
+			result = mockCategoryGolden();
+
+			userRepository.findByTeamIdAndUserId(TEAM_ID, USER_ID);
+			result = mockUserGolden();
+
+			userCategoryRepository.findOne((UserCategoryPK) any);
+			result = mockUserCategoryGolden();
+
+			slackUtilities.getUserById(TEAM_ID, USER_ID);
+			result = mockSlackUserGolden();
+
+			userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(anyLong);
+			result = mockUserCategoriesGolden();
+		}};
+
+		statsService.processRequest(request);
+
+		new Verifications() {{
+			Response response;
+			restTemplate.postForLocation(RESPONSE_URL, response = withCapture());
+			assertThat(response.getAttachments().get(0).getFields().get(1).getTitle(), containsString("Rank. (Rating) Name [Wins-Losses-Draws]"));
+			assertThat(response.getAttachments().get(0).getFields().get(1).getValue(), containsString(TEST_USER_ID_1));
+			assertThat(response.getAttachments().get(0).getFields().get(1).getValue(), containsString(TEST_USER_ID_2));
+			assertThat(response.getAttachments().get(0).getFields().get(1).getValue(), containsString(TEST_USER_ID_3));
+			assertThat(response.getAttachments().get(0).getFields().get(2).getValue(), containsString(TEST_USER_ID_5));
+			assertThat(response.getAttachments().get(0).getFields().get(2).getValue(), containsString(USER_ID));
+			assertThat(response.getAttachments().get(0).getFields().get(2).getValue(), containsString(TEST_USER_ID_6));
+		}};
+	}
+
 	private Optional<Category> mockCategoryGolden() {
 		return Optional.of(new Category(TEAM_ID, CHANNEL_ID));
 	}
 
 	private Optional<User> mockUserGolden() {
 		return Optional.of(new User(TEAM_ID, CHANNEL_ID));
+	}
+
+	private List<UserCategory> mockMaxStreak() {
+		UserCategoryPK userCategoryPK = new UserCategoryPK(new User("teamId", "userId"), null);
+		UserCategory userCategory = new UserCategory(userCategoryPK);
+		userCategory.setWins(10);
+		userCategory.setLosses(10);
+		userCategory.setStreakType(ContestOutcome.WIN);
+		return Arrays.asList(userCategory);
+	}
+
+	private List<UserUserCategory> mockFrenemyNemesis() {
+		UserUserCategoryPK userUserCategoryPK = new UserUserCategoryPK(null, new User("teamId", "userId"), null);
+		UserUserCategory userUserCategory = new UserUserCategory(userUserCategoryPK);
+		userUserCategory.setWins(10);
+		userUserCategory.setLosses(10);
+		return Arrays.asList(userUserCategory);
 	}
 
 	private Optional<com.github.seratch.jslack.api.model.User> mockSlackUserGolden() {
@@ -234,7 +353,7 @@ public class StatsServiceTest {
 		return userCategory;
 	}
 
-	private List<UserCategory> mockUserCategoriesDrawsIncluded() {
+	private List<UserCategory> mockUserCategoriesDrawsExcluded() {
 		List<UserCategory> userCategories = new ArrayList<>();
 
 		User user = new User(TEAM_ID, TEST_USER_ID_1);
@@ -248,7 +367,7 @@ public class StatsServiceTest {
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(1);
-		userCategory.setDraws(10);
+		userCategory.setWins(10);
 		userCategories.add(userCategory);
 
 		user = new User(TEAM_ID, TEST_USER_ID_3);
@@ -262,7 +381,85 @@ public class StatsServiceTest {
 		userCategoryPK = new UserCategoryPK(user, 1L);
 		userCategory = new UserCategory(userCategoryPK);
 		userCategory.setElo(2);
-		userCategory.setDraws(10);
+		userCategory.setLosses(10);
+		userCategories.add(userCategory);
+
+		return userCategories;
+	}
+
+	private List<UserCategory> mockUserCategoriesGolden() {
+		List<UserCategory> userCategories = new ArrayList<>();
+
+		User user = new User(TEAM_ID, TEST_USER_ID_1);
+		UserCategoryPK userCategoryPK = new UserCategoryPK(user, 1L);
+		UserCategory userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(8);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_2);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(7);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_3);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(6);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_4);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(5);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_5);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(4);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, USER_ID);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(3);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_6);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(2);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
+		userCategories.add(userCategory);
+
+		user = new User(TEAM_ID, TEST_USER_ID_7);
+		userCategoryPK = new UserCategoryPK(user, 1L);
+		userCategory = new UserCategory(userCategoryPK);
+		userCategory.setElo(1);
+		userCategory.setWins(4);
+		userCategory.setLosses(4);
+		userCategory.setDraws(4);
 		userCategories.add(userCategory);
 
 		return userCategories;

@@ -1,18 +1,19 @@
 package com.vdda.command.service;
 
 import com.github.seratch.jslack.api.model.User;
-import com.vdda.jpa.Category;
-import com.vdda.jpa.UserCategory;
-import com.vdda.jpa.UserCategoryPK;
-import com.vdda.jpa.UserUserCategory;
-import com.vdda.repository.CategoryRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserRepository;
-import com.vdda.repository.UserUserCategoryRepository;
+import com.vdda.domain.jpa.Category;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.jpa.UserCategoryPK;
+import com.vdda.domain.jpa.UserUserCategory;
+import com.vdda.domain.repository.CategoryRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserRepository;
+import com.vdda.domain.repository.UserUserCategoryRepository;
 import com.vdda.slack.*;
 import com.vdda.tool.Request;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class StatsService {
 	private static final String COLOUR_GREEN = "#86C53C";
 	private static final String COLOUR_GOLD = "#FFD700";
 	private static final int NUM_TOP_USERS = 3;
+
+	@Value("${gloat.calibration}")
+	private int calibration;
 
 	private final RestTemplate restTemplate;
 	private final SlackUtilities slackUtilities;
@@ -95,7 +99,7 @@ public class StatsService {
 			return response;
 		}
 
-		Optional<com.vdda.jpa.User> user = userRepository.findByTeamIdAndUserId(teamId, userId);
+		Optional<com.vdda.domain.jpa.User> user = userRepository.findByTeamIdAndUserId(teamId, userId);
 		if (!user.isPresent()) {
 			response.setText("No contests have been registered for this user.");
 			return response;
@@ -130,72 +134,69 @@ public class StatsService {
 		numberOfContests.setShortMessage(true);
 		channelFields.add(numberOfContests);
 
-		Optional<UserCategory> maxStreakCount = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByStreakCountDescStreakTypeDescCreatedDesc(category.getId())
+		Optional<UserCategory> maxStreakUserCategory = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByStreakCountDescStreakTypeDescModifiedDesc(category.getId())
 				.stream()
-				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
+				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= calibration)
 				.findFirst();
-		if (maxStreakCount.isPresent()) {
+		if (maxStreakUserCategory.isPresent()) {
 			Field maxStreak = new Field();
 			maxStreak.setTitle("Longest Streak");
-			maxStreak.setValue("<@" + slackUtilities.getUserById(teamId, maxStreakCount.get().getUserCategoryPK().getUser().getUserId()).orElse(new User()).getName() + "> with " + maxStreakCount.get().getStreakCount() + " " + (maxStreakCount.get().getStreakCount() > 1 ? maxStreakCount.get().getStreakType().getPlural() : maxStreakCount.get().getStreakType().name().toLowerCase()));
+			maxStreak.setValue("<@" + slackUtilities.getUserById(teamId, maxStreakUserCategory.get().getUserCategoryPK().getUser().getUserId()).orElse(new User()).getName() + "> with " + maxStreakUserCategory.get().getStreakCount() + " " + (maxStreakUserCategory.get().getStreakCount() > 1 ? maxStreakUserCategory.get().getStreakType().getPlural() : maxStreakUserCategory.get().getStreakType().name().toLowerCase()));
 			maxStreak.setShortMessage(true);
 
 			channelFields.add(maxStreak);
 		}
 
-		// TODO replace literal "10" with global config
 		List<UserCategory> userCategories = userCategoryRepository.findAllByUserCategoryPK_CategoryIdOrderByEloDesc(category.getId())
 				.stream()
-				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
+				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= calibration)
 				.collect(Collectors.toList());
 
-		if (userCategories.isEmpty()) {
-			channelStats.setFields(channelFields);
-			return channelStats;
-		}
+		if (!userCategories.isEmpty()) {
+			List<Pair<Integer, UserCategory>> rankedUserCategories = determineRankedPairs(userCategories);
 
-		List<Pair<Integer, UserCategory>> rankedUserCategories = determineRankedPairs(userCategories);
+			List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(userId, rankedUserCategories, NUM_TOP_USERS);
 
-		List<Pair<Integer, UserCategory>> rankedUserCategoriesFiltered = getFilteredList(userId, rankedUserCategories, NUM_TOP_USERS);
+			boolean containsDraws = rankedUserCategoriesFiltered.stream()
+					.mapToInt(u -> u.getSecond().getDraws())
+					.sum() > 0;
 
-		boolean containsDraws = rankedUserCategoriesFiltered.stream()
-				.mapToInt(u -> u.getSecond().getDraws())
-				.sum() > 0;
+			Field topField = new Field();
+			if (containsDraws) {
+				topField.setTitle("Rank. (Rating) Name [Wins-Losses-Draws]");
+			} else {
+				topField.setTitle("Rank. (Rating) Name [Wins-Losses]");
+			}
 
-		Field topField = new Field();
-		if (containsDraws) {
-			topField.setTitle("Rankings. (Rating) Name [Wins-Losses-Draws]");
-		} else {
-			topField.setTitle("Rankings. (Rating) Name [Wins-Losses]");
-		}
-
-		StringBuilder textTopContestants = new StringBuilder();
-		rankedUserCategoriesFiltered.stream()
-				.filter(p -> p.getFirst() <= NUM_TOP_USERS)
-				.collect(toList())
-				.forEach(u -> addContestant(u, textTopContestants, containsDraws));
-
-		topField.setValue(textTopContestants.toString());
-
-		channelFields.add(topField);
-
-		if (rankedUserCategoriesFiltered.size() > NUM_TOP_USERS) {
-			Field neighbourField = new Field();
-			StringBuilder textNeighbouringContestants = new StringBuilder();
+			StringBuilder textTopContestants = new StringBuilder();
 			rankedUserCategoriesFiltered.stream()
-					.filter(p -> p.getFirst() > NUM_TOP_USERS)
+					.filter(p -> p.getFirst() <= NUM_TOP_USERS)
 					.collect(toList())
-					.forEach(u -> addContestant(u, textNeighbouringContestants, containsDraws));
+					.forEach(u -> addContestant(u, textTopContestants, containsDraws));
 
-			neighbourField.setValue(textNeighbouringContestants.toString());
-			channelFields.add(neighbourField);
+			topField.setValue(textTopContestants.toString());
+
+			channelFields.add(topField);
+
+			if (rankedUserCategoriesFiltered.size() > NUM_TOP_USERS) {
+				Field neighbourField = new Field();
+				StringBuilder textNeighbouringContestants = new StringBuilder();
+				rankedUserCategoriesFiltered.stream()
+						.filter(p -> p.getFirst() > NUM_TOP_USERS)
+						.collect(toList())
+						.forEach(u -> addContestant(u, textNeighbouringContestants, containsDraws));
+
+				neighbourField.setValue(textNeighbouringContestants.toString());
+				channelFields.add(neighbourField);
+			}
+
+			channelStats.setFields(channelFields);
 		}
 
-		channelStats.setFields(channelFields);
 		return channelStats;
 	}
 
-	private Attachment getPlayerStats(String teamId, User slackUser, Category category, com.vdda.jpa.User user, UserCategory userCategory) {
+	private Attachment getPlayerStats(String teamId, User slackUser, Category category, com.vdda.domain.jpa.User user, UserCategory userCategory) {
 		Attachment playerStats = new Attachment();
 		playerStats.setFallback("Player Stats");
 		playerStats.setTitle("Player Stats: <@" + slackUser.getName() + ">");
@@ -214,10 +215,9 @@ public class StatsService {
 		playerStreak.setShortMessage(true);
 		playerFields.add(playerStreak);
 
-		// TODO replace literal "10" with global config
 		Optional<UserUserCategory> frenemy = userUserCategoryRepository.findWilsonMax(user.getId(), category.getId())
 				.stream()
-				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
+				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= calibration)
 				.findFirst();
 		if (frenemy.isPresent()) {
 			Field playerWilsonHigh = new Field();
@@ -227,10 +227,9 @@ public class StatsService {
 			playerFields.add(playerWilsonHigh);
 		}
 
-		// TODO replace literal "10" with global config
 		Optional<UserUserCategory> nemesis = userUserCategoryRepository.findWilsonMin(user.getId(), category.getId())
 				.stream()
-				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= 10)
+				.filter(u -> (u.getWins() + u.getLosses() + u.getDraws()) >= calibration)
 				.findFirst();
 		if (nemesis.isPresent()) {
 			Field playerWilsonLow = new Field();

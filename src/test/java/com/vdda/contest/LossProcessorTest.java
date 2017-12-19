@@ -1,58 +1,76 @@
 package com.vdda.contest;
 
-import com.vdda.EnvProperties;
+import com.vdda.domain.jpa.UserCategory;
+import com.vdda.domain.jpa.UserUserCategory;
+import com.vdda.domain.repository.ContestRepository;
+import com.vdda.domain.repository.UserCategoryRepository;
+import com.vdda.domain.repository.UserUserCategoryRepository;
 import com.vdda.elo.EloCalculator;
-import com.vdda.jpa.UserCategory;
-import com.vdda.repository.ContestRepository;
-import com.vdda.repository.UserCategoryRepository;
-import com.vdda.repository.UserUserCategoryRepository;
 import mockit.Mocked;
-import mockit.Tested;
 import mockit.Verifications;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class LossProcessorTest {
-    @Tested
-    LossProcessor lossProcessor;
 
-    @Mocked
-    private ContestRepository contestRepository;
-    @Mocked
-    private UserCategoryRepository userCategoryRepository;
-    @Mocked
-    private UserUserCategoryRepository userUserCategoryRepository;
-    @Mocked
-    private EnvProperties envProperties;
+	@Autowired
+	LossProcessor lossProcessor;
 
-    @Before
-    public void setUp() throws Exception {
-        lossProcessor = new LossProcessor(envProperties, contestRepository, userCategoryRepository, userUserCategoryRepository);
-    }
+	@Mocked
+	private ContestRepository contestRepository;
+	@Mocked
+	private UserCategoryRepository userCategoryRepository;
+	@Mocked
+	private UserUserCategoryRepository userUserCategoryRepository;
 
-    @Test
-    public void getRatings(@Mocked EloCalculator eloCalculator) throws Exception {
+	@Before
+	public void setUp() throws Exception {
+		lossProcessor = new LossProcessor(contestRepository, userCategoryRepository, userUserCategoryRepository);
+	}
 
-        lossProcessor.getRatings(eloCalculator);
+	@Test
+	public void getRatings(@Mocked EloCalculator eloCalculator) throws Exception {
 
-        new Verifications() {{
-            eloCalculator.adjustedRating(EloCalculator.Outcome.LOSE);
-        }};
-    }
+		lossProcessor.getRatings(eloCalculator);
 
-    @Test
-    public void adjustUserCategoryStats() throws Exception {
-        UserCategory reporterCategory = new UserCategory(null);
-        reporterCategory.setLosses(3);
+		new Verifications() {{
+			eloCalculator.adjustedRating(EloCalculator.Outcome.LOSE);
+		}};
+	}
 
-        UserCategory opponentCategory = new UserCategory(null);
-        opponentCategory.setWins(5);
+	@Test
+	public void adjustUserCategoryStats() throws Exception {
+		UserCategory reporterCategory = new UserCategory(null);
+		reporterCategory.setLosses(3);
 
-        lossProcessor.adjustUserCategoryStats(reporterCategory, opponentCategory);
+		UserCategory opponentCategory = new UserCategory(null);
+		opponentCategory.setWins(5);
 
-        assertEquals((Integer) 4, reporterCategory.getLosses());
-        assertEquals((Integer) 6, opponentCategory.getWins());
-    }
+		lossProcessor.adjustUserCategoryStats(reporterCategory, opponentCategory);
+
+		assertEquals((Integer) 4, reporterCategory.getLosses());
+		assertEquals((Integer) 6, opponentCategory.getWins());
+	}
+
+	@Test
+	public void adjustUserUserCategoryStats() throws Exception {
+		UserUserCategory userUserCategoryReporter = new UserUserCategory(null);
+		userUserCategoryReporter.setLosses(3);
+
+		UserUserCategory userUserCategoryOpponent = new UserUserCategory(null);
+		userUserCategoryOpponent.setWins(5);
+
+		lossProcessor.adjustUserUserCategoryStats(userUserCategoryReporter, userUserCategoryOpponent);
+
+		assertEquals((Integer) 4, userUserCategoryReporter.getLosses());
+		assertEquals((Integer) 6, userUserCategoryOpponent.getWins());
+	}
 }
