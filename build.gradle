@@ -15,6 +15,7 @@ plugins {
 
 jar {
     baseName = 'gloat'
+    version = getVersionFromTag()
 }
 
 sourceCompatibility = 1.8
@@ -75,4 +76,13 @@ task setupEnv(type: Exec, dependsOn: 'dockerComposeStop') {
 task dockerComposeStop(type: Exec) {
     executable = 'docker-compose'
     args = ['-f', 'docker-compose.yml', 'stop']
+}
+
+def getVersionFromTag() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--tags'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
 }
